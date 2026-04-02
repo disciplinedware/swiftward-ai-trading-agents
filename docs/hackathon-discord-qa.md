@@ -62,9 +62,11 @@ The Kraken team hasn't communicated details yet, but full information will be pr
 
 *Source: Steve (April 1, private ticket)*
 
-### ❓ Q: How is social engagement measured for the Kraken challenge?
+### ✅ Q: How is social engagement measured for the Kraken challenge?
 
-**Unanswered.** No official response yet.
+its internal
+
+*Source: Zofia at General Q&A Stage (March 30)*
 
 ### ❓ Q: Kraken is not available in my country. What should I do?
 
