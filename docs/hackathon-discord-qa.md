@@ -1,9 +1,9 @@
 # AI Trading Agents Hackathon - Q&A from Discord
 
-Compiled from Discord channels: #general-qa-stage, #participants-chat-ai-trading-agents, Surge AMA, and private support tickets (March 30 - April 1, 2026).
+Compiled from Discord channels: #general-qa-stage, #participants-chat-ai-trading-agents, Surge AMA, and private support tickets (March 30 - April 2, 2026).
 Questions from participants with official answers from lablab.ai team and Kraken mentors.
 
-**Last updated: April 1, 2026**
+**Last updated: April 2, 2026**
 
 Legend: ✅ official answer available | ❓ waiting on organizers | ⚠️ partially answered
 
@@ -48,7 +48,9 @@ Paper mode is for building and testing agents before going live. The read-only k
 
 **Open question.** Since real money is required, teams with more capital have an inherent advantage. The hackathon page says ranking is by "net PnL" without specifying whether that's absolute or percentage-based. Kraken mentors said: "This needs a clear ruling from lablab/Surge: absolute PnL vs. percentage return, minimum capital requirements, etc. We provide the trading tool; the ranking methodology is on the hackathon organizers to define."
 
-*Source: Kraken Mentors via Zofia (April 1)*
+Multiple participants echoed this concern (April 2): using absolute PnL with unequal capital creates uneven conditions. Suggested alternatives: percentage return or win rate.
+
+*Source: Kraken Mentors via Zofia (April 1), Atikin_NT (April 2)*
 
 ### ✅ Q: Is Kraken CLI available on Windows?
 
@@ -66,9 +68,13 @@ The Kraken team hasn't communicated details yet, but full information will be pr
 
 **Unanswered.** No official response yet.
 
-### ❓ Q: Kraken is not available in my country. What should I do?
+### ✅ Q: Kraken is not available in my country (India, Pakistan, etc.). What should I do?
 
-**Unanswered** by organizers as of April 1.
+Kraken isn't currently available in India, Pakistan, and some other regions due to licensing restrictions. You can still use paper trading to build and test your agent, but paper trading won't count for the Kraken leaderboard.
+
+Workaround shared by a participant: build native Kraken REST API calls directly instead of using the CLI binary.
+
+*Source: Steve (April 2), participant workaround (April 2)*
 
 ---
 
@@ -90,6 +96,18 @@ It's about showing a **complete trustless flow**, not just one piece. Keep it si
 **Use shared contracts.** Using shared contracts is the only way judges will compare results.
 
 *Source: Steve (April 1, private ticket)*
+
+### ❓ Q: How does the Risk Router actually execute trades?
+
+The hackathon page says "DEX execution via a whitelisted Risk Router contract (Uniswap-style routers)," but the template's RiskRouter only validates intents and emits events - it has no DEX integration, no swap calls, and doesn't spend from the Vault. How are ERC-8004 trades supposed to execute on-chain?
+
+**Unanswered** as of April 2. Related to the open questions about sandbox capital and contract addresses - Steve is consulting with the Surge team.
+
+### ❓ Q: Does implementing just the Validation Registry + a strategy qualify for the ERC-8004 challenge?
+
+**Unanswered** as of April 2.
+
+*Source: Kai (April 2, #general)*
 
 ### ❓ Q: How do agents set their own risk params on the shared RiskRouter? `setRiskParams` requires contract owner.
 
@@ -161,18 +179,17 @@ Create a ticket in the #create-a-ticket channel with a clear description of your
 
 ## Summary
 
-✅ **Answered: 8** | ⚠️ **Partial: 3** | ❓ **Open: 7**
+✅ **Answered: 10** | ⚠️ **Partial: 3** | ❓ **Open: 8**
 
 ### Open Questions
 
 | # | Question | Status |
 |---|----------|--------|
-| 1 | Hackathon contract addresses (Vault, Risk Router, etc.) | Steve consulting Surge team |
-| 2 | How to claim/access funded sub-account | Steve consulting Surge team |
+| 1 | Shared contract addresses, sandbox capital, and how Risk Router executes trades | Steve consulting Surge team |
+| 2 | Does Validation Registry + strategy alone qualify for ERC-8004? | Unanswered |
 | 3 | PnL ranking method (absolute vs %) and minimum capital | Waiting on lablab/Surge ruling |
-| 4 | How agents set RiskRouter params | Unanswered |
+| 4 | How agents set RiskRouter params (`setRiskParams` requires owner) | Unanswered |
 | 5 | Do all team members need Surge accounts? | Unanswered |
 | 6 | How does "build in public" prize work with late Surge registration? | Unclear |
 | 7 | Can teams use their own data sources (broker APIs)? | Unanswered |
 | 8 | Social engagement measurement (Kraken) | Unanswered |
-| 9 | Kraken availability in restricted regions | Unanswered |
