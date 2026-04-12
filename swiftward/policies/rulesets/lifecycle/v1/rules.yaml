@@ -1,0 +1,115 @@
+# Claude Agent Lifecycle Policy — v1
+#
+# Evaluates agent.lifecycle events emitted by the claude-agent binary.
+# Monitors agent health, session outcomes, and critical error conditions.
+#
+# Event fields:
+#   event.data.action        - "started" | "session.started" | "session.completed" |
+#                              "session.failed" | "needs_attention" | "stopped"
+#   event.data.agent_id      - agent ID string
+#   event.data.error_type    - "auth_expired" | "rate_limited" | "max_consecutive_errors"
+#                              (only present on needs_attention events)
+#   event.data.error_message - human-readable error description
+#   event.data.session_id    - session identifier
+#   event.data.elapsed_ms    - session duration in milliseconds
+
+dsl_version: 2
+
+default_effects:
+  verdict: approved
+
+rules:
+  # ── Auth expired — requires human intervention ───────────────────────────
+  alert_needs_attention:
+    description: "Agent auth token expired — requires human to rotate credentials"
+    conditions:
+      - field: event.data.action
+        op: equals
+        value: "needs_attention"
+      - field: event.data.error_type
+        op: equals
+        value: "auth_expired"
+    effects:
+      verdict: flagged
+      tags: ["auth", "needs_human"]
+      reason: "Agent auth token expired — human intervention required to rotate credentials"
+      actions:
+        - type: log
+          message: "Agent auth expired: agent_id={{event.data.agent_id}} error={{event.data.error_message}}"
+
+  # ── Rate limited — transient, no human needed ────────────────────────────
+  alert_rate_limited:
+    description: "Agent is being rate limited by upstream API"
+    conditions:
+      - field: event.data.action
+        op: equals
+        value: "needs_attention"
+      - field: event.data.error_type
+        op: equals
+        value: "rate_limited"
+    effects:
+      verdict: flagged
+      tags: ["rate_limit"]
+      reason: "Agent rate limited by upstream API — will retry automatically"
+      actions:
+        - type: log
+          message: "Agent rate limited: agent_id={{event.data.agent_id}} error={{event.data.error_message}}"
+
+  # ── Max consecutive errors — requires human investigation ────────────────
+  alert_max_errors:
+    description: "Agent hit consecutive error threshold — likely stuck"
+    conditions:
+      - field: event.data.action
+        op: equals
+        value: "needs_attention"
+      - field: event.data.error_type
+        op: equals
+        value: "max_consecutive_errors"
+    effects:
+      verdict: flagged
+      tags: ["consecutive_errors", "needs_human"]
+      reason: "Agent exceeded max consecutive errors — human investigation required"
+      actions:
+        - type: log
+          message: "Agent max errors: agent_id={{event.data.agent_id}} error={{event.data.error_message}}"
+
+  # ── Session completed successfully ───────────────────────────────────────
+  track_session_completed:
+    description: "Track successful session completions with timing"
+    conditions:
+      - field: event.data.action
+        op: equals
+        value: "session.completed"
+    effects:
+      verdict: approved
+      actions:
+        - type: log
+          message: "Session completed: agent_id={{event.data.agent_id}} session_id={{event.data.session_id}} elapsed_ms={{event.data.elapsed_ms}}"
+
+  # ── Session skipped (triage decided not to run) ──────────────────────────
+  track_session_skipped:
+    description: "Track triage-skipped sessions"
+    conditions:
+      - field: event.data.action
+        op: equals
+        value: "session.skipped"
+    effects:
+      verdict: approved
+      actions:
+        - type: log
+          message: "Session skipped: agent_id={{event.data.agent_id}} session_id={{event.data.session_id}} reason={{event.data.reason}}"
+
+  # ── Session failed ───────────────────────────────────────────────────────
+  track_session_failed:
+    description: "Track failed sessions for monitoring and alerting"
+    conditions:
+      - field: event.data.action
+        op: equals
+        value: "session.failed"
+    effects:
+      verdict: flagged
+      tags: ["session_failure"]
+      reason: "Agent session failed — see error_message for details"
+      actions:
+        - type: log
+          message: "Session failed: agent_id={{event.data.agent_id}} session_id={{event.data.session_id}} error={{event.data.error_message}}"

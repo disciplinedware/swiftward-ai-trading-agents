@@ -1,0 +1,171 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-100">Batch #<%= @agent_batch.id %></h1>
+        <p class="mt-2 text-sm text-gray-300"><%= @agent_batch.prefix %></p>
+      </div>
+      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex items-center gap-3">
+        <% if @agent_batch.init? || @agent_batch.stopped? %>
+          <%= button_to "Start Batch", start_agent_batch_path(@agent_batch), method: :post, class: "block rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+        <% elsif @agent_batch.started? %>
+          <%= button_to "Stop Batch", stop_agent_batch_path(@agent_batch), method: :post, class: "block rounded-md bg-red-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" %>
+        <% end %>
+
+        <% unless onboarded? %>
+        <div class="flex items-center gap-2">
+          <% if @agent_batch.warm_up_status.nil? || @agent_batch.warm_up_status.in?(%w(not_started pending)) %>
+             <%= button_to "Warm Up Model", warm_up_agent_batch_path(@agent_batch), method: :post, class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" %>
+          <% end %>
+          <%= turbo_stream_from @agent_batch, "agent_batch_warm_up_status" %>
+          <%= render "agent_batches/warm_up_status", benchmark: @agent_batch %>
+        </div>
+        <% end %>
+
+        <% if @agent_batch.agent_mode == "swiftward" %>
+          <% all_stopped = @progress[:stopped] == @progress[:total] && @progress[:total] > 0 %>
+          <% if all_stopped %>
+            <%= button_to "Resume Orchestrator", resume_orchestrator_agent_batch_path(@agent_batch), method: :post, class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+          <% else %>
+            <%= button_to "Stop Orchestrator", stop_orchestrator_agent_batch_path(@agent_batch), method: :post, data: { confirm: "All agents will be paused. No trades will happen until resumed." }, class: "block rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500" %>
+          <% end %>
+        <% else %>
+          <% has_running = @agent_batch.agent_runs.where(orchestrator_status: [:running, :waiting]).exists? %>
+          <% if has_running %>
+            <%= button_to "Stop All", stop_orchestrator_agent_batch_path(@agent_batch), method: :post, data: { confirm: "All backtest runs will be paused. No tokens will be spent until you resume." }, class: "block rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500" %>
+          <% elsif @agent_batch.agent_runs.orchestrator_stopped.exists? %>
+            <%= button_to "Resume All", resume_orchestrator_agent_batch_path(@agent_batch), method: :post, class: "block rounded-md bg-blue-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-500" %>
+          <% end %>
+        <% end %>
+
+        <% if @agent_batch.error? || @has_errors %>
+          <%= button_to "Restart Errors", restart_errors_agent_batch_path(@agent_batch), method: :post, class: "block rounded-md bg-orange-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-orange-500" %>
+        <% end %>
+        <%= link_to "Back to List", agent_batches_path, class: "block rounded-md bg-gray-800 px-3 py-2 text-center text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-700" %>
+      </div>
+    </div>
+
+    <%= render "agent_batches/onboarding_alert" unless onboarded? %>
+
+    <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-5">
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Model</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight text-indigo-400"><%= @agent_batch.agent_model&.name %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Agent</dt>
+        <dd class="mt-1">
+          <% if @agent_batch.agent_mode == "swiftward" %>
+            <span class="inline-flex items-center rounded-md bg-emerald-950/50 px-2 py-1 text-sm font-semibold text-emerald-300 ring-1 ring-inset ring-emerald-700/50">Swiftward (Live)</span>
+          <% else %>
+            <span class="inline-flex items-center rounded-md bg-indigo-950/50 px-2 py-1 text-sm font-semibold text-indigo-300 ring-1 ring-inset ring-indigo-700/50">Backtesting</span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Concurrency / Attempts</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-100"><%= @agent_batch.concurrency %> / <%= @agent_batch.attempts %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Progress</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-100">
+          <% if @agent_batch.agent_mode == "swiftward" %>
+            <div class="flex flex-col gap-1 text-sm">
+              <span><span class="text-yellow-300 font-bold"><%= @progress[:running] %></span> <span class="text-gray-400">running</span></span>
+              <span><span class="text-blue-300 font-bold"><%= @progress[:waiting] %></span> <span class="text-gray-400">waiting</span></span>
+              <span><span class="text-red-400 font-bold"><%= @progress[:stopped] %></span> <span class="text-gray-400">stopped</span></span>
+            </div>
+          <% else %>
+            <%= @progress[:completed] %> / <%= @progress[:total] %>
+            <span class="text-xs text-gray-400 ml-1">(<%= @progress[:percent] %>%)</span>
+            <div class="text-sm text-green-400 font-medium mt-1">
+              Completed: <%= @progress[:solved] %> / <%= @progress[:total] %>
+            </div>
+          <% end %>
+        </dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Status</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight">
+          <span class="inline-flex items-center rounded-md px-2 py-1 text-sm font-medium ring-1 ring-inset
+            <%= case @agent_batch.status
+                when 'init' then 'bg-gray-800/50 text-gray-300 ring-gray-700/50'
+                when 'started' then 'bg-green-950/50 text-green-300 ring-green-700/50'
+                when 'completed' then 'bg-blue-950/50 text-blue-300 ring-blue-700/30'
+                when 'error' then 'bg-red-950/50 text-red-400 ring-red-700/50'
+                when 'stopped' then 'bg-yellow-950/50 text-yellow-300 ring-yellow-700/50'
+                else 'bg-gray-800/50 text-gray-300 ring-gray-700/50'
+                end %>">
+            <%= @agent_batch.status.humanize %>
+          </span>
+        </dd>
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-2 gap-5 sm:grid-cols-6">
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Total Cost</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight text-green-400">$<%= number_with_precision(@token_stats[:cost], precision: 4) %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Input Tokens</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-100"><%= number_with_delimiter(@token_stats[:input]) %></dd>
+      </div>
+      <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+        <dt class="truncate text-sm font-medium text-gray-400">Output Tokens</dt>
+        <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-100"><%= number_with_delimiter(@token_stats[:output]) %></dd>
+      </div>
+      <% if @pnl_stats %>
+        <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-400">Total PNL (<%= @pnl_stats[:count] %> runs)</dt>
+          <dd class="mt-1 text-xl font-semibold tracking-tight <%= @pnl_stats[:total] >= 0 ? 'text-green-400' : 'text-red-400' %>">
+            <%= @pnl_stats[:total] >= 0 ? '+' : '' %><%= number_to_currency(@pnl_stats[:total], unit: "$") %>
+          </dd>
+        </div>
+        <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-400">Best PNL</dt>
+          <dd class="mt-1 text-xl font-semibold tracking-tight <%= @pnl_stats[:max] >= 0 ? 'text-green-400' : 'text-red-400' %>">
+            <%= @pnl_stats[:max] >= 0 ? '+' : '' %><%= number_to_currency(@pnl_stats[:max], unit: "$") %>
+          </dd>
+        </div>
+        <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow sm:p-6">
+          <dt class="truncate text-sm font-medium text-gray-400">Worst PNL</dt>
+          <dd class="mt-1 text-xl font-semibold tracking-tight <%= @pnl_stats[:min] >= 0 ? 'text-green-400' : 'text-red-400' %>">
+            <%= @pnl_stats[:min] >= 0 ? '+' : '' %><%= number_to_currency(@pnl_stats[:min], unit: "$") %>
+          </dd>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-8 flex justify-end gap-3">
+      <%= link_to "Download Report", download_agent_batch_path(@agent_batch), class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      <%= button_to "Recalc All Stats", recalculate_stats_agent_batch_path(@agent_batch), method: :post, class: "rounded-md bg-gray-800 px-2.5 py-1.5 text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-700" %>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-100">Runs</h2>
+      <div class="mt-4">
+         <%= paginate @agent_runs %>
+      </div>
+      <%= render "agent_runs/table", executions: @agent_runs %>
+      <div class="mt-4">
+         <%= paginate @agent_runs %>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-gray-700 pt-10">
+      <div class="bg-red-950/50 rounded-lg p-6 border border-red-800">
+        <h2 class="text-lg font-bold text-red-300">Danger Zone</h2>
+        <p class="mt-2 text-sm text-red-400">Deleting this batch will permanently remove all associated runs and statistics. This action is irreversible.</p>
+
+        <div class="mt-6">
+          <% expected_name = "#{@agent_batch.agent_model&.name}/#{@agent_batch.prefix}" %>
+          <%= form_with url: agent_batch_path(@agent_batch), method: :delete, class: "flex items-end gap-4" do |f| %>
+            <div class="flex-1 max-w-md">
+              <label class="block text-sm font-medium text-red-300 mb-1">Type <span class="font-mono bg-red-950/50 px-1 rounded"><%= expected_name %></span> to confirm</label>
+              <%= text_field_tag :confirmation, "", placeholder: "Type batch name here", class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-red-700 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6" %>
+            </div>
+            <%= f.submit "Delete Batch", class: "rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>

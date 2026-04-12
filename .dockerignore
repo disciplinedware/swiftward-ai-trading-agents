@@ -1,0 +1,39 @@
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.*
+
+# Runtime data
+data/
+
+# Documentation
+docs/
+*.md
+!typescript/README.md
+
+# Non-build directories (not needed by Dockerfile.trading-server)
+ruby/
+python/
+postgres/
+swiftward/
+prompts/
+backups/
+
+# Build artifacts & dependencies
+golang/bin/
+golang/server
+golang/vendor/
+golang/internal/dashboard/dist/*
+!golang/internal/dashboard/dist/placeholder.html
+typescript/node_modules/
+typescript/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/

@@ -1,0 +1,563 @@
+# ERC-8004 Trading Gateway - Policy Ruleset v2 (Shadow)
+#
+# Same 3 events and shared state as v1. Deployed as shadow arm (logged, not enforced)
+# for A/B comparison. Stricter thresholds:
+#
+#   v1 -> v2:
+#   order limit:          15% -> 10%
+#   concentration limit:  50% -> 35%
+#   drawdown breaker:      5% ->  3%
+#   order rate:        50/10m -> 25/10m
+#   daily drawdown:        5% ->  3%
+#   peak drawdown:        10% ->  7%
+#   absolute drawdown:    20% -> 15%
+#   leverage cap:          -  ->  2x (new in v2)
+#
+# See v1/rules.yaml header for full event/rule documentation and available actions reference.
+
+dsl_version: 2
+
+default_effects:
+  verdict: approved
+
+state_models:
+  agent:
+    key: "{{ event.entity_id }}"
+    counters:
+      fill_count:
+      reject_count:
+    metadata:
+      agent_token_id:
+    labels:
+      halted:
+    buckets:
+      orders_10m:
+        type: fixed_window
+        window: "10m"
+        timezone: "UTC"
+      drawdown_cooldown:
+        type: fixed_window
+        window: "1h"
+        timezone: "UTC"
+
+constants:
+  max_order_pct: 0.10
+  max_concentration: 0.35
+  max_drawdown: -0.03
+  max_drawdown_daily: -0.03
+  max_drawdown_peak: -0.07
+  max_drawdown_absolute: -0.15
+  max_order_value: 1000
+  max_orders_10m: 25
+  max_leverage: 2
+  permitted_pairs:
+    # 30 USD pairs on Kraken spot (same as v1)
+    - "BTC-USD"
+    - "ETH-USD"
+    - "SOL-USD"
+    - "XRP-USD"
+    - "ADA-USD"
+    - "DOGE-USD"
+    - "AVAX-USD"
+    - "LINK-USD"
+    - "TON-USD"
+    - "SUI-USD"
+    - "DOT-USD"
+    - "ATOM-USD"
+    - "UNI-USD"
+    - "AAVE-USD"
+    - "NEAR-USD"
+    - "ARB-USD"
+    - "OP-USD"
+    - "FIL-USD"
+    - "LTC-USD"
+    - "MATIC-USD"
+    - "RENDER-USD"
+    - "FET-USD"
+    - "INJ-USD"
+    - "PEPE-USD"
+    - "APT-USD"
+    - "GRT-USD"
+    - "IMX-USD"
+    - "MKR-USD"
+    - "CRV-USD"
+    - "ALGO-USD"
+
+signals:
+  # --- Pre-trade signals (use enriched event data from Trading MCP) ---
+
+  position_risk:
+    udf: trading/compute_position_risk
+    params:
+      size: "{{ event.data.order.value }}"
+      portfolio_value: "{{ event.data.portfolio.value }}"
+
+  concentration_check:
+    udf: trading/compute_concentration
+    params:
+      market: "{{ event.data.order.pair }}"
+      size: "{{ event.data.order.value }}"
+      side: "{{ event.data.order.side }}"
+      positions: "{{ event.data.portfolio.positions }}"
+      portfolio_value: "{{ event.data.portfolio.value }}"
+
+  daily_drawdown:
+    udf: trading/compute_drawdown
+    params:
+      portfolio_value: "{{ event.data.portfolio.value }}"
+      peak_value: "{{ event.data.portfolio.day_start_value }}"
+
+  order_rate:
+    udf: trading/count_recent_trades
+    params:
+      entity_id: "{{ event.entity_id }}"
+      bucket: "orders_10m"
+
+  # Window-end timestamps for cooldown retry_after (deterministic from event.ingested_at)
+  window_end_1h:
+    udf: trading/compute_window_end
+    params:
+      timestamp: "{{ event.ingested_at }}"
+      window: "1h"
+
+  # --- Heartbeat signals (heartbeat events carry live prices) ---
+
+  drawdown_3layer:
+    udf: trading/compute_drawdown_3layer
+    params:
+      portfolio_value: "{{ event.data.portfolio.value }}"
+      peak_value: "{{ event.data.portfolio.peak }}"
+      day_start_value: "{{ event.data.portfolio.day_start_value }}"
+      initial_capital: "{{ event.data.portfolio.initial_value }}"
+
+rules:
+  # =========================================================================
+  # PRE-TRADE RULES (sync)
+  # =========================================================================
+
+  halted_check:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "state.agent.labels.halted"
+        op: eq
+        value: true
+    effects:
+      verdict: rejected
+      priority: 110
+      response:
+        reason: "Agent is halted - trading paused by risk manager or heartbeat"
+        tag: "halted"
+        hint: "Use risk/resume_agent to resume, or wait for operator intervention"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/BLOCKED] Halted Agent\nAgent {{ event.entity_id }} attempted to trade while halted.\nAll trading is suspended until manual resume."
+
+  drawdown_cooldown_active:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "state.agent.buckets.drawdown_cooldown"
+        op: gte
+        value: 1
+    effects:
+      verdict: rejected
+      priority: 100
+      response:
+        reason: "Circuit breaker active - trading paused for cooldown period"
+        tag: "drawdown_cooldown"
+        retry_after: "{{ signals.window_end_1h }}"
+
+  max_order_value_absolute:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.value"
+        op: gt
+        value: "{{ constants.max_order_value }}"
+    effects:
+      verdict: rejected
+      priority: 96
+      response:
+        reason: "Order exceeds {{ constants.max_order_value }} quote-currency cap (on-chain RiskRouter limit is 1,000)"
+        tag: "risk_limit"
+        max_value: "{{ constants.max_order_value }}"
+
+  max_order_size:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.position_risk"
+        op: gte
+        value: "{{ constants.max_order_pct }}"
+    effects:
+      verdict: rejected
+      priority: 90
+      response:
+        reason: "Position would exceed 10% of portfolio"
+        tag: "risk_limit"
+        max_pct: 10
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/REJECTED] Order Size Limit\nAgent: {{ event.entity_id }}\nPair: {{ event.data.order.pair }} | {{ event.data.order.side }}\nReason: Order exceeds 10% of portfolio"
+
+  concentration_limit:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.concentration_check"
+        op: gte
+        value: "{{ constants.max_concentration }}"
+    effects:
+      verdict: rejected
+      priority: 85
+      response:
+        reason: "Asset concentration would exceed 35%"
+        tag: "concentration"
+        max_pct: 35
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/REJECTED] Concentration Limit\nAgent: {{ event.entity_id }}\nPair: {{ event.data.order.pair }}\nReason: Would exceed 35% in single asset"
+
+  daily_loss_limit:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.daily_drawdown"
+        op: lt
+        value: "{{ constants.max_drawdown }}"
+    effects:
+      verdict: rejected
+      priority: 95
+      state_changes:
+        agent:
+          change_buckets:
+            drawdown_cooldown: 1
+      response:
+        reason: "Daily drawdown exceeded 3% - circuit breaker activated"
+        tag: "drawdown_cooldown"
+        retry_after: "{{ signals.window_end_1h }}"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/CIRCUIT BREAKER] Activated\nAgent: {{ event.entity_id }}\nDrawdown exceeded 3% - all trading paused for 1 hour"
+
+  order_rate_limit:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.order_rate"
+        op: gte
+        value: "{{ constants.max_orders_10m }}"
+    effects:
+      verdict: rejected
+      priority: 80
+      response:
+        reason: "Order rate exceeded 25 orders/10min"
+        tag: "velocity"
+        max_orders: 25
+        window: "10m"
+
+  pair_whitelist:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.pair"
+        op: not_in
+        value: "{{ constants.permitted_pairs }}"
+    effects:
+      verdict: rejected
+      priority: 88
+      response:
+        reason: "Pair not in permitted list"
+        tag: "pair_restriction"
+        hint: "Check agent prompt for permitted_pairs or call trade/get_limits"
+
+  # v2-only: Leverage cap
+  leverage_cap:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.leverage"
+        op: gt
+        value: "{{ constants.max_leverage }}"
+    effects:
+      verdict: rejected
+      priority: 87
+      response:
+        reason: "Leverage exceeds maximum of 2x"
+        tag: "leverage"
+
+  # Require stop_loss on buy orders (risk management gate).
+  # Fires when stop_loss field is missing from the order event data.
+  # Agents must include stop_loss in params of trade/submit_order for buy orders.
+  require_stop_loss:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.side"
+        op: eq
+        value: "buy"
+      - path: "event.data.order.stop_loss"
+        op: not_exists
+    effects:
+      verdict: rejected
+      priority: 89
+      response:
+        reason: "stop_loss required for buy orders - include stop_loss in params"
+        tag: "missing_stop_loss"
+
+  # Validate stop_loss is within 10% of current price.
+  # sl_distance_pct is pre-computed by Go in the event data.
+  validate_stop_loss_proximity:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.side"
+        op: eq
+        value: "buy"
+      - path: "event.data.order.sl_distance_pct"
+        op: exists
+      - path: "event.data.order.sl_distance_pct"
+        op: gt
+        value: 10
+    effects:
+      verdict: rejected
+      priority: 85
+      response:
+        reason: "stop_loss too far from current price (max 10% distance)"
+        tag: "stop_loss_too_far"
+
+  # Reject inverted stop-loss (SL above current price for buy orders).
+  reject_inverted_stop_loss:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.sl_inverted"
+        op: eq
+        value: true
+    effects:
+      verdict: rejected
+      priority: 87
+      response:
+        reason: "stop_loss must be below current price for buy orders"
+        tag: "stop_loss_inverted"
+
+  count_orders:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+    effects:
+      verdict: approved
+      priority: 1
+      state_changes:
+        agent:
+          change_buckets:
+            orders_10m: 1
+
+  # =========================================================================
+  # HEARTBEAT RULES (sync)
+  # =========================================================================
+
+  heartbeat_drawdown_daily:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "heartbeat"
+      - path: "signals.drawdown_3layer.daily_drawdown_pct"
+        op: lt
+        value: "{{ constants.max_drawdown_daily }}"
+    effects:
+      verdict: rejected
+      priority: 95
+      state_changes:
+        agent:
+          set_labels:
+            halted:
+      response:
+        reason: "Daily drawdown exceeded threshold - agent halted"
+        tag: "heartbeat_drawdown"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/AGENT HALTED] Daily Drawdown\nAgent: {{ event.entity_id }}\nDaily loss exceeded 3% threshold.\nAll trading suspended."
+
+  heartbeat_drawdown_peak:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "heartbeat"
+      - path: "signals.drawdown_3layer.peak_drawdown_pct"
+        op: lt
+        value: "{{ constants.max_drawdown_peak }}"
+    effects:
+      verdict: rejected
+      priority: 96
+      state_changes:
+        agent:
+          set_labels:
+            halted:
+      response:
+        reason: "Peak drawdown exceeded threshold - agent halted"
+        tag: "heartbeat_drawdown"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/AGENT HALTED] Peak Drawdown\nAgent: {{ event.entity_id }}\nPeak-to-current loss exceeded 7% threshold.\nAll trading suspended."
+
+  heartbeat_drawdown_absolute:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "heartbeat"
+      - path: "signals.drawdown_3layer.floor_drawdown_pct"
+        op: lt
+        value: "{{ constants.max_drawdown_absolute }}"
+    effects:
+      verdict: rejected
+      priority: 97
+      state_changes:
+        agent:
+          set_labels:
+            halted:
+      response:
+        reason: "Absolute drawdown exceeded floor - agent halted"
+        tag: "heartbeat_drawdown"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[v2/AGENT HALTED] Absolute Drawdown\nAgent: {{ event.entity_id }}\nTotal loss exceeded 15% floor.\nAll trading suspended."
+
+  # =========================================================================
+  # POST-TRADE RULES (async)
+  # =========================================================================
+
+  track_fill:
+    enabled: true
+    mode: async
+    all:
+      - path: "event.type"
+        op: eq
+        value: "execution_report"
+      - path: "event.data.status"
+        op: eq
+        value: "fill"
+    effects:
+      verdict: approved
+      state_changes:
+        agent:
+          change_counters:
+            fill_count: 1
+      actions:
+        - action: log_action
+          params:
+            message: "Trade filled for {{ event.entity_id }}, decision_hash={{ event.data.decision_hash }}"
+            level: "info"
+
+  router_rejection_alert:
+    enabled: true
+    mode: async
+    all:
+      - path: "event.type"
+        op: eq
+        value: "execution_report"
+      - path: "event.data.status"
+        op: eq
+        value: "reject"
+    effects:
+      verdict: flagged
+      state_changes:
+        agent:
+          change_counters:
+            reject_count: 1
+      actions:
+        - action: log_action
+          params:
+            message: "Risk Router rejected a Swiftward-approved trade - tighten policies"
+            level: "warning"

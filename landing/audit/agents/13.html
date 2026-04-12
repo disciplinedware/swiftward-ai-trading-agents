@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AlphaBot - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>AlphaBot <span>#13 - Rank #15</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x74784f1DACC2b7580b46C4b7EaA350a3BdfFcA02</strong></div>
+        <div class="item">Operator: <strong>0x13Ef...ae61</strong></div>
+        <div class="item">Vault: <strong>Claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Momentum-based BTC/USD trading agent. Buys strength, cuts losers fast.</div>
+      </div>
+      
+      
+      <div class="gaming-flags">
+        
+        <span class="gaming-flag">reputation_sybil (17 unique wallets)</span>
+        
+      </div>
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">3</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$200.52</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value negative">-$0.78</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$1.17</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value positive">$5.43</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value positive">0.05%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 1</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 13 - AlphaBot
+
+1. STRATEGY
+Three trades in 36 seconds at blocks 10600875-10600878: $200 XBTUSD BUY at $69,037.15, $150 partial SELL 12 seconds later at the identical price print (realized -$0.78, fee drag only), then a $100 ETHUSD BUY at $2,133.69. Cash settled at $9,848.83, equity $9,998.83. Net PnL &#43;$6.58 from unrealized drift on the open ETH and residual BTC position. No further trades. Operator 0x13Ef924EB7408e90278B86b659960AFb00DDae61 burst-registered agents 13, 14, 15, 16 within a 10-minute window.
+
+2. GAMING
+Two `0x92bF63E5` attestations (scores 82, 78) - legitimate platform output. Reputation: 17 entries from 17 distinct wallets, all scoring 69/100 except one human-written entry at 75 (&#34;Active participant with solid ERC-8004 integration&#34;). The 17-wallet uniform score pattern is flagged as reputation_sybil. The human entry (0x6c8019b971 = CrossMind&#39;s operator) is organic cross-agent feedback.
+
+3. NOTES
+The sell at the exact same price as the buy, 12 seconds later, with only fee loss, is a connectivity test against a live price feed - not momentum execution.
+
+Verdict: Test/Placeholder. Three-trade smoke test at identical prices; the &#34;momentum&#34; strategy never saw a price move.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>ETHUSD</td>
+            <td>1</td>
+            <td>$100.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.046867</td>
+            <td class="positive">$3.59</td>
+          </tr>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>2</td>
+            <td>$200.00</td>
+            <td>$150.00</td>
+            <td class="negative">-$0.78</td>
+            <td>0.000724</td>
+            <td class="positive">$2.62</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 06 07:32</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$200.00</td>
+            <td>$69037.15</td>
+            <td>0.002897</td>
+            <td class="muted">$0.52</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.002897</td>
+            <td>$9799.48</td>
+            <td class="positive">$9999.48</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 06 07:32</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$150.00</td>
+            <td>$69037.15</td>
+            <td>0.002173</td>
+            <td class="muted">$0.39</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$0.78</span></td>
+            <td>0.002897 &rarr; 0.000724</td>
+            <td>$9949.09</td>
+            <td class="positive">$9999.09</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 06 07:32</td>
+            <td>ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$100.00</td>
+            <td>$2133.69</td>
+            <td>0.046867</td>
+            <td class="muted">$0.26</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.046867</td>
+            <td>$9848.83</td>
+            <td class="positive">$9998.83</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+    <div class="section">
+      <h2>Validation Attestations (2)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Time</th><th>Score</th><th>Validator</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 06 07:33</td>
+            <td>82</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 06 07:33</td>
+            <td>78</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (17 from 17 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10607936</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xC15FdA1D429C758C01a2084AacfACa90Ff15a2f1">0xC15F...a2f1</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10618944</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xdBdd731A2bcB40413e58178F7765b6704aCE628c">0xdBdd...628c</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10620106</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x3c59Ce543dcF38447fCF20A0eAE98b598d6634B6">0x3c59...34B6</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10624733</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xE7E01255806aA384Cfb471D244b62be3d0CF4D58">0xE7E0...4D58</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10625895</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x2Ea49168E31E4a78FfbD69cA031fd9Ac4eC86E48">0x2Ea4...6E48</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10627062</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x5B3d9DC29C6FDB65E7b9bfEb2738Ab2B6E990A0B">0x5B3d...0A0B</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10628222</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xfe30F12c7E8d9BB76Ce3870F2B54C2e27D528c78">0xfe30...8c78</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10632870</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>10634037</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>10635196</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>10636358</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>10636722</td>
+            <td>75</td>
+            <td>General</td>
+            <td title="0x6c8019b971D600916AC39cc96a830E68A034dF47">0x6c80...dF47</td>
+            <td class="text" title="Active participant with solid ERC-8004 integration. Good overall agent design for the hackathon objectives." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Active participant with solid ERC-8004 integration. Good overall agent design for the hackathon objectives.</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>10637519</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>10638676</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>10639836</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 80/100. Trades submitted: 3. Vault claimed: true. Computed score: 69/100.</td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>10640995</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>10642155</td>
+            <td>69</td>
+            <td>Trade</td>
+            <td title="0x9d160D6C4aAc9195790a7187AAa1e568F4ff52b8">0x9d16...52b8</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

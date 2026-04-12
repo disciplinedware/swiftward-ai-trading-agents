@@ -1,0 +1,11 @@
+<span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset
+  <%= case conversation.loop&.status
+      when 'processing' then 'bg-yellow-900/50 text-yellow-300 ring-yellow-700/50'
+      when 'waiting_for_user' then 'bg-green-900/50 text-green-300 ring-green-700/50'
+      when 'paused' then 'bg-gray-800 text-gray-300 ring-gray-600/50'
+      when 'completed' then 'bg-blue-900/50 text-blue-300 ring-blue-700/50'
+      when 'error' then 'bg-red-900/50 text-red-300 ring-red-700/50'
+      else 'bg-gray-800 text-gray-400 ring-gray-600/50'
+      end %>">
+  <%= conversation.loop&.status&.humanize || "No loop" %>
+</span>

@@ -1,0 +1,247 @@
+# LLM Attention Recovery - nudge agent when it forgets to use tools
+#
+# Detects when an LLM response contains NO tool calls, but the conversation
+# history suggests the model intended to call tools (attention drift).
+# On detection, the response is rejected, triggering the LLM Gateway's retry
+# mechanism: the rejected response is wrapped in <REJECTED> tags and a user
+# message with the rejection reason is appended - giving the model a second chance.
+#
+# Two-phase architecture:
+#
+#   Phase 1 - INPUT (configure_retry_pipeline rule, fires on llm.input):
+#     The llm.input eval runs BEFORE the request is forwarded to the upstream LLM.
+#     Its response carries pipeline config that tells the gateway HOW to handle
+#     output rejections later. Without this, any llm.output rejection is a hard
+#     block (max_retries defaults to 0). We set max_retries=1 so the gateway
+#     knows to retry once with feedback instead of immediately blocking.
+#     We also set violation_feedback="{reason}" so the model gets just our
+#     crafted nudge message, not the default "Response blocked" wrapper.
+#
+#   Phase 2 - OUTPUT (attention_recovery rule, fires on llm.output):
+#     The llm.output eval runs AFTER the upstream LLM responds. If the model's
+#     response has no tool calls but analysis says it intended to make them,
+#     the rule rejects. The gateway then uses the pipeline config from phase 1
+#     to retry: it wraps the rejected response in <REJECTED> tags, appends
+#     the feedback message, and re-sends to the upstream LLM.
+#
+# Retry safety: the rule only fires on attempt 0 (first evaluation).
+# On retry (attempt >= 1), the rule is skipped and the response passes
+# through regardless - the model either fixed itself or chose not to.
+#
+# Signal pipeline:
+#   1. Guard: skip if this is a retry attempt (event.data.attempt > 0)
+#   2. Guard: skip if response already has tool calls (nothing to recover)
+#   3. Guard: skip if no tools are available (model can't call tools anyway)
+#   4. Extract full conversation text with role labels ([User]/[Assistant]/[Tool])
+#   5. Stringify available tools for analyzer prompt context
+#   6. LLM rulebook analysis (gpt-5-mini, single violation code MISSED_TOOL_CALLS):
+#      did the model intend to make tool calls it didn't?
+#   7. Rule: reject if MISSED_TOOL_CALLS violated && confidence >= threshold
+
+dsl_version: 2
+
+default_effects:
+  verdict: approved
+
+state_models:
+  agent:
+    key: "{{ event.entity_id }}"
+    counters:
+      attention_recoveries:
+      end_cycle_enforcements:
+
+constants:
+  attention_confidence_threshold: 0.7
+
+signals:
+  # Guard 1: does the response already have tool calls? Nothing to recover.
+  response_has_tool_calls:
+    expr: "len(event.data.tool_calls ?? []) > 0"
+
+  # Guard 2: are tools even available in this request?
+  tools_available:
+    expr: "len(event.data.request.tools ?? []) > 0"
+
+  # Extract full conversation text for the analyzer.
+  # Skip system messages (prompt engineering noise, not intent signal).
+  session_text:
+    udf: llm/messages_extract_text
+    params:
+      request: "{{ event.data.request }}"
+      include_system: false
+      include_user: true
+      include_assistant: true
+      include_tool_results: true
+      include_tool_calls: true
+      role_labels: true
+      last_only: false
+      max_text_length: 50000
+    on_error:
+      text: ""
+      segments: []
+
+  # Stringify the tools array so the analyzer can see what's available.
+  tools_json:
+    udf: json/stringify
+    params:
+      value: "{{ event.data.request.tools }}"
+    on_error: "[]"
+
+  # Did the conversation include a trade/end_cycle call?
+  # session_text includes tool calls as "[Tool Call] trade/end_cycle(...)" when
+  # role_labels and include_tool_calls are true. Pure substring check, no LLM needed.
+  session_has_end_cycle:
+    expr: "(signals.session_text.text ?? '') contains 'trade/end_cycle'"
+
+  # LLM rulebook analysis - single violation code for missed tool calls.
+  # Uses moderation/llm_rulebook: purpose-built for "did this violate policy X?"
+  # Returns {violations: ["MISSED_TOOL_CALLS"] or [], confidence, reason}.
+  attention_analysis:
+    udf: moderation/llm_rulebook
+    params:
+      endpoint: "{{ env.LLM_MODERATION_ENDPOINT }}"
+      model: "{{ env.LLM_MODERATION_MODEL }}"
+      api_key: "{{ env.OPENAI_API_KEY }}"
+      temperature: 0.0
+      max_tokens: 512
+      timeout_seconds: 10
+      allowed_codes:
+        - "MISSED_TOOL_CALLS"
+      messages:
+        - role: "system"
+          content: |
+            You are a tool-use intent analyzer for an AI trading agent.
+
+            ## Policy
+
+            MISSED_TOOL_CALLS: The assistant's response shows clear intent to use
+            tools but fails to include actual tool calls. This includes: saying
+            "I'll check..." or "Let me look up..." without a tool call following;
+            mentioning it needs data obtainable from available tools; giving vague
+            answers when a tool could provide precise data; stopping mid-plan when
+            previous turns show active tool use; referencing tool results it hasn't
+            fetched yet.
+
+            ## NOT a violation (do NOT flag)
+
+            - Summarizing or reflecting on already-fetched data
+            - Giving a final recommendation after completing tool use
+            - Asking the user a clarifying question
+            - Explicitly saying it's done or wrapping up
+            - The conversation naturally concluding
+
+            Be conservative. Only flag clear cases of attention drift.
+        - role: "user"
+          content: |
+            ## Conversation
+            {{ signals.session_text.text }}
+
+            ## Available Tools
+            {{ signals.tools_json }}
+
+            The assistant's last response contained NO tool calls.
+            Analyze whether it should have included tool calls.
+    on_error:
+      violations: []
+      confidence: 0.0
+      reason: "analysis failed"
+
+rules:
+  # Phase 1: Configure retry pipeline (fires on llm.input, before upstream call).
+  # Returns approved + pipeline config in response. The gateway reads max_retries
+  # and violation_feedback from the input eval response to know how to handle
+  # output rejections later. These fields are pipeline config, not user-facing.
+  configure_retry_pipeline:
+    enabled: true
+    all:
+      - path: "event.type"
+        op: eq
+        value: "llm.input"
+    effects:
+      verdict: approved
+      priority: 10
+      response:
+        max_retries: 1
+        violation_feedback: "{reason}"
+
+  # Phase 2: Detect missed tool calls (fires on llm.output, after upstream responds).
+  # If rejected, the gateway uses phase 1's pipeline config to retry with feedback.
+  # Priority 50 - lower than injection (200) since this is a quality nudge.
+  attention_recovery:
+    enabled: true
+    all:
+      - path: "event.type"
+        op: eq
+        value: "llm.output"
+      - path: "event.data.attempt"
+        op: eq
+        value: 0
+      - path: "signals.tools_available"
+        op: eq
+        value: true
+      - path: "signals.response_has_tool_calls"
+        op: eq
+        value: false
+      - path: "signals.attention_analysis.violations"
+        op: contains
+        value: "MISSED_TOOL_CALLS"
+      - path: "signals.attention_analysis.confidence"
+        op: gte
+        value: "{{ constants.attention_confidence_threshold }}"
+    effects:
+      verdict: rejected
+      priority: 50
+      state_changes:
+        agent:
+          change_counters:
+            attention_recoveries: 1
+      response:
+        reason: >-
+          Attention check: your response had no tool calls, but it looks like
+          you may have intended to use tools. Analysis: {{ signals.attention_analysis.reason }}.
+          Your original response was NOT delivered to the user and will NOT be delivered.
+          If you agree you missed tool calls - make them now (include your text response too if needed).
+          If your original response was intentional and complete - you MUST repeat it
+          in full, exactly as-is, because it was not delivered. Do not comment on
+          this check or mention that you are repeating yourself.
+        tag: "attention_recovery"
+
+  # Mandatory end_cycle checkpoint: every session must call trade/end_cycle before
+  # finishing. Deterministic check - scans conversation history for the tool call,
+  # no LLM analysis needed. Uses the same retry mechanism as attention_recovery:
+  # phase 1 (configure_retry_pipeline) already sets max_retries=1 for all llm.input.
+  #
+  # Priority 40 (below attention_recovery at 50): if the LLM both missed generic
+  # tool calls AND forgot end_cycle, attention_recovery wins (higher priority) and
+  # the retry will likely fix both issues at once.
+  require_end_cycle:
+    enabled: true
+    all:
+      - path: "event.type"
+        op: eq
+        value: "llm.output"
+      - path: "event.data.attempt"
+        op: eq
+        value: 0
+      - path: "signals.tools_available"
+        op: eq
+        value: true
+      - path: "signals.response_has_tool_calls"
+        op: eq
+        value: false
+      - path: "signals.session_has_end_cycle"
+        op: eq
+        value: false
+    effects:
+      verdict: rejected
+      priority: 40
+      state_changes:
+        agent:
+          change_counters:
+            end_cycle_enforcements: 1
+      response:
+        reason: >-
+          You must call trade/end_cycle as your final tool call before finishing.
+          Summarize what you analyzed and decided this session, then call it now.
+          Your original response was NOT delivered.
+        tag: "require_end_cycle"

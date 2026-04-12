@@ -1,0 +1,63 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex items-center justify-between">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100">
+        <%= @agent_model.name %>
+      </h1>
+      <div class="flex gap-3">
+        <%= link_to "Edit", edit_agent_model_path(@agent_model), class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+        <%= button_to "Delete", @agent_model, method: :delete, class: "rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-red-400 shadow-sm ring-1 ring-inset ring-red-600 hover:bg-red-900/50 cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
+      </div>
+    </div>
+
+    <div class="mt-6 border-t border-gray-800">
+      <dl class="divide-y divide-gray-800">
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-100">Provider</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0">
+            <% if @agent_model.provider %>
+              <%= link_to @agent_model.provider.name, @agent_model.provider, class: "text-indigo-400 hover:text-indigo-300" %>
+            <% else %>
+              <span class="text-gray-400">Not set</span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-100">LLM Model ID</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0"><%= @agent_model.llm_model_name %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-100">Description</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0"><%= @agent_model.description.presence || "No description provided." %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-100">Base URL</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0 font-mono"><%= @agent_model.provider&.base_url.presence || "N/A" %></dd>
+        </div>
+        <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+          <dt class="text-sm font-medium leading-6 text-gray-100">Enabled Tools</dt>
+          <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0">
+            <% if @agent_model.tools.present? %>
+              <ul role="list" class="divide-y divide-gray-800 rounded-md border border-gray-700">
+                <% @agent_model.tools.each do |tool| %>
+                  <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+                    <div class="flex w-0 flex-1 items-center">
+                      <svg style="width: 2em; height: 2em;"  class="h-5 w-5 flex-shrink-0 text-gray-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M10 2a.75.75 0 01.75.75v12.59l1.95-2.1a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 111.1-1.02l1.95 2.1V2.75A.75.75 0 0110 2z" clip-rule="evenodd" />
+                      </svg>
+                      <span class="ml-2 w-0 flex-1 truncate"><%= tool %></span>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <span class="text-gray-400 italic">No tools enabled.</span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="mt-6 flex items-center justify-end gap-x-6">
+      <%= link_to "Back to List", agent_models_path, class: "text-sm font-semibold leading-6 text-gray-100" %>
+    </div>
+  </div>

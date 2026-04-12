@@ -1,0 +1,113 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="md:flex md:items-center md:justify-between">
+      <div class="min-w-0 flex-1">
+        <h2 class="text-2xl font-bold leading-7 text-gray-100 sm:truncate sm:text-3xl sm:tracking-tight">
+          MCP Inspector: <%= @agent_run.loop&.title || "Untitled" %>
+          <% if @replay_tool_name.present? %>
+            <span class="inline-flex items-center rounded-md bg-indigo-950/50 px-2 py-0.5 text-xs font-medium text-indigo-300 ring-1 ring-inset ring-indigo-700/50 ml-2">Replay: <%= @replay_tool_name %></span>
+          <% end %>
+        </h2>
+        <div class="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
+          <div class="mt-2 flex items-center text-sm text-gray-400">
+            Sessions:
+            <span class="font-mono ml-1">
+              <% sessions = @agent_run.loop&.mcp_sessions %>
+              <% if sessions&.any? %>
+                <% sessions.each_with_index do |s, idx| %>
+                  <% is_selected = @session_id == s.session_id %>
+                  <span class="<%= is_selected ? 'font-bold text-indigo-400 bg-indigo-950/50 px-1 rounded' : '' %>" title="<%= s.session_id %>">
+                    <%= s.mcp_name %><%= is_selected ? "*" : "" %>
+                  </span><%= idx < sessions.size - 1 ? ", " : "" %>
+                <% end %>
+              <% else %>
+                None
+              <% end %>
+            </span>
+          </div>
+          <% if @session_id.present? %>
+            <div class="mt-2 flex items-center text-xs text-gray-500 font-mono">
+              Inspecting: <%= @session_id %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="mt-4 flex md:ml-4 md:mt-0">
+        <%= link_to "Back to Run", @agent_run, class: "inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-700" %>
+      </div>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-4" data-controller="tabs">
+      <div class="lg:col-span-1">
+        <nav class="space-y-1" aria-label="Sidebar">
+          <% default_tool = @replay_tool_name || (@tools.any? { |t| t["name"] == "run_utility" } ? "run_utility" : @tools.first&.dig("name")) %>
+          <% @tools.each_with_index do |tool, index| %>
+            <% is_active = tool["name"] == default_tool %>
+            <a href="#" class="<%= is_active ? 'bg-indigo-950/50 text-indigo-300' : 'text-gray-400 hover:bg-gray-800 hover:text-gray-100' %> group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full"
+               data-action="click->tabs#change"
+               data-tabs-target="tab"
+               data-target-panel="panel_<%= tool['name'] %>">
+              <span class="truncate"><%= tool["name"] %></span>
+            </a>
+          <% end %>
+        </nav>
+      </div>
+
+      <div class="lg:col-span-3">
+        <% @tools.each_with_index do |tool, index| %>
+          <% is_active = tool["name"] == default_tool %>
+          <div id="panel_<%= tool['name'] %>" class="<%= is_active ? '' : 'hidden' %> bg-gray-900 shadow sm:rounded-lg ring-1 ring-gray-700" data-tabs-target="panel">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-base font-semibold leading-6 text-gray-100 mb-4"><%= tool["name"] %></h3>
+              <div class="text-sm text-gray-400 mb-4"><%= tool["description"] %></div>
+
+              <%= form_with url: run_mcp_tool_agent_run_path(@agent_run), method: :post, data: { turbo: true } do |f| %>
+                <%= hidden_field_tag :tool_name, tool["name"] %>
+                <%= hidden_field_tag :session_id, @session_id %>
+
+                <div class="space-y-4">
+                  <% props = tool.dig("inputSchema", "properties") || {} %>
+                  <% required = tool.dig("inputSchema", "required") || [] %>
+
+                  <% props.each do |key, schema| %>
+                    <div>
+                      <label for="arg_<%= tool['name'] %>_<%= key %>" class="block text-sm font-medium leading-6 text-gray-100">
+                        <%= key %> <%= required.include?(key) ? "*" : "" %>
+                      </label>
+                      <div class="mt-2">
+                        <% if schema["type"] == "boolean" %>
+                             <%= select_tag "arguments[#{key}]", options_for_select([["True", true], ["False", false]]), class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                        <% else %>
+                             <% replay_val = @replay_tool_name == tool["name"] ? @replay_arguments&.dig(key) : nil %>
+                             <% replay_str = if replay_val.nil? then nil elsif replay_val.is_a?(String) then replay_val else replay_val.to_json end %>
+                             <%= text_area_tag "arguments[#{key}]", replay_str,
+                                 placeholder: schema["description"],
+                                 rows: 1,
+                                 class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+                        <% end %>
+                      </div>
+                      <% if schema["description"] %>
+                        <p class="mt-1 text-xs text-gray-500"><%= schema["description"] %></p>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="mt-5">
+                  <%= f.submit "Run #{tool['name']}", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="mt-6">
+          <h4 class="text-sm font-medium text-gray-400">Output</h4>
+          <div id="mcp_output">
+             <div class="mt-2 p-4 bg-gray-800/50 text-gray-500 text-sm rounded-lg border border-gray-700 italic">
+               Tool output will appear here...
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

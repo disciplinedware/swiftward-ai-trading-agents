@@ -1,0 +1,180 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mb-6 flex justify-between items-center">
+    <%= link_to "← Back to Run", agent_run_path(@agent_run), class: "text-indigo-400 hover:text-indigo-300 text-sm font-medium" %>
+  </div>
+
+  <div class="space-y-6">
+    <div class="bg-gray-900 shadow sm:rounded-lg border border-gray-700 p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-2xl font-bold text-gray-100">Message Details</h1>
+        <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium uppercase tracking-wider
+          <%= case @message.role
+              when 'user' then 'bg-blue-900/50 text-blue-300 ring-1 ring-inset ring-blue-700/50'
+              when 'assistant' then 'bg-green-900/50 text-green-300 ring-1 ring-inset ring-green-700/50'
+              when 'system' then 'bg-gray-800 text-gray-300 ring-1 ring-inset ring-gray-600/50'
+              when 'tool' then 'bg-orange-900/50 text-orange-300 ring-1 ring-inset ring-orange-700/50'
+              end %>">
+          <%= @message.role %>
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-6">
+        <div>
+          <dt class="text-sm font-medium text-gray-400">Status</dt>
+          <dd class="mt-1 text-sm text-gray-100 capitalize"><%= @message.status %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-400">Created At</dt>
+          <dd class="mt-1 text-sm text-gray-100"><%= @message.created_at.to_fs(:db) %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-gray-400">ID</dt>
+          <dd class="mt-1 text-sm text-gray-100"><%= @message.id %></dd>
+        </div>
+      </div>
+
+      <div>
+        <dt class="text-sm font-medium text-gray-400 mb-2">Content</dt>
+        <dd class="p-4 bg-gray-800 rounded-lg text-sm text-gray-100 whitespace-pre-wrap font-mono border border-gray-700"><%= @message.content %></dd>
+      </div>
+    </div>
+
+    <% if @all_events.any? { |e| e.duration } %>
+      <div class="bg-indigo-950/30 shadow sm:rounded-lg border border-indigo-800/50 p-6">
+        <h3 class="text-sm font-bold text-indigo-300 uppercase tracking-tight mb-4">Performance Stats</h3>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <%
+            llm_duration = @all_events.select { |e| e.name == 'llm_completion' }.map(&:duration).compact.sum
+            tool_duration = @all_events.select { |e| e.name == 'tool_call' }.map(&:duration).compact.sum
+            total_duration = llm_duration + tool_duration
+          %>
+          <div class="bg-gray-900 p-3 rounded-md border border-indigo-800/50">
+            <dt class="text-[10px] font-bold text-indigo-400 uppercase">Total Delay</dt>
+            <dd class="mt-1 text-lg font-bold text-indigo-300"><%= total_duration.round(2) %>s</dd>
+          </div>
+          <div class="bg-gray-900 p-3 rounded-md border border-indigo-800/50">
+            <dt class="text-[10px] font-bold text-indigo-400 uppercase">LLM Thinking</dt>
+            <dd class="mt-1 text-lg font-bold text-indigo-300"><%= llm_duration.round(2) %>s</dd>
+          </div>
+          <div class="bg-gray-900 p-3 rounded-md border border-indigo-800/50">
+            <dt class="text-[10px] font-bold text-indigo-400 uppercase">Tool Execution</dt>
+            <dd class="mt-1 text-lg font-bold text-indigo-300"><%= tool_duration.round(2) %>s</dd>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @message.agent_tool_calls.any? %>
+      <div class="bg-gray-900 shadow sm:rounded-lg border border-gray-700 overflow-hidden">
+        <div class="px-4 py-5 sm:px-6 bg-gray-800/50 border-b border-gray-700">
+          <h3 class="text-lg font-medium leading-6 text-gray-100">Tool Calls</h3>
+        </div>
+        <div class="divide-y divide-gray-700">
+          <% @message.agent_tool_calls.each do |atc| %>
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm font-bold text-gray-100">Function: <%= atc.function_name %></span>
+                <span class="text-xs text-gray-500 font-mono">ID: <%= atc.tool_call_id %></span>
+              </div>
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <h4 class="text-xs font-semibold text-gray-500 uppercase mb-2">Arguments</h4>
+                  <div class="overflow-x-auto border border-gray-700 rounded-lg">
+                    <table class="min-w-full divide-y divide-gray-700">
+                      <tbody class="bg-gray-800/50 divide-y divide-gray-700">
+                        <% (atc.arguments || {}).each do |key, value| %>
+                          <tr>
+                            <td class="px-3 py-2 text-[10px] font-bold text-gray-400 bg-gray-900/50 w-1/4 uppercase tracking-wider"><%= key %></td>
+                            <td class="px-3 py-2 text-[10px] text-gray-100 whitespace-pre-wrap font-mono"><%= value.is_a?(Hash) || value.is_a?(Array) ? JSON.pretty_generate(value) : value %></td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div>
+                  <h4 class="text-xs font-semibold text-gray-500 uppercase mb-2">Result</h4>
+                  <div class="bg-gray-800 p-3 rounded text-[10px] overflow-auto border border-gray-700 whitespace-pre-wrap font-mono h-full max-h-40"><%= atc.result %></div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="bg-gray-900 shadow sm:rounded-lg border border-gray-700 overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 bg-gray-800/50 border-b border-gray-700">
+        <h3 class="text-lg font-medium leading-6 text-gray-100">Communication Logs</h3>
+      </div>
+      <div class="p-6">
+        <% if @all_events.any? %>
+          <div class="flow-root">
+            <ul role="list" class="-mb-8">
+              <% @all_events.each_with_index do |event, idx| %>
+                <li>
+                  <div class="relative pb-8">
+
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-purple-900/50 flex items-center justify-center ring-8 ring-gray-900">
+                          <svg class="h-4 w-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </span>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center mb-2">
+                          <p class="text-sm text-gray-400">
+                            <span class="font-bold text-gray-100 uppercase"><%= event.name.humanize %></span>
+                            <span class="ml-2 text-gray-500"><%= event.created_at.to_fs(:db) %></span>
+                            <% if event.duration %>
+                              <span class="ml-2 inline-flex items-center rounded-full bg-blue-900/50 px-1.5 py-0.5 text-[10px] font-medium text-blue-300 ring-1 ring-inset ring-blue-700/50">
+                                <%= event.duration.round(2) %>s
+                              </span>
+                            <% end %>
+                          </p>
+                          <span class="text-[10px] text-gray-500 font-mono">
+                            <%= event.http_method %> <%= event.url.to_s.split('/').last(2).join('/') if event.url %>
+                          </span>
+                        </div>
+
+                        <div class="flex flex-col gap-4 mb-4">
+                          <div class="grid grid-cols-1 gap-4">
+                            <div class="space-y-1">
+                              <span class="text-xs text-gray-500 font-bold uppercase">Request JSON</span>
+                              <div class="bg-gray-800 p-4 rounded-lg overflow-auto border border-gray-700">
+                                <pre class="text-xs font-mono text-gray-300"><%= JSON.pretty_generate(event.request_data) rescue "N/A" %></pre>
+                              </div>
+                            </div>
+                            <div class="space-y-1">
+                              <span class="text-xs text-gray-500 font-bold uppercase">Response JSON</span>
+                              <div class="bg-gray-800 p-4 rounded-lg overflow-auto border border-gray-700">
+                                <pre class="text-xs font-mono text-gray-300"><%= JSON.pretty_generate(event.response_data) rescue "N/A" %></pre>
+                              </div>
+                            </div>
+                          </div>
+
+                          <% if event.log.present? %>
+                            <div class="mt-2 opacity-60 hover:opacity-100 transition-opacity">
+                              <span class="text-[9px] text-gray-500 font-bold uppercase">HTTP Wire Trace / Debug Log</span>
+                              <div class="mt-1 bg-gray-950 text-green-400 p-2 rounded font-mono text-[9px] whitespace-pre-wrap max-h-40 overflow-auto border border-gray-800">
+                                <%= event.log %>
+                              </div>
+                            </div>
+                          <% end %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-500 italic">No communication logs recorded for this message.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

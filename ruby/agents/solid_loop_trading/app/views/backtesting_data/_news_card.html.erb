@@ -1,0 +1,58 @@
+<div class="bg-gray-900 p-6 rounded-lg shadow-sm ring-1 ring-gray-700">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-gray-100">News</h2>
+    <span class="inline-flex items-center rounded-full bg-indigo-900/50 px-3 py-0.5 text-sm font-medium text-indigo-300">
+      <%= number_with_delimiter(@news_count) %> items
+    </span>
+  </div>
+
+  <% if @news_last %>
+    <div class="mb-4 bg-gray-800/50 rounded p-3">
+      <p class="text-xs text-gray-400 mb-1">Latest news</p>
+      <p class="text-sm text-gray-100"><%= @news_last.title %></p>
+      <p class="text-xs text-gray-500 mt-1">
+        <%= @news_last.telegram_channel %> &middot; <%= time_ago_in_words(@news_last.published_at) %> ago
+      </p>
+    </div>
+  <% end %>
+
+  <% if @news_per_month.present? %>
+    <div class="mb-4">
+      <p class="text-sm text-gray-300 mb-2">News per month</p>
+      <div class="space-y-1">
+        <% max_val = @news_per_month.values.max.to_f %>
+        <% @news_per_month.to_a.last(12).each do |month, count| %>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400 w-24 shrink-0"><%= month %></span>
+            <div class="flex-1 bg-gray-800 rounded h-4 overflow-hidden">
+              <div class="bg-indigo-600 h-full rounded" style="width: <%= (count.to_f / max_val * 100).round %>%;"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-10 text-right"><%= number_with_delimiter(count) %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @news_per_day.present? %>
+    <div>
+      <p class="text-sm text-gray-300 mb-2">News per day (last 30 days)</p>
+      <div class="space-y-1 max-h-48 overflow-y-auto">
+        <% max_val = @news_per_day.values.max.to_f %>
+        <% @news_per_day.each do |day, count| %>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400 w-24 shrink-0"><%= day %></span>
+            <div class="flex-1 bg-gray-800 rounded h-3 overflow-hidden">
+              <div class="bg-indigo-500/70 h-full rounded" style="width: <%= (count.to_f / max_val * 100).round %>%;"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-6 text-right"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @news_count.zero? %>
+    <p class="text-sm text-gray-500 italic">No news data. Import from Telegram exports.</p>
+  <% end %>
+</div>

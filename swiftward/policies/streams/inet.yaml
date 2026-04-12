@@ -1,0 +1,7 @@
+code: inet
+description: "Internet Gateway - policy rules for agent internet traffic"
+deployment:
+  active:
+    - arm: "A"
+      path: "../rulesets/inet/v1"
+      traffic_percent: 100

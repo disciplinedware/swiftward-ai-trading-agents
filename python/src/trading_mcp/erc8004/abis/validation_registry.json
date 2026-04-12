@@ -1,0 +1,112 @@
+[
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "agentId", "type": "uint256" },
+      { "internalType": "bytes32", "name": "checkpointHash", "type": "bytes32" },
+      { "internalType": "uint8", "name": "score", "type": "uint8" },
+      { "internalType": "uint8", "name": "proofType", "type": "uint8" },
+      { "internalType": "bytes", "name": "proof", "type": "bytes" },
+      { "internalType": "string", "name": "notes", "type": "string" }
+    ],
+    "name": "postAttestation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "agentId", "type": "uint256" },
+      { "internalType": "bytes32", "name": "checkpointHash", "type": "bytes32" },
+      { "internalType": "uint8", "name": "score", "type": "uint8" },
+      { "internalType": "string", "name": "notes", "type": "string" }
+    ],
+    "name": "postEIP712Attestation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "agentId", "type": "uint256" }
+    ],
+    "name": "getAttestations",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "agentId", "type": "uint256" },
+          { "internalType": "address", "name": "validator", "type": "address" },
+          { "internalType": "bytes32", "name": "checkpointHash", "type": "bytes32" },
+          { "internalType": "uint8", "name": "score", "type": "uint8" },
+          { "internalType": "uint8", "name": "proofType", "type": "uint8" },
+          { "internalType": "bytes", "name": "proof", "type": "bytes" },
+          { "internalType": "string", "name": "notes", "type": "string" },
+          { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+        ],
+        "internalType": "struct ValidationRegistry.Attestation[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "agentId", "type": "uint256" }
+    ],
+    "name": "getAverageValidationScore",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "checkpointHash", "type": "bytes32" }
+    ],
+    "name": "getAttestation",
+    "outputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "agentId", "type": "uint256" },
+          { "internalType": "address", "name": "validator", "type": "address" },
+          { "internalType": "bytes32", "name": "checkpointHash", "type": "bytes32" },
+          { "internalType": "uint8", "name": "score", "type": "uint8" },
+          { "internalType": "uint8", "name": "proofType", "type": "uint8" },
+          { "internalType": "bytes", "name": "proof", "type": "bytes" },
+          { "internalType": "string", "name": "notes", "type": "string" },
+          { "internalType": "uint256", "name": "timestamp", "type": "uint256" }
+        ],
+        "internalType": "struct ValidationRegistry.Attestation",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "agentId", "type": "uint256" }
+    ],
+    "name": "attestationCount",
+    "outputs": [
+      { "internalType": "uint256", "name": "", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "uint256", "name": "agentId", "type": "uint256" },
+      { "indexed": true, "internalType": "address", "name": "validator", "type": "address" },
+      { "indexed": true, "internalType": "bytes32", "name": "checkpointHash", "type": "bytes32" },
+      { "indexed": false, "internalType": "uint8", "name": "score", "type": "uint8" },
+      { "indexed": false, "internalType": "uint8", "name": "proofType", "type": "uint8" }
+    ],
+    "name": "AttestationPosted",
+    "type": "event"
+  }
+]

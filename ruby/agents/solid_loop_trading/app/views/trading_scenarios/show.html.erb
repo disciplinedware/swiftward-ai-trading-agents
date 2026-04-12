@@ -1,0 +1,38 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-100"><%= @trading_scenario.name %></h1>
+        <p class="mt-2 text-sm text-gray-300">File: <span class="font-mono text-xs"><%= @trading_scenario.filename.presence || "-" %></span></p>
+      </div>
+      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-3">
+        <%= link_to "Edit Scenario", edit_trading_scenario_path(@trading_scenario), class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" %>
+        <%= link_to "Back to List", trading_scenarios_path, class: "block rounded-md bg-gray-800 px-3 py-2 text-center text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-800" %>
+      </div>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div>
+        <h3 class="text-sm font-medium text-gray-400">System Prompt</h3>
+        <div class="mt-2 rounded-md bg-gray-800/50 p-4 font-mono text-sm whitespace-pre-wrap"><%= @trading_scenario.prompt %></div>
+      </div>
+      <div>
+        <h3 class="text-sm font-medium text-gray-400">User Prompt</h3>
+        <% if @trading_scenario.user_prompt.present? %>
+          <div class="mt-2 rounded-md bg-gray-800/50 p-4 font-mono text-sm whitespace-pre-wrap"><%= @trading_scenario.user_prompt %></div>
+        <% else %>
+          <div class="mt-2 rounded-md bg-gray-800/50 p-4 text-sm text-gray-500 italic">Default: "Parse file <%= @trading_scenario.filename %>"</div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="text-xl font-semibold text-gray-100">Runs</h2>
+      <div class="mt-4">
+         <%= paginate @agent_runs %>
+      </div>
+      <%= render "agent_runs/table", executions: @agent_runs %>
+      <div class="mt-4">
+         <%= paginate @agent_runs %>
+      </div>
+    </div>
+  </div>

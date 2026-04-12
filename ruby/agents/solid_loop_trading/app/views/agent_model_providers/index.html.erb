@@ -1,0 +1,49 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100">Model Providers</h1>
+      <p class="mt-2 text-sm text-gray-300">Manage LLM API providers, base URLs, and API keys.</p>
+    </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+      <%= link_to "New Provider", new_agent_model_provider_path, class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+    </div>
+  </div>
+
+  <div class="mt-8 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-800/50">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-100 sm:pl-6">Name</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Base URL</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Models</th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700 bg-gray-900">
+              <% @agent_model_providers.each do |provider| %>
+                <tr>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-100 sm:pl-6">
+                    <%= link_to provider.name, provider, class: "text-indigo-400 hover:text-indigo-300" %>
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400 font-mono"><%= provider.base_url %></td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                    <%= provider.agent_models.count %>
+                  </td>
+                  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <%= link_to "Edit", edit_agent_model_provider_path(provider), class: "text-indigo-400 hover:text-indigo-300 mr-4" %>
+                    <%= button_to "Delete", provider, method: :delete, data: { turbo_confirm: "Are you sure? This will delete all associated models." }, class: "text-red-400 hover:text-red-300 bg-transparent border-0 cursor-pointer inline-block" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

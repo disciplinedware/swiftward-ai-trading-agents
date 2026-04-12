@@ -1,0 +1,3 @@
+-- Schema managed by golang-migrate.
+-- See postgres/migrations/ for migration files.
+-- Run: make postgres-migrate

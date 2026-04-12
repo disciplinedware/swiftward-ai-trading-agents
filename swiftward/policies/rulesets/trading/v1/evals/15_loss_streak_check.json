@@ -1,0 +1,68 @@
+{
+  "id": "loss-streak-check",
+  "comment": "Pause flag active (loss_streak_paused=1, paused_until=15:47) - buy blocked, retry_after taken from saved metadata (exact, not rounded).",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "ingested_at": "2026-04-02T15:10:00Z",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 1000,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "Trying again after loss streak",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "initial_state": {
+    "agent": {
+      "counters": {
+        "loss_streak": 0,
+        "loss_streak_paused": 1
+      },
+      "metadata": {
+        "loss_streak_paused_until": "2026-04-02T15:47:00Z"
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 100,
+      "response": {
+        "reason": "Loss streak pause active - new positions blocked for 1h cooldown (exits still allowed)",
+        "tag": "loss_streak",
+        "retry_after": "2026-04-02T15:47:00Z"
+      },
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      }
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "loss_streak_check"
+      ]
+    }
+  }
+}

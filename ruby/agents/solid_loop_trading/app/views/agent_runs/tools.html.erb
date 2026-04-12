@@ -1,0 +1,125 @@
+<div class="bg-gray-900 min-h-screen py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <nav class="flex mb-2" aria-label="Breadcrumb">
+          <ol role="list" class="flex items-center space-x-2 text-sm text-gray-400">
+            <li>
+              <%= link_to "Executions", agent_runs_path, class: "hover:text-gray-300" %>
+            </li>
+            <li>
+              <svg class="h-5 w-5 flex-shrink-0 text-gray-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
+              </svg>
+            </li>
+            <li>
+              <%= link_to @agent_run.title.presence || "Execution ##{@agent_run.id}", @agent_run, class: "hover:text-gray-300" %>
+            </li>
+          </ol>
+        </nav>
+        <h1 class="text-3xl font-bold text-gray-100">
+          Called Tools
+        </h1>
+        <p class="mt-1 text-sm text-gray-400">
+          Showing all tool calls executed during this session.
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-indigo-900/50 text-indigo-300">
+          <%= @tool_calls.size %> calls
+        </span>
+        <%= link_to "Back to Execution", @agent_run, class: "inline-flex items-center px-4 py-2 border border-gray-600 shadow-sm text-sm font-medium rounded-md text-gray-300 bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    </div>
+
+    <% if @tool_calls.any? %>
+      <div class="space-y-6">
+        <% @tool_calls.each_with_index do |tool_call, index| %>
+          <div class="bg-gray-900 shadow-sm ring-1 ring-gray-700 sm:rounded-xl overflow-hidden" id="tool_call_<%= tool_call.id %>">
+            <div class="px-4 py-4 sm:px-6 bg-gray-800/50 border-b border-gray-700 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-sm font-bold text-gray-500">#<%= index + 1 %></span>
+                <code class="text-lg font-bold text-indigo-400 bg-indigo-950/50 px-2 py-0.5 rounded">
+                  <%= tool_call.function_name %>
+                </code>
+                <% if tool_call.is_success %>
+                  <span class="inline-flex items-center rounded-md bg-green-900/50 px-2 py-1 text-xs font-medium text-green-400 ring-1 ring-inset ring-green-700/50">Success</span>
+                <% else %>
+                  <span class="inline-flex items-center rounded-md bg-red-900/50 px-2 py-1 text-xs font-medium text-red-400 ring-1 ring-inset ring-red-700/50">Failed</span>
+                <% end %>
+              </div>
+              <div class="text-xs text-gray-500 font-mono">
+                <%= tool_call.duration.round(3) %>s | <%= tool_call.created_at.strftime("%Y-%m-%d %H:%M:%S") %>
+              </div>
+            </div>
+            
+            <div class="p-6">
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col">
+                  <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Arguments</h3>
+                  <div class="bg-gray-900 rounded-lg overflow-auto max-h-[500px] border border-gray-700 shadow-inner">
+                    <table class="min-w-full divide-y divide-gray-700 border-collapse">
+                      <tbody class="divide-y divide-gray-700">
+                        <% (tool_call.arguments || {}).each do |param, value| %>
+                          <tr>
+                            <td class="px-3 py-2 font-bold text-gray-300 bg-gray-800/50 border-r border-gray-700 w-32 align-top text-xs"><%= param %></td>
+                            <td class="px-3 py-2 text-gray-400 align-top text-xs">
+                              <% if value.to_s.include?("\n") %>
+                                <pre class="font-mono whitespace-pre-wrap text-[11px]"><%= value %></pre>
+                              <% else %>
+                                <span class="font-mono text-[11px]"><%= value %></span>
+                              <% end %>
+                            </td>
+                          </tr>
+                        <% end %>
+                        <% if (tool_call.arguments || {}).empty? %>
+                          <tr>
+                            <td colspan="2" class="px-3 py-4 text-center text-gray-600 italic text-xs">No arguments</td>
+                          </tr>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="flex flex-col">
+                  <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Result</h3>
+                  <div class="bg-gray-900 rounded-lg p-4 overflow-auto max-h-[500px] border border-gray-700 shadow-inner">
+                    <% if tool_call.is_success %>
+                      <pre class="text-xs font-mono text-gray-300 whitespace-pre overflow-x-auto"><code><%= tool_call.result %></code></pre>
+                    <% else %>
+                      <div class="text-red-400 font-mono text-sm mb-2">Error:</div>
+                      <pre class="text-xs font-mono text-red-400 bg-red-950/50 p-3 rounded whitespace-pre-wrap overflow-x-auto"><code><%= tool_call.error_message || tool_call.result %></code></pre>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+              
+              <% if tool_call.metadata.present? && tool_call.metadata.any? %>
+                <div class="mt-6 border-t border-gray-700 pt-4">
+                  <details class="group">
+                    <summary class="flex items-center cursor-pointer text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      <svg class="h-4 w-4 mr-1 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                      Metadata
+                    </summary>
+                    <div class="mt-2 bg-gray-800/50 rounded p-3">
+                      <pre class="text-[10px] font-mono text-gray-400 overflow-x-auto"><code><%= JSON.pretty_generate(tool_call.metadata) %></code></pre>
+                    </div>
+                  </details>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center bg-gray-900 shadow-sm ring-1 ring-gray-700 sm:rounded-xl p-12">
+        <svg class="mx-auto h-12 w-12 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        <h3 class="mt-2 text-sm font-semibold text-gray-100">No tool calls</h3>
+        <p class="mt-1 text-sm text-gray-400">No tools have been called in this session yet.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

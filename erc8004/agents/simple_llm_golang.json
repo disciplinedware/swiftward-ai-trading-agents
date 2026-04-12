@@ -1,0 +1,15 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Swiftward Alpha",
+  "description": "Policy-enforced AI trading agent with deterministic risk management, EIP-712 signed checkpoints, and tamper-evident hash chains. Built by Swiftward (swiftward.dev).",
+  "image": "ipfs://QmPCtfkHorHpo5Cxyjss9THtyMLeMBeaJCmhmZCi58LdWj",
+  "services": [
+    {
+      "name": "evidence",
+      "endpoint": "https://api.swiftward.dev/v1/evidence",
+      "version": "1.0.0"
+    }
+  ],
+  "active": true,
+  "supportedTrust": ["validation", "reputation"]
+}

@@ -1,0 +1,209 @@
+<div id="<%= dom_id(message) %>" class="flex <%= message.role == 'user' ? 'justify-end' : 'justify-start' %> group">
+  <div class="max-w-2xl min-w-[150px] px-4 py-2 rounded-lg shadow-sm relative
+    <%= case message.role
+        when 'user' then 'bg-indigo-600 text-white'
+        when 'assistant' then 'bg-gray-800 text-gray-100 border border-gray-700'
+        when 'system' then 'bg-gray-800/50 text-gray-400 text-xs italic'
+        when 'tool' then 'bg-orange-950/40 text-orange-300 border border-orange-800 font-mono text-xs'
+        end %>">
+
+    <div class="flex justify-between items-start mb-1">
+      <span class="text-[10px] font-bold uppercase tracking-wider opacity-70">
+        <%= message.role %>
+      </span>
+      <div class="flex gap-2">
+        <% bexec = local_assigns[:agent_run] || @agent_run %>
+        <% if bexec && message.role == 'assistant' && (message.loop.completed? || message.loop.failed? || message.loop.paused? || message.loop.init?) %>
+          <%= button_to regenerate_agent_run_message_path(bexec, message),
+                        method: :post,
+                        class: "text-gray-500 hover:text-indigo-400 transition-colors",
+                        title: "Regenerate from this turn",
+                        data: {
+                          turbo: false,
+                          confirm: "Are you sure? This message and all subsequent messages will be deleted. The dialog will restart from here."
+                        } do %>
+            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if message.reasoning_content.present? %>
+      <div class="mb-3 p-3 bg-gray-900/50 rounded-lg border-l-4 border-indigo-700 text-xs italic text-gray-400 overflow-x-auto shadow-sm">
+        <div class="font-bold not-italic text-[10px] uppercase tracking-wider opacity-70 mb-1 flex items-center gap-1">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+          Reasoning
+        </div>
+        <div class="whitespace-pre-wrap"><%= message.reasoning_content %></div>
+      </div>
+    <% end %>
+
+    <% formatted_content = format_json_content(message.content) %>
+    <% if message.role == 'tool' && formatted_content.include?("\n") %>
+      <pre class="whitespace-pre-wrap font-mono bg-gray-900 p-2 rounded text-xs"><%= formatted_content %></pre>
+    <% else %>
+      <div class="whitespace-pre-wrap"><%= formatted_content %></div>
+    <% end %>
+
+    <% display_tool_calls = message.tool_calls.any? ? message.tool_calls : (message.tool_calls_raw || []) %>
+    <% display_tool_calls.each do |atc| %>
+      <%
+        is_ar = atc.is_a?(ActiveRecord::Base)
+        name = is_ar ? atc.function_name : atc.dig("function", "name")
+        args = is_ar ? (atc.arguments || {}) : begin
+          JSON.parse(atc.dig("function", "arguments") || "{}")
+        rescue JSON::ParserError
+          raw_args = atc.dig("function", "arguments") || ""
+          if raw_args.start_with?("{")
+             {}
+          else
+            {}
+          end
+        end
+        atc_id = is_ar ? atc.id : (atc["id"] || "raw_#{SecureRandom.hex(4)}")
+        is_success = is_ar ? atc.is_success : false
+        correctness = is_ar && atc.respond_to?(:correctness) ? atc.correctness.to_f : nil
+      %>
+      <div class="mt-2 p-2 bg-gray-900/50 rounded border border-gray-700 text-[10px] text-gray-400 overflow-x-auto">
+        <div class="font-bold mb-1 flex items-center gap-2">
+          <span>Tool Call: <%= name %></span>
+
+          <% if is_ar %>
+            <% if is_success %>
+              <span class="text-green-400" title="Success">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              </span>
+            <% else %>
+              <span class="text-red-400" title="Failed">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+              </span>
+            <% end %>
+          <% else %>
+             <span class="animate-pulse text-indigo-400" title="Streaming...">
+               <svg class="h-3 w-3 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+             </span>
+          <% end %>
+
+          <% if correctness %>
+            <span class="<%= correctness >= 0.99 ? 'bg-green-900/50 text-green-300' : (correctness > 0 ? 'bg-yellow-900/50 text-yellow-300' : 'bg-red-900/50 text-red-300') %> text-[9px] px-1.5 py-0.5 rounded border border-current opacity-80" title="Correctness Score">
+              <%= (correctness * 100).to_i %>%
+            </span>
+          <% end %>
+        </div>
+        <table class="min-w-full divide-y divide-gray-700 border border-gray-700 bg-gray-900">
+          <tbody class="divide-y divide-gray-700">
+            <% (args || {}).each do |param, value| %>
+              <tr>
+                <td class="px-2 py-1 font-bold text-gray-300 bg-gray-800/50 border-r border-gray-700 w-24 align-top"><%= param %></td>
+                <td class="px-2 py-1 text-gray-400 align-top">
+                  <% formatted = format_json_content(value) %>
+                  <% if formatted.include?("\n") %>
+                    <pre class="font-mono whitespace-pre-wrap bg-gray-900 p-1 rounded text-xs"><%= formatted %></pre>
+                  <% else %>
+                    <%= formatted %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+            <% if !is_ar && args.empty? && atc.dig("function", "arguments").present? %>
+              <tr>
+                <td class="px-2 py-1 font-bold text-gray-300 bg-gray-800/50 border-r border-gray-700 w-24 align-top">raw</td>
+                <td class="px-2 py-1 text-gray-400 align-top font-mono text-[9px]">
+                  <%= atc.dig("function", "arguments") %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+
+    <div class="mt-2 flex items-center justify-end space-x-1 opacity-70 text-[9px] font-medium">
+      <% if message.role == "assistant" %>
+        <% if message.respond_to?(:ttft) && message.ttft.to_f > 0 %>
+          <span class="ml-2 text-green-400 font-bold border-l pl-2 border-gray-600" title="Time to First Token">
+            TTFT: <%= number_with_precision(message.ttft, precision: 2) %>s |
+          </span>
+        <% end %>
+
+        <% if message.respond_to?(:duration_thinking) && message.duration_thinking.to_f > 0 %>
+          <span class="ml-2 text-purple-400 font-bold border-l pl-2 border-gray-600" title="Reasoning Duration">
+            Think: <%= number_with_precision(message.duration_thinking, precision: 2) %>s |
+          </span>
+        <% end %>
+
+        <% tps = message.respond_to?(:tps) ? message.tps.to_f : 0 %>
+        <% if tps > 0 %>
+          <span class="ml-2 text-indigo-400 font-bold border-l pl-2 border-gray-600">
+            TPS: <%= number_with_precision(tps, precision: 2) %> |
+          </span>
+        <% end %>
+        <% latency = message.duration_generation.to_f %>
+        <% if latency > 0 %>
+          <span class="ml-2 text-pink-400 font-bold border-l pl-2 border-gray-600" title="Full request lifecycle (Parsing + Reasoning + Generation)">
+            Latency: <%= number_with_precision(latency, precision: 3) %>s |
+          </span>
+        <% end %>
+
+        <% if message.respond_to?(:cost) && message.cost.to_f.positive? %>
+          <span class="ml-2 text-green-400 font-bold border-l pl-2 border-gray-600" title="Message Cost">
+            Cost: $<%= number_with_precision(message.cost, precision: 5) %> |
+          </span>
+        <% end %>
+      <% end %>
+
+      <% if message.role == "tool" %>
+        <% tool_dur = message.tool_calls.to_a.sum { |tc| tc.duration.to_f } %>
+        <% if tool_dur > 0 %>
+          <span class="ml-2 text-orange-400 font-bold border-l pl-2 border-gray-600">
+            Tool: <%= number_with_precision(tool_dur, precision: 3) %>s |
+          </span>
+        <% end %>
+      <% end %>
+
+      <span class="text-[9px] text-gray-500 font-bold ml-1" title="Cumulative active duration">
+        Σ <%=
+          cum_dur = message.respond_to?(:cumulative_duration) ? (message.cumulative_duration || 0.0) : 0.0
+          cum_dur > 300 ? distance_of_time_in_words(cum_dur) : "#{number_with_precision(cum_dur, precision: 1)}s"
+        %>
+      </span> |
+      <span><%= message.created_at.strftime("%H:%M:%S.%L") %></span> |
+      <%= link_to "Events", Rails.application.routes.url_helpers.agent_events_path(message_id: message.id), class: "text-indigo-400 hover:text-indigo-300 font-bold ml-1", data: { turbo: false } %> |
+
+      <% case message.status %>
+      <% when 'pending' %>
+        <span class="animate-pulse px-1">In queue...</span>
+      <% when 'processing' %>
+        <span class="flex items-center space-x-2 italic px-1">
+          <div class="inline-block animate-spin rounded-full h-3 w-3 border-b-2 <%= message.role == 'user' ? 'border-white' : 'border-indigo-400' %>"></div>
+          <span class="<%= message.role == 'user' ? 'text-white' : 'text-indigo-400' %> font-bold">
+            <%= case message.role
+                when 'user' then 'Thinking...'
+                when 'assistant' then 'Acting...'
+                when 'tool' then 'Analyzing...'
+                else 'Processing...'
+                end %>
+          </span>
+        </span>
+      <% when 'success' %>
+        <span title="delivered" class="flex text-blue-400 px-1 font-bold">✓✓</span>
+      <% end %>
+    </div>
+
+    <% if message.failed? %>
+      <div class="mt-2 flex flex-col items-end space-y-1 w-full border-t border-white/10 pt-1">
+        <span title="error" class="flex items-center space-x-1 text-red-400 text-[10px] font-bold opacity-90 bg-white/5 px-1.5 py-0.5 rounded">
+          <svg style="width: 12px; height: 12px; min-width: 12px;" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="uppercase tracking-wider">Error</span>
+        </span>
+        <% if message.error_message.present? %>
+          <div class="text-[10px] text-red-400 bg-red-950/50 px-2 py-1 rounded border border-red-800 font-mono whitespace-pre-wrap max-w-full text-right">
+            <%= message.error_message %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+code: mcp
+description: "MCP Gateway - prompt injection scanning on tool responses"
+deployment:
+  active:
+    - arm: "A"
+      path: "../rulesets/mcp/v1"
+      traffic_percent: 100
+  shadow:
+    - arm: "B"
+      path: "../rulesets/mcp/v2"
+      traffic_percent: 100

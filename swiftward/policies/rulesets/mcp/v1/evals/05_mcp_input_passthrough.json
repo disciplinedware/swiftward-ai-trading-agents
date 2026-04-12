@@ -1,0 +1,17 @@
+{
+  "description": "mcp.input events should always pass through (we only scan outputs)",
+  "event": {
+    "type": "mcp.input",
+    "entity_id": "agent-alpha",
+    "data": {
+      "tool": {
+        "name": "market/get_prices",
+        "server": "market",
+        "params": {"markets": ["BTC-USD", "ETH-USD"]}
+      }
+    }
+  },
+  "expected": {
+    "verdict": "approved"
+  }
+}

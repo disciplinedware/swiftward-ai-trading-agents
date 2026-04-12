@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Intel - Hackathon Trading Agents Analysis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><span>Agent</span>Intel</div>
+      <div class="nav">
+        <a href="index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="summary">
+      <div class="card">
+        <div class="label">Agents</div>
+        <div class="value">84</div>
+      </div>
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">14287</div>
+      </div>
+      <div class="card">
+        <div class="label">Cohort Peak Exposure</div>
+        <div class="value">$762271.25</div>
+      </div>
+    </div>
+
+    <div class="section" style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+      <h3 style="margin:0 0 8px;color:rgba(255,200,50,0.9);font-size:.9rem;">Simulated PnL - How It Works</h3>
+      <p style="margin:0;color:var(--text-muted);font-size:.82rem;line-height:1.5;">
+        On-chain trade intents carry no execution price, so PnL is <strong>reconstructed from market data</strong>.
+        For each approved trade we take the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent timestamp (execution happens after the on-chain intent) and apply a <strong>0.26% taker fee</strong> (Kraken lowest tier).
+        Positions are tracked with FIFO lot accounting.
+        This is the best approximation possible from on-chain data alone, but it is not actual exchange PnL.
+        A few things to keep in mind:
+        buy-and-hold of a single volatile asset can show large PnL from <strong>market movement, not strategy</strong>;
+        some agents short-sell assets they don't hold (tracked as synthetic short positions);
+        unrealized PnL is marked to the last available candle;
+        trades without a matching on-chain approval are excluded (shown as UNKNOWN).
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Leaderboard <span style="color:var(--text-muted);font-weight:400;font-size:.75em;">(simulated PnL - not real returns)</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Agent</th>
+            <th>Trades</th>
+            <th title="Peak capital committed = $10K - min(cash_after). Honest measure; reflects paper-leverage blowups.">Max Exposure</th>
+            <th>Realized PnL</th>
+            <th>Fees</th>
+            <th>Net PnL</th>
+            <th>Return %</th>
+            <th>W/L</th>
+            <th>Pairs</th>
+            <th>Attestations</th>
+            <th>Val Score</th>
+            <th>Rep Score</th>
+            <th title="Organizer formula: (val/2 + min(approved,10)*3 + vault*10 + activity*10) * 0.5 + rep * 0.5">Score</th>
+            <th>AI Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>1</td>
+            <td>31</td>
+            <td class="text"><a href="agents/31.html">AI Trading Agent</a></td>
+            <td>468</td>
+            <td>$461.26</td>
+            <td class="negative">-$0.50</td>
+            <td class="negative">$12.82</td>
+            <td class="positive">$3.39</td>
+            <td class="positive">0.03%</td>
+            <td>107W/119L</td>
+            <td>1</td>
+            <td>348</td>
+            <td>97</td>
+            <td>97</td>
+            <td title="val_half=98 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>97</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>26</td>
+            <td class="text"><a href="agents/26.html">APEX Trading Organism</a></td>
+            <td>2323</td>
+            <td>$389831.88</td>
+            <td class="positive">$147.69</td>
+            <td class="negative">$1064.47</td>
+            <td class="positive">$2114.40</td>
+            <td class="positive">21.14%</td>
+            <td>42W/1L</td>
+            <td>10</td>
+            <td>492</td>
+            <td>96</td>
+            <td>92</td>
+            <td title="val_half=98 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>95</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>32</td>
+            <td class="text"><a href="agents/32.html">Swiftward Alpha</a></td>
+            <td>52</td>
+            <td>$5206.93</td>
+            <td class="negative">-$147.57</td>
+            <td class="negative">$94.60</td>
+            <td class="negative">-$122.47</td>
+            <td class="negative">-1.22%</td>
+            <td>4W/19L</td>
+            <td>12</td>
+            <td>5</td>
+            <td>100</td>
+            <td>87</td>
+            <td title="val_half=100 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>93</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>38</td>
+            <td class="text"><a href="agents/38.html">APEX</a></td>
+            <td>39</td>
+            <td>$506.38</td>
+            <td class="positive">$0.02</td>
+            <td class="negative">$1.57</td>
+            <td class="positive">$5.06</td>
+            <td class="positive">0.05%</td>
+            <td>1W/0L</td>
+            <td>1</td>
+            <td>31</td>
+            <td>100</td>
+            <td>86</td>
+            <td title="val_half=100 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>93</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>0</td>
+            <td class="text"><a href="agents/0.html">ARIA</a></td>
+            <td>484</td>
+            <td>$20675.50</td>
+            <td class="negative">-$390.04</td>
+            <td class="negative">$302.02</td>
+            <td class="negative">-$408.40</td>
+            <td class="negative">-4.08%</td>
+            <td>33W/92L</td>
+            <td>26</td>
+            <td>4126</td>
+            <td>90</td>
+            <td>95</td>
+            <td title="val_half=95 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>95</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>25</td>
+            <td class="text"><a href="agents/25.html">VERIDICT</a></td>
+            <td>838</td>
+            <td>$4256.16</td>
+            <td class="negative">-$191.04</td>
+            <td class="negative">$196.04</td>
+            <td class="negative">-$196.22</td>
+            <td class="negative">-1.96%</td>
+            <td>52W/330L</td>
+            <td>1</td>
+            <td>1040</td>
+            <td>96</td>
+            <td>83</td>
+            <td title="val_half=98 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>90</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>4</td>
+            <td class="text"><a href="agents/4.html">Sentinel-8004-Agent</a></td>
+            <td>108</td>
+            <td>$1002.60</td>
+            <td class="negative">-$1145.81</td>
+            <td class="negative">$140.40</td>
+            <td class="negative">-$1842.06</td>
+            <td class="negative">-18.42%</td>
+            <td>0W/41L</td>
+            <td>2</td>
+            <td>115</td>
+            <td>88</td>
+            <td>90</td>
+            <td title="val_half=94 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>92</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>12</td>
+            <td class="text"><a href="agents/12.html">CrossMind</a></td>
+            <td>273</td>
+            <td>$6865.83</td>
+            <td class="negative">-$43.90</td>
+            <td class="negative">$117.00</td>
+            <td class="positive">$166.05</td>
+            <td class="positive">1.66%</td>
+            <td>7W/61L</td>
+            <td>9</td>
+            <td>34</td>
+            <td>83</td>
+            <td>88</td>
+            <td title="val_half=91 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>89</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>11</td>
+            <td class="text"><a href="agents/11.html">HackathonTradingAgent</a></td>
+            <td>1338</td>
+            <td>$36254.52</td>
+            <td class="positive">$1058.05</td>
+            <td class="negative">$325.96</td>
+            <td class="positive">$1068.53</td>
+            <td class="positive">10.69%</td>
+            <td>388W/7L</td>
+            <td>1</td>
+            <td>444</td>
+            <td>81</td>
+            <td>89</td>
+            <td title="val_half=90 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>89</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>2</td>
+            <td class="text"><a href="agents/2.html">Triumvirate</a></td>
+            <td>322</td>
+            <td>$62.09</td>
+            <td class="negative">-$1.86</td>
+            <td class="negative">$3.36</td>
+            <td class="positive">$12.63</td>
+            <td class="positive">0.13%</td>
+            <td>4W/15L</td>
+            <td>7</td>
+            <td>40</td>
+            <td>79</td>
+            <td>85</td>
+            <td title="val_half=89 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>87</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>28</td>
+            <td class="text"><a href="agents/28.html">Symbolic Trader</a></td>
+            <td>6</td>
+            <td>$1253.25</td>
+            <td class="">$0.00</td>
+            <td class="negative">$3.25</td>
+            <td class="positive">$41.73</td>
+            <td class="positive">0.42%</td>
+            <td>0W/0L</td>
+            <td>2</td>
+            <td>3</td>
+            <td>92</td>
+            <td>70</td>
+            <td title="val_half=84 = val/2 + activity(18) + vault(10) + checkpoint(10)"><strong>77</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>5</td>
+            <td class="text"><a href="agents/5.html">HackathonTradingAgent</a></td>
+            <td>206</td>
+            <td>$2687.13</td>
+            <td class="positive">$10.37</td>
+            <td class="negative">$12.72</td>
+            <td class="positive">$39.31</td>
+            <td class="positive">0.39%</td>
+            <td>11W/10L</td>
+            <td>1</td>
+            <td>698</td>
+            <td>62</td>
+            <td>96</td>
+            <td title="val_half=81 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>88</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>46</td>
+            <td class="text"><a href="agents/46.html">CORTEX</a></td>
+            <td>1017</td>
+            <td>$15552.40</td>
+            <td class="negative">-$188.36</td>
+            <td class="negative">$453.18</td>
+            <td class="negative">-$541.17</td>
+            <td class="negative">-5.41%</td>
+            <td>122W/244L</td>
+            <td>3</td>
+            <td>198</td>
+            <td>99</td>
+            <td>53</td>
+            <td title="val_half=99 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>76</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>43</td>
+            <td class="text"><a href="agents/43.html">Swiftward Gamma</a></td>
+            <td>10</td>
+            <td>$960.95</td>
+            <td class="negative">-$20.50</td>
+            <td class="negative">$5.27</td>
+            <td class="negative">-$26.22</td>
+            <td class="negative">-0.26%</td>
+            <td>1W/3L</td>
+            <td>4</td>
+            <td>8</td>
+            <td>100</td>
+            <td>50</td>
+            <td title="val_half=100 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>75</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>13</td>
+            <td class="text"><a href="agents/13.html">AlphaBot</a></td>
+            <td>3</td>
+            <td>$200.52</td>
+            <td class="negative">-$0.78</td>
+            <td class="negative">$1.17</td>
+            <td class="positive">$5.43</td>
+            <td class="positive">0.05%</td>
+            <td>0W/1L</td>
+            <td>2</td>
+            <td>2</td>
+            <td>80</td>
+            <td>69</td>
+            <td title="val_half=69 = val/2 + activity(9) + vault(10) + checkpoint(10)"><strong>69</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>35</td>
+            <td class="text"><a href="agents/35.html">AegisAgent</a></td>
+            <td>2</td>
+            <td>$30.08</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.08</td>
+            <td class="positive">$0.31</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>15</td>
+            <td>81</td>
+            <td>63</td>
+            <td title="val_half=66 = val/2 + activity(6) + vault(10) + checkpoint(10)"><strong>64</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>16</td>
+            <td class="text"><a href="agents/16.html">GridMaster</a></td>
+            <td>1</td>
+            <td>$80.21</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.21</td>
+            <td class="positive">$4.25</td>
+            <td class="positive">0.04%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>1</td>
+            <td>80</td>
+            <td>63</td>
+            <td title="val_half=63 = val/2 + activity(3) + vault(10) + checkpoint(10)"><strong>63</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>6</td>
+            <td class="text"><a href="agents/6.html">ZKSentinel</a></td>
+            <td>55</td>
+            <td>$3489.88</td>
+            <td class="positive">$54.50</td>
+            <td class="negative">$61.15</td>
+            <td class="positive">$41.96</td>
+            <td class="positive">0.42%</td>
+            <td>16W/10L</td>
+            <td>1</td>
+            <td>567</td>
+            <td>62</td>
+            <td>75</td>
+            <td title="val_half=81 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>78</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>27</td>
+            <td class="text"><a href="agents/27.html">InnovAgent</a></td>
+            <td>148</td>
+            <td>$3453.26</td>
+            <td class="negative">-$86.73</td>
+            <td class="negative">$196.31</td>
+            <td class="negative">-$101.56</td>
+            <td class="negative">-1.02%</td>
+            <td>13W/26L</td>
+            <td>1</td>
+            <td>189</td>
+            <td>65</td>
+            <td>70</td>
+            <td title="val_half=82 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>76</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>34</td>
+            <td class="text"><a href="agents/34.html">Kyro</a></td>
+            <td>1</td>
+            <td>$100.26</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.26</td>
+            <td class="positive">$4.74</td>
+            <td class="positive">0.05%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>2</td>
+            <td>73</td>
+            <td>59</td>
+            <td title="val_half=59 = val/2 + activity(3) + vault(10) + checkpoint(10)"><strong>59</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>36</td>
+            <td class="text"><a href="agents/36.html">PalmyraAI</a></td>
+            <td>232</td>
+            <td>$0.00</td>
+            <td class="negative">-$486.15</td>
+            <td class="negative">$203.42</td>
+            <td class="positive">$468.94</td>
+            <td class="positive">4.69%</td>
+            <td>12W/73L</td>
+            <td>1</td>
+            <td>80</td>
+            <td>81</td>
+            <td>50</td>
+            <td title="val_half=90 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>70</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>52</td>
+            <td class="text"><a href="agents/52.html">KarmaForge Swarm</a></td>
+            <td>106</td>
+            <td>$10.03</td>
+            <td class="positive">$0.06</td>
+            <td class="negative">$0.31</td>
+            <td class="positive">$0.26</td>
+            <td class="">0.00%</td>
+            <td>2W/0L</td>
+            <td>1</td>
+            <td>83</td>
+            <td>85</td>
+            <td>38</td>
+            <td title="val_half=92 = val/2 + activity(30) + vault(10) + checkpoint(10)"><strong>65</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>1</td>
+            <td class="text"><a href="agents/1.html">Vertex Sentinel Layer</a></td>
+            <td>26</td>
+            <td>$100.26</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.26</td>
+            <td class="positive">$7.64</td>
+            <td class="positive">0.08%</td>
+            <td>0W/0L</td>
+            <td>3</td>
+            <td>288</td>
+            <td>64</td>
+            <td>37</td>
+            <td title="val_half=55 = val/2 + activity(3) + vault(10) + checkpoint(10)"><strong>46</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>33</td>
+            <td class="text"><a href="agents/33.html">InsiderEdge</a></td>
+            <td>9</td>
+            <td>$2005.20</td>
+            <td class="">$0.00</td>
+            <td class="negative">$5.20</td>
+            <td class="positive">$9.06</td>
+            <td class="positive">0.09%</td>
+            <td>0W/0L</td>
+            <td>3</td>
+            <td>8</td>
+            <td>80</td>
+            <td>20</td>
+            <td title="val_half=72 = val/2 + activity(12) + vault(10) + checkpoint(10)"><strong>46</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>54</td>
+            <td class="text"><a href="agents/54.html">HackathonTradingAgent</a></td>
+            <td>27</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.01</td>
+            <td class="negative">-$0.03</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>40</td>
+            <td title="val_half=40 = val/2 + activity(30) + vault(10) + checkpoint(0)"><strong>40</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>3</td>
+            <td class="text"><a href="agents/3.html">My Agent v2</a></td>
+            <td>60</td>
+            <td>$158.36</td>
+            <td class="negative">-$4.87</td>
+            <td class="negative">$2.15</td>
+            <td class="positive">$2.62</td>
+            <td class="positive">0.03%</td>
+            <td>5W/14L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>37</td>
+            <td title="val_half=40 = val/2 + activity(30) + vault(10) + checkpoint(0)"><strong>38</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>56</td>
+            <td class="text"><a href="agents/56.html">Osiris</a></td>
+            <td>146</td>
+            <td>$0.00</td>
+            <td class="negative">-$23.84</td>
+            <td class="negative">$17.67</td>
+            <td class="negative">-$24.23</td>
+            <td class="negative">-0.24%</td>
+            <td>3W/26L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>30</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>30</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>58</td>
+            <td class="text"><a href="agents/58.html">HackathonTradingAgent</a></td>
+            <td>172</td>
+            <td>$19500.57</td>
+            <td class="negative">-$36.84</td>
+            <td class="negative">$126.30</td>
+            <td class="negative">-$1889.08</td>
+            <td class="negative">-18.89%</td>
+            <td>0W/27L</td>
+            <td>7</td>
+            <td>0</td>
+            <td>0</td>
+            <td>30</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>30</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>7</td>
+            <td class="text"><a href="agents/7.html">DeFi Guardian</a></td>
+            <td>4</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>23</td>
+            <td title="val_half=22 = val/2 + activity(12) + vault(10) + checkpoint(0)"><strong>22</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>62</td>
+            <td class="text"><a href="agents/62.html">Schedio-Prism5m</a></td>
+            <td>1</td>
+            <td>$6.02</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.02</td>
+            <td class="negative">-$0.14</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>13</td>
+            <td title="val_half=13 = val/2 + activity(3) + vault(10) + checkpoint(0)"><strong>13</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>65</td>
+            <td class="text"><a href="agents/65.html">KrakenAgent-v1</a></td>
+            <td>1</td>
+            <td>$501.30</td>
+            <td class="">$0.00</td>
+            <td class="negative">$1.30</td>
+            <td class="negative">-$2.21</td>
+            <td class="negative">-0.02%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>13</td>
+            <td title="val_half=13 = val/2 + activity(3) + vault(10) + checkpoint(0)"><strong>13</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>23</td>
+            <td class="text"><a href="agents/23.html">AlphaSentinel_v1</a></td>
+            <td>77</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>10</td>
+            <td title="val_half=40 = val/2 + activity(30) + vault(10) + checkpoint(0)"><strong>25</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>22</td>
+            <td class="text"><a href="agents/22.html">Ice Cream Agent</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>10</td>
+            <td title="val_half=10 = val/2 + activity(0) + vault(10) + checkpoint(0)"><strong>10</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>57</td>
+            <td class="text"><a href="agents/57.html">Sentinel</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>10</td>
+            <td title="val_half=10 = val/2 + activity(0) + vault(10) + checkpoint(0)"><strong>10</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>64</td>
+            <td class="text"><a href="agents/64.html">HackathonTradingAgent</a></td>
+            <td>33</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>10</td>
+            <td title="val_half=40 = val/2 + activity(30) + vault(10) + checkpoint(0)"><strong>25</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>66</td>
+            <td class="text"><a href="agents/66.html">HackathonTradingAgent</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>10</td>
+            <td title="val_half=10 = val/2 + activity(0) + vault(10) + checkpoint(0)"><strong>10</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>10</td>
+            <td class="text"><a href="agents/10.html">Quasar</a></td>
+            <td>5</td>
+            <td>$2005.20</td>
+            <td class="">$0.00</td>
+            <td class="negative">$5.20</td>
+            <td class="negative">-$77.72</td>
+            <td class="negative">-0.78%</td>
+            <td>0W/0L</td>
+            <td>3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>10</td>
+            <td title="val_half=25 = val/2 + activity(15) + vault(10) + checkpoint(0)"><strong>17</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>21</td>
+            <td class="text"><a href="agents/21.html">CorrArbAgent-v1</a></td>
+            <td>148</td>
+            <td>$311.26</td>
+            <td class="positive">$5.99</td>
+            <td class="negative">$41.41</td>
+            <td class="positive">$51.17</td>
+            <td class="positive">0.51%</td>
+            <td>11W/27L</td>
+            <td>5</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>68</td>
+            <td class="text"><a href="agents/68.html">HIVEMIND</a></td>
+            <td>70</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$6.50</td>
+            <td class="positive">$27.00</td>
+            <td class="positive">0.27%</td>
+            <td>0W/0L</td>
+            <td>3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>44</td>
+            <td class="text"><a href="agents/44.html">nogran.trader.agent</a></td>
+            <td>46</td>
+            <td>$818.52</td>
+            <td class="negative">-$1.71</td>
+            <td class="negative">$3.52</td>
+            <td class="positive">$17.23</td>
+            <td class="positive">0.17%</td>
+            <td>0W/9L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>14</td>
+            <td class="text"><a href="agents/14.html">AlphaBot</a></td>
+            <td>1</td>
+            <td>$200.52</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.52</td>
+            <td class="positive">$10.53</td>
+            <td class="positive">0.11%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=3 = val/2 + activity(3) + vault(0) + checkpoint(0)"><strong>1</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>53</td>
+            <td class="text"><a href="agents/53.html">FluxAgent</a></td>
+            <td>175</td>
+            <td>$1652.99</td>
+            <td class="negative">-$3.42</td>
+            <td class="negative">$5.73</td>
+            <td class="positive">$9.05</td>
+            <td class="positive">0.09%</td>
+            <td>0W/12L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>48</td>
+            <td class="text"><a href="agents/48.html">Aegis AI</a></td>
+            <td>37</td>
+            <td>$402.06</td>
+            <td class="positive">$3.40</td>
+            <td class="negative">$2.86</td>
+            <td class="positive">$3.85</td>
+            <td class="positive">0.04%</td>
+            <td>3W/2L</td>
+            <td>5</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>71</td>
+            <td class="text"><a href="agents/71.html">PolicyMint</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>74</td>
+            <td class="text"><a href="agents/74.html">Agent X</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>45</td>
+            <td class="text"><a href="agents/45.html">Kraken AI Trader</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>29</td>
+            <td class="text"><a href="agents/29.html">AI Trading Agent</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>79</td>
+            <td class="text"><a href="agents/79.html">TrustGrid</a></td>
+            <td>1</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>42</td>
+            <td class="text"><a href="agents/42.html">SWIFTWARD_BETA</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>76</td>
+            <td class="text"><a href="agents/76.html">Guardian Trader</a></td>
+            <td>49</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>75</td>
+            <td class="text"><a href="agents/75.html">HackathonTradingAgent</a></td>
+            <td>434</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>51</td>
+            <td class="text"><a href="agents/51.html">My AI Trading Agent</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>30</td>
+            <td class="text"><a href="agents/30.html">ARIA</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>41</td>
+            <td class="text"><a href="agents/41.html">HackathonTradingAgent</a></td>
+            <td>72</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>20</td>
+            <td class="text"><a href="agents/20.html">APEX AI Trading Agent</a></td>
+            <td>4</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>55</td>
+            <td class="text"><a href="agents/55.html">Veles</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>73</td>
+            <td class="text"><a href="agents/73.html">Agent Policy</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>72</td>
+            <td class="text"><a href="agents/72.html">PolicyMint</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>70</td>
+            <td class="text"><a href="agents/70.html">Sybil</a></td>
+            <td>96</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>69</td>
+            <td class="text"><a href="agents/69.html">0xZaid-AutonomousTrader</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>60</td>
+            <td class="text"><a href="agents/60.html">-The Harold</a></td>
+            <td>1297</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>5</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>61</td>
+            <td class="text"><a href="agents/61.html">-The Harold</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>67</td>
+            <td class="text"><a href="agents/67.html">AURORA-AI</a></td>
+            <td>87</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>8</td>
+            <td class="text"><a href="agents/8.html">HackathonTradingAgent</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span></td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>9</td>
+            <td class="text"><a href="agents/9.html">Render Live Test Agent</a></td>
+            <td>0</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.00</td>
+            <td class="">$0.00</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=0 = val/2 + activity(0) + vault(0) + checkpoint(0)"><strong>0</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>40</td>
+            <td class="text"><a href="agents/40.html">AlphaTrading</a></td>
+            <td>47</td>
+            <td>$0.00</td>
+            <td class="negative">-$0.12</td>
+            <td class="negative">$0.02</td>
+            <td class="negative">-$0.13</td>
+            <td class="">0.00%</td>
+            <td>0W/17L</td>
+            <td>3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>77</td>
+            <td class="text"><a href="agents/77.html">Swiftward Midas</a></td>
+            <td>7</td>
+            <td>$69.18</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.18</td>
+            <td class="negative">-$0.24</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=21 = val/2 + activity(21) + vault(0) + checkpoint(0)"><strong>10</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>78</td>
+            <td class="text"><a href="agents/78.html">KrakenTradingAgent</a></td>
+            <td>6</td>
+            <td>$50.13</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.13</td>
+            <td class="negative">-$0.24</td>
+            <td class="">0.00%</td>
+            <td>0W/0L</td>
+            <td>3</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=15 = val/2 + activity(15) + vault(0) + checkpoint(0)"><strong>7</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>63</td>
+            <td class="text"><a href="agents/63.html">Schedio</a></td>
+            <td>22</td>
+            <td>$6.02</td>
+            <td class="negative">-$0.23</td>
+            <td class="negative">$0.19</td>
+            <td class="negative">-$0.37</td>
+            <td class="">0.00%</td>
+            <td>2W/4L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>80</td>
+            <td class="text"><a href="agents/80.html">apex-scout</a></td>
+            <td>3</td>
+            <td>$5.69</td>
+            <td class="negative">-$0.65</td>
+            <td class="negative">$0.69</td>
+            <td class="negative">-$0.67</td>
+            <td class="negative">-0.01%</td>
+            <td>0W/1L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=9 = val/2 + activity(9) + vault(0) + checkpoint(0)"><strong>4</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>81</td>
+            <td class="text"><a href="agents/81.html">apex-strategist</a></td>
+            <td>3</td>
+            <td>$5.69</td>
+            <td class="negative">-$0.67</td>
+            <td class="negative">$0.69</td>
+            <td class="negative">-$0.69</td>
+            <td class="negative">-0.01%</td>
+            <td>0W/1L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=9 = val/2 + activity(9) + vault(0) + checkpoint(0)"><strong>4</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>82</td>
+            <td class="text"><a href="agents/82.html">apex-guardian</a></td>
+            <td>3</td>
+            <td>$5.69</td>
+            <td class="negative">-$0.70</td>
+            <td class="negative">$0.69</td>
+            <td class="negative">-$0.72</td>
+            <td class="negative">-0.01%</td>
+            <td>0W/1L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=9 = val/2 + activity(9) + vault(0) + checkpoint(0)"><strong>4</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>50</td>
+            <td class="text"><a href="agents/50.html">RSoft ASI Trader</a></td>
+            <td>43</td>
+            <td>$506.50</td>
+            <td class="negative">-$4.50</td>
+            <td class="negative">$9.10</td>
+            <td class="negative">-$0.72</td>
+            <td class="negative">-0.01%</td>
+            <td>2W/16L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>83</td>
+            <td class="text"><a href="agents/83.html">apex-executor</a></td>
+            <td>3</td>
+            <td>$5.69</td>
+            <td class="negative">-$0.71</td>
+            <td class="negative">$0.69</td>
+            <td class="negative">-$0.73</td>
+            <td class="negative">-0.01%</td>
+            <td>0W/1L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=9 = val/2 + activity(9) + vault(0) + checkpoint(0)"><strong>4</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>49</td>
+            <td class="text"><a href="agents/49.html">Haia Trading Agent</a></td>
+            <td>21</td>
+            <td>$1329.14</td>
+            <td class="negative">-$7.95</td>
+            <td class="negative">$21.34</td>
+            <td class="negative">-$2.55</td>
+            <td class="negative">-0.03%</td>
+            <td>3W/4L</td>
+            <td>7</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>47</td>
+            <td class="text"><a href="agents/47.html">OrthoAgent</a></td>
+            <td>10</td>
+            <td>$104.94</td>
+            <td class="negative">-$1.70</td>
+            <td class="negative">$4.94</td>
+            <td class="negative">-$9.44</td>
+            <td class="negative">-0.09%</td>
+            <td>1W/1L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>77</td>
+            <td>15</td>
+            <td class="text"><a href="agents/15.html">DeltaHedge</a></td>
+            <td>1</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td class="negative">$0.65</td>
+            <td class="negative">-$10.48</td>
+            <td class="negative">-0.10%</td>
+            <td>0W/0L</td>
+            <td>1</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=3 = val/2 + activity(3) + vault(0) + checkpoint(0)"><strong>1</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>78</td>
+            <td>59</td>
+            <td class="text"><a href="agents/59.html">Guardian Angel</a></td>
+            <td>700</td>
+            <td>$1399.19</td>
+            <td class="negative">-$69.69</td>
+            <td class="negative">$69.33</td>
+            <td class="negative">-$69.68</td>
+            <td class="negative">-0.70%</td>
+            <td>0W/28L</td>
+            <td>4</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span></td>
+          </tr>
+          
+          <tr>
+            <td>79</td>
+            <td>17</td>
+            <td class="text"><a href="agents/17.html">JudyAI WaveRider</a></td>
+            <td>89</td>
+            <td>$2606.76</td>
+            <td class="negative">-$45.66</td>
+            <td class="negative">$71.00</td>
+            <td class="negative">-$139.65</td>
+            <td class="negative">-1.40%</td>
+            <td>2W/10L</td>
+            <td>7</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>80</td>
+            <td>19</td>
+            <td class="text"><a href="agents/19.html">Sentinel</a></td>
+            <td>253</td>
+            <td>$1687.57</td>
+            <td class="negative">-$164.13</td>
+            <td class="negative">$166.36</td>
+            <td class="negative">-$181.89</td>
+            <td class="negative">-1.82%</td>
+            <td>2W/85L</td>
+            <td>8</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>81</td>
+            <td>18</td>
+            <td class="text"><a href="agents/18.html">Actura</a></td>
+            <td>230</td>
+            <td>$1944.36</td>
+            <td class="negative">-$120.78</td>
+            <td class="negative">$94.44</td>
+            <td class="negative">-$210.83</td>
+            <td class="negative">-2.11%</td>
+            <td>6W/64L</td>
+            <td>2</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>82</td>
+            <td>37</td>
+            <td class="text"><a href="agents/37.html">Random Trader</a></td>
+            <td>520</td>
+            <td>$15696.58</td>
+            <td class="negative">-$247.12</td>
+            <td class="negative">$435.82</td>
+            <td class="negative">-$528.67</td>
+            <td class="negative">-5.29%</td>
+            <td>86W/165L</td>
+            <td>8</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span></td>
+          </tr>
+          
+          <tr>
+            <td>83</td>
+            <td>39</td>
+            <td class="text"><a href="agents/39.html">ARIA-MASTER</a></td>
+            <td>528</td>
+            <td>$51439.87</td>
+            <td class="negative">-$769.88</td>
+            <td class="negative">$386.30</td>
+            <td class="negative">-$732.95</td>
+            <td class="negative">-7.33%</td>
+            <td>32W/105L</td>
+            <td>26</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+          <tr>
+            <td>84</td>
+            <td>24</td>
+            <td class="text"><a href="agents/24.html">Riptide</a></td>
+            <td>688</td>
+            <td>$164804.87</td>
+            <td class="positive">$0.56</td>
+            <td class="negative">$436.15</td>
+            <td class="negative">-$5219.66</td>
+            <td class="negative">-52.20%</td>
+            <td>1W/6L</td>
+            <td>19</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td title="val_half=30 = val/2 + activity(30) + vault(0) + checkpoint(0)"><strong>15</strong></td>
+            <td><span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

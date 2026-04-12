@@ -1,0 +1,16 @@
+# Binaries
+bin/
+mcp-server
+
+# Go
+vendor/
+*.exe
+*.test
+*.prof
+.env
+
+# Data directory
+data/
+
+# Docker caches (if any)
+.docker/

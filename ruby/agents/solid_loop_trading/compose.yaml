@@ -1,0 +1,128 @@
+name: solid-loop-trading
+
+services:
+  db:
+    image: postgres:17-alpine
+    networks:
+      default: {}
+    environment:
+      POSTGRES_USER: solid_loop_trading
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: solid_loop_trading_production
+    volumes:
+      - solid_loop_trading_postgres:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U solid_loop_trading -d solid_loop_trading_production"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: solid_loop_trading:latest
+    ports:
+      - "7175:80"
+    env_file:
+      - ../../../.env
+    networks:
+      default: {}
+      main-stack: {}
+      agent-isolated: {}
+    environment:
+      - RAILS_ENV=production
+      - DATABASE_URL=postgres://solid_loop_trading:password@db:5432/solid_loop_trading_production
+      - CACHE_DATABASE_URL=postgres://solid_loop_trading:password@db:5432/solid_loop_trading_production_cache
+      - CABLE_DATABASE_URL=postgres://solid_loop_trading:password@db:5432/solid_loop_trading_production_cable
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - SECRET_KEY_BASE=${RAILS_SECRET_KEY_BASE}
+      - SOLID_LOOP_TRADING_DB_PASSWORD=password
+      - TRADING_MCP_URL=http://web:80/mcp
+      - TRADING_SERVER_URL=${TRADING_SERVER_URL:-http://trading-server:8091}
+      - SWIFTWARD_MCP_URL=${SWIFTWARD_MCP_URL:-http://swiftward-server:8095}
+      - SWIFTWARD_API_KEY=${RAILS_SWIFTWARD_API_KEY}
+      - SWIFTWARD_AGENT_ID=${RAILS_SWIFTWARD_AGENT_ID}
+      - MCP_SERVER=http://analytic-sandbox:9091
+      - MCP_API_TOKEN=${RUBY_SANDBOX_TOKEN:-}
+      - OTEL_SERVICE_NAME=agent-ruby-solid
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=ai-trading-agents
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://signoz-otel-collector:4318
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://signoz-otel-collector:4318/v1/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      analytic-sandbox:
+        condition: service_started
+    volumes:
+      - solid_loop_trading_storage:/rails/storage
+      - ${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}/containers:/rails/storage/external/data
+
+  worker:
+    image: solid_loop_trading:latest
+    command: ["bundle", "exec", "good_job", "start", "--max-threads", "20"]
+    env_file:
+      - ../../../.env
+    networks:
+      default: {}
+      main-stack: {}
+      agent-isolated: {}
+    environment:
+      - RAILS_ENV=production
+      - DATABASE_URL=postgres://solid_loop_trading:password@db:5432/solid_loop_trading_production
+      - CACHE_DATABASE_URL=postgres://solid_loop_trading:password@db:5432/solid_loop_trading_production_cache
+      - CABLE_DATABASE_URL=postgres://solid_loop_trading:password@db:5432/solid_loop_trading_production_cable
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - SECRET_KEY_BASE=${RAILS_SECRET_KEY_BASE}
+      - SOLID_LOOP_TRADING_DB_PASSWORD=password
+      - TRADING_MCP_URL=http://web:80/mcp
+      - TRADING_SERVER_URL=${TRADING_SERVER_URL:-http://trading-server:8091}
+      - SWIFTWARD_MCP_URL=${SWIFTWARD_MCP_URL:-http://swiftward-server:8095}
+      - SWIFTWARD_API_KEY=${RAILS_SWIFTWARD_API_KEY}
+      - SWIFTWARD_AGENT_ID=${RAILS_SWIFTWARD_AGENT_ID}
+      - MCP_SERVER=http://analytic-sandbox:9091
+      - MCP_API_TOKEN=${RUBY_SANDBOX_TOKEN:-}
+      - OTEL_SERVICE_NAME=agent-ruby-solid-worker
+      - OTEL_RESOURCE_ATTRIBUTES=service.namespace=ai-trading-agents
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://signoz-otel-collector:4318
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://signoz-otel-collector:4318/v1/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      analytic-sandbox:
+        condition: service_started
+    volumes:
+      - solid_loop_trading_storage:/rails/storage
+      - ${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}/containers:/rails/storage/external/data
+
+  analytic-sandbox:
+    build:
+      context: ../analytic-sandbox
+      dockerfile: Dockerfile
+    networks:
+      default: {}
+    environment:
+      - MCP_SANDBOX_IMAGE=${ANALYTIC_SANDBOX_IMAGE:-analytic-sandbox:local}
+      - MCP_AUTH_TOKEN=${RUBY_SANDBOX_TOKEN:-}
+      - HOST_DATA_DIR=${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}:/app/data
+    restart: unless-stopped
+
+networks:
+  main-stack:
+    external: true
+    name: swiftward-ai-trading-agents_default
+  agent-isolated:
+    external: true
+    name: swiftward-ai-trading-agents_agent-isolated
+
+volumes:
+  solid_loop_trading_postgres:
+  solid_loop_trading_storage:

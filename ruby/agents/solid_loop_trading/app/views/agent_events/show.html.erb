@@ -1,0 +1,42 @@
+<div class="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mb-6 flex items-center justify-between">
+    <%= link_to "← Back to Logs", :back, class: "text-indigo-400 hover:text-indigo-300 text-sm font-medium" %>
+    <% if @agent_event.name == "mcp_tool_call" && @agent_event.loop&.subject&.is_a?(AgentRun) %>
+      <%= link_to mcp_agent_run_path(@agent_event.loop.subject, event_id: @agent_event.id), class: "inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-indigo-400 shadow-sm ring-1 ring-inset ring-indigo-500 hover:bg-indigo-950/50" do %>
+        <svg class="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+        Replay in MCP Inspector
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="bg-gray-900 shadow sm:rounded-lg overflow-hidden border border-gray-700 p-6 space-y-6">
+    <h1 class="text-2xl font-bold text-gray-100">Event Detail</h1>
+
+    <div>
+      <h3 class="text-sm font-medium text-gray-400">Event Name</h3>
+      <p class="mt-1 text-sm text-gray-100"><%= @agent_event.name.humanize %></p>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-medium text-gray-400">Method & URL</h3>
+      <p class="mt-1 font-mono text-sm text-gray-100"><%= @agent_event.http_method %> <%= @agent_event.url %></p>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-medium text-gray-400 border-b border-gray-700 pb-1 mb-2">Request Body</h3>
+      <pre class="bg-gray-800/50 p-4 rounded text-xs overflow-auto"><%= JSON.pretty_generate(@agent_event.request_data) rescue "{}" %></pre>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-medium text-gray-400 border-b border-gray-700 pb-1 mb-2">Response Body</h3>
+      <pre class="bg-gray-800/50 p-4 rounded text-xs overflow-auto"><%= JSON.pretty_generate(@agent_event.response_data) rescue "{}" %></pre>
+    </div>
+
+    <% if @agent_event.log.present? %>
+    <div>
+      <h3 class="text-sm font-medium text-gray-400 border-b border-gray-700 pb-1 mb-2">Full Debug Log</h3>
+      <pre class="bg-gray-900 text-green-400 p-4 rounded text-xs overflow-auto"><%= @agent_event.log %></pre>
+    </div>
+    <% end %>
+  </div>
+</div>

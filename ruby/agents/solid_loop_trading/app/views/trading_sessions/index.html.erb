@@ -1,0 +1,158 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100">Trading Sessions</h1>
+      <p class="mt-2 text-sm text-gray-300">A list of all active and past trading sessions created by MCP.</p>
+    </div>
+  </div>
+
+  <div class="mt-8 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-800/50">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-100 sm:pl-6">UUID / Session ID</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Equity</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Portfolio</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Created</th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700 bg-gray-900">
+              <% @trading_sessions.each do |session| %>
+                <tr>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-mono text-indigo-400 sm:pl-6">
+                    <%= link_to session.uuid[0..7] + "...", trading_session_path(session.uuid), class: "hover:text-indigo-300" %>
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm font-bold text-green-400">
+                    <%= number_to_currency(session.total_equity_usdt, unit: "$") %>
+                  </td>
+                  <td class="px-3 py-4 text-xs text-gray-400 max-w-xs truncate">
+                    <% if session.portfolio.present? %>
+                      <%= session.portfolio.map { |k, v| "#{k}: #{v}" }.join(", ") %>
+                    <% else %>
+                      <span class="text-gray-600">Empty</span>
+                    <% end %>
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                    <%= time_ago_in_words(session.created_at) %> ago
+                  </td>
+                  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <%= link_to "View Details", trading_session_path(session.uuid), class: "text-indigo-400 hover:text-indigo-300" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-14">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h2 class="text-xl font-bold tracking-tight text-gray-100">Remote Sessions <span class="text-sm font-normal text-emerald-400">(Live Trading)</span></h2>
+        <p class="mt-1 text-sm text-gray-400">Agent runs with an active Swiftward session.</p>
+      </div>
+    </div>
+
+    <div class="mt-4 flow-root">
+      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-700">
+              <thead class="bg-emerald-950/30">
+                <tr>
+                  <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-100 sm:pl-6">Swiftward Agent ID</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Run</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Agent</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Status</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">PNL</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Trades</th>
+                  <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Created</th>
+                  <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6"><span class="sr-only">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700 bg-gray-900">
+                <% if @remote_loops.empty? %>
+                  <tr><td colspan="8" class="px-6 py-10 text-center text-sm text-gray-500 italic">No live sessions found.</td></tr>
+                <% end %>
+                <% @remote_loops.each do |loop| %>
+                  <% run = loop.subject %>
+                  <% agent_id = run&.agent_id %>
+                  <% presenter = RemoteTradingSessionPresenter.new(loop.id) rescue nil %>
+                  <% pnl_value = presenter&.pnl rescue nil %>
+                  <% trades_value = presenter&.trades_count rescue nil %>
+                  <tr class="hover:bg-emerald-950/30">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-mono text-emerald-300 sm:pl-6">
+                      <% if agent_id.present? %>
+                        <%= link_to agent_id[0..7] + "...", trading_session_path(agent_id), title: agent_id, class: "hover:text-emerald-300 underline" %>
+                      <% else %>
+                        <span class="text-gray-600">—</span>
+                      <% end %>
+                    </td>
+                    <td class="px-3 py-4 text-sm text-gray-300 max-w-xs truncate">
+                      <% if run %>
+                        <%= link_to run.title.presence || "Run ##{run.id}", agent_run_path(run), class: "text-indigo-400 hover:text-indigo-300" %>
+                      <% else %>
+                        <span class="text-gray-600">—</span>
+                      <% end %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-xs font-mono text-gray-400">
+                      <%= loop.agent_class_name.presence || "—" %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-xs">
+                      <% status_color = { "done" => "text-green-300 bg-green-900/50", "running" => "text-blue-300 bg-blue-900/50", "error" => "text-red-300 bg-red-900/50" }.fetch(loop.status, "text-gray-400 bg-gray-800") %>
+                      <span class="inline-flex items-center rounded px-2 py-0.5 font-semibold uppercase <%= status_color %>"><%= loop.status %></span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm font-bold">
+                      <% if pnl_value %>
+                        <span class="<%= pnl_value >= 0 ? 'text-green-400' : 'text-red-400' %>">
+                          <%= pnl_value >= 0 ? "+" : "" %><%= number_to_currency(pnl_value, unit: "$") %>
+                        </span>
+                      <% else %>
+                        <span class="text-gray-600">—</span>
+                      <% end %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-300">
+                      <% if trades_value %>
+                        <%= trades_value %>
+                      <% else %>
+                        <span class="text-gray-600">—</span>
+                      <% end %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                      <%= time_ago_in_words(loop.created_at) %> ago
+                    </td>
+                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                      <%= link_to "Portfolio", trading_session_path(agent_id), class: "text-emerald-400 hover:text-emerald-300 font-semibold" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <% if @remote_loops.total_pages > 1 %>
+            <div class="mt-4 flex items-center justify-between text-sm text-gray-400">
+              <span>Page <%= @remote_loops.current_page %> of <%= @remote_loops.total_pages %></span>
+              <div class="flex gap-2">
+                <% if @remote_loops.prev_page %>
+                  <%= link_to "← Prev", trading_sessions_path(remote_page: @remote_loops.prev_page), class: "px-3 py-1 rounded border border-gray-600 hover:bg-gray-700" %>
+                <% end %>
+                <% if @remote_loops.next_page %>
+                  <%= link_to "Next →", trading_sessions_path(remote_page: @remote_loops.next_page), class: "px-3 py-1 rounded border border-gray-600 hover:bg-gray-700" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

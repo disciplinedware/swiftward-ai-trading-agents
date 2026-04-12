@@ -1,0 +1,55 @@
+{
+  "id": "heartbeat-trailing-24h-halted",
+  "comment": "Heartbeat: portfolio at 46000, rolling_peak_24h 50000 (trailing drawdown = -8%, hits -8% threshold) - agent halted + Telegram alert",
+  "mode": "sync",
+  "event": {
+    "type": "heartbeat",
+    "entity_id": "agent-42",
+    "data": {
+      "prices": {"ETH-USD": 2500},
+      "check_type": "periodic",
+      "portfolio": {
+        "value": 46000,
+        "peak": 55000,
+        "cash": 0,
+        "rolling_peak_24h": 50000,
+        "day_start_value": 50000,
+        "initial_value": 50000
+      }
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 96,
+      "response": {
+        "reason": "Trailing 24h drawdown exceeded 8% - agent halted",
+        "tag": "heartbeat_drawdown"
+      },
+      "state_changes": {
+        "agent": {
+          "set_labels": {
+            "halted": null
+          }
+        }
+      },
+      "actions": [
+        {
+          "action": "http/request",
+          "params": {
+            "method": "POST",
+            "url": "https://api.telegram.org/bot/sendMessage",
+            "payload": {
+              "chat_id": "",
+              "message_thread_id": "",
+              "text": "[AGENT HALTED] Trailing 24h Drawdown\nAgent: agent-42\nLoss exceeded 8% from 24h peak.\nAll trading suspended until manual resume."
+            }
+          }
+        }
+      ]
+    },
+    "decisions": {
+      "matched_rules": ["heartbeat_trailing_24h"]
+    }
+  }
+}

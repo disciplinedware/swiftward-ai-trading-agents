@@ -1,0 +1,92 @@
+<%= form_with(model: trading_scenario, class: "space-y-8 divide-y divide-gray-700") do |form| %>
+  <div class="space-y-8 divide-y divide-gray-700">
+    <div>
+      <% if trading_scenario.errors.any? %>
+        <div class="rounded-md bg-red-900/50 p-4 mb-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-300">
+                <%= pluralize(trading_scenario.errors.count, "error") %> prohibited this scenario from being saved:
+              </h3>
+              <div class="mt-2 text-sm text-red-300">
+                <ul role="list" class="list-disc pl-5 space-y-1">
+                  <% trading_scenario.errors.each do |error| %>
+                    <li><%= error.full_message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <%= form.label :name, class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.text_field :name, class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-4">
+          <%= form.label :filename, "Context Filename (e.g. data.csv)", class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.text_field :filename, class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+          <p class="mt-2 text-sm text-gray-400">Optional file path.</p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :start_at, "Start Date (UTC)", class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.datetime_field :start_at, class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :end_at, "End Date (UTC)", class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.datetime_field :end_at, class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+          <p class="mt-2 text-xs text-orange-600 font-medium italic leading-relaxed">
+            Hint: Trading is strictly forbidden after the end date. If the scheduled time of a session falls on or after the end date, that session will not occur.
+          </p>
+        </div>
+
+        <div class="sm:col-span-2">
+          <%= form.label :step_interval, "Step Interval (seconds)", class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.number_field :step_interval, value: trading_scenario.step_interval.presence || 86400, class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+          <p class="mt-2 text-xs text-gray-400">e.g. 3600 for 1 hour, 86400 for 1 day.</p>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :prompt, "System Prompt", class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.text_area :prompt, rows: 5, class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="sm:col-span-6">
+          <%= form.label :user_prompt, "User Prompt", class: "block text-sm font-medium leading-6 text-gray-100" %>
+          <div class="mt-2">
+            <%= form.text_area :user_prompt, rows: 5, placeholder: "Optional: If blank, defaults to 'Parse file [path]' if file is present.", class: "block w-full rounded-md border-0 bg-gray-800 py-1.5 text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pt-5">
+    <div class="flex justify-end gap-x-3">
+      <%= link_to "Cancel", trading_scenarios_path, class: "rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-800" %>
+      <%= form.submit class: "inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+    </div>
+  </div>
+<% end %>

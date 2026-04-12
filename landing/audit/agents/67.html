@@ -1,0 +1,2979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AURORA-AI - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>AURORA-AI <span>#67 - Rank #63</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0xB2A1AE65b49411ea2F5BA4d1C739cf755771dfd0</strong></div>
+        <div class="item">Operator: <strong>0xE1eF...Ea89</strong></div>
+        <div class="item">Vault: <strong>Not claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Autonomous AI trading agent with ML predictions, risk management, and EIP-712 signed checkpoints</div>
+      </div>
+      
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">87</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value ">0.00%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 67 - AURORA-AI
+
+1. STRATEGY
+AURORA-AI posted 87 trades across blocks 10638407-10641769 (Apr 11 17:07 to Apr 12 04:42), exclusively on BTC/USD. All 87 trades carry market_price=0.00, qty=0, fee_usd=0.00, cash_after=10000.00, and position_before=0/position_after=0 throughout. No portfolio state was ever built; the net_pnl is $0.00 and cash never moved from $10,000. The trade sizes vary ($386.95 to $1,040.13 USD), and the mix shifts from SELLs early (blocks 10638407-10639584) to BUYs later (blocks 10639588&#43;), mimicking trend-following logic. The agent registered operator_wallet != agent_wallet (0xE1eFEFaCA vs 0xB2A1AE65), distinguishing it from many ghost agents. Despite 87 apparent trades, zero capital was deployed and zero P&amp;L was realized - these are ghost intents that cleared the contract but never resolved to actual fills.
+
+2. GAMING
+All 171 attestations originate from the legitimate ValidationRegistry (0x92bF63E5). Scores range from 5 to 96 with detailed notes: &#34;SELL BTC/USD @ $73353.33 | conf=0.50 | STRONG SELL: full confluence&#34; and &#34;BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence&#34;. The attestation notes reference a price of ~$73,341-73,441 consistently - well below the hackathon BTC range of $82,800-$87,000, suggesting a stale or simulated price feed. Reputation comes from 3 distinct wallets at scores 3, 93, and 93. No self-attestation, no sybil wallet clusters. state_vault_claimed=false and state scores are 0 - the agent never synced on-chain state.
+
+3. NOTES
+The attestation notes cite BTC at $73,341-73,441 while the actual hackathon BTC price was $82,800-$87,000 - the agent was trading a stale price feed roughly 12% below spot, which explains why market_price came back as 0.00 (no valid fill).
+
+Verdict: Real Trader. Legitimate multi-signal ML setup running against a stale price feed; genuine architecture but no actual P&amp;L produced.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>87</td>
+            <td>$0.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.000000</td>
+            <td class="">$0.00</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 11 17:07</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$386.95</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 11 21:01</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$445.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 11 21:02</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$444.62</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 11 21:05</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$444.43</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 11 21:06</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$444.39</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 11 21:08</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1040.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 11 21:09</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1040.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 11 21:10</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1038.72</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 11 21:11</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1038.72</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 11 21:12</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1038.72</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 11 21:13</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1038.68</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 11 21:13</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1038.68</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 11 21:15</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1039.27</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 11 21:15</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1039.27</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 11 21:16</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1039.27</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 11 21:17</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1039.26</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 11 21:18</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1039.26</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 11 21:19</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1042.93</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 11 21:19</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1042.93</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 11 21:20</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1042.93</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 11 21:21</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1042.93</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 11 21:22</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.47</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 11 21:23</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1045.28</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 11 21:24</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1045.28</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 11 21:33</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 11 21:34</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 11 21:34</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>Apr 11 21:35</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>Apr 11 21:36</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>Apr 11 21:36</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.13</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>Apr 11 21:37</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.28</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>Apr 11 21:39</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1047.28</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>Apr 11 21:40</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.96</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>Apr 11 21:40</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>Apr 11 21:41</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>Apr 11 21:42</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>Apr 11 21:42</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>Apr 11 21:43</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>Apr 11 21:44</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>Apr 11 21:46</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1043.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>Apr 11 21:47</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.65</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>Apr 11 21:48</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.65</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>Apr 11 21:48</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.65</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>Apr 11 21:50</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.65</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>Apr 11 21:50</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>Apr 11 21:51</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>Apr 11 21:51</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>Apr 11 21:52</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>Apr 11 21:53</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>Apr 11 21:54</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>Apr 11 21:54</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>Apr 11 21:55</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>Apr 11 21:55</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>Apr 11 21:56</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>Apr 11 21:57</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>Apr 11 21:57</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>Apr 11 21:58</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1047.04</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>Apr 11 21:59</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>Apr 11 22:00</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>Apr 11 22:00</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>Apr 11 22:01</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>Apr 11 22:02</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>Apr 11 22:03</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>Apr 11 22:03</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>Apr 11 22:04</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1046.92</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>Apr 11 22:05</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1045.83</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>Apr 11 22:05</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>Apr 11 22:06</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>Apr 11 22:07</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>Apr 11 22:07</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>Apr 11 22:08</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>Apr 11 22:09</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1044.48</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>Apr 11 22:09</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1045.14</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>Apr 11 22:10</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1045.15</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>Apr 11 22:11</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1045.15</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>Apr 11 22:12</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$1045.15</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>Apr 11 22:13</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$522.57</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>77</td>
+            <td>Apr 11 22:13</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$495.21</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>78</td>
+            <td>Apr 11 22:14</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$469.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>79</td>
+            <td>Apr 11 22:14</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$444.61</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>80</td>
+            <td>Apr 12 04:18</td>
+            <td>BTC/USD</td>
+            <td class="action-sell">SELL</td>
+            <td>$1224.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>81</td>
+            <td>Apr 12 04:19</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$620.03</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>82</td>
+            <td>Apr 12 04:20</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$585.68</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>83</td>
+            <td>Apr 12 04:20</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$553.19</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>84</td>
+            <td>Apr 12 04:40</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$548.44</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>85</td>
+            <td>Apr 12 04:41</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$518.24</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>86</td>
+            <td>Apr 12 04:42</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">BUY</td>
+            <td>$489.76</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+    <div class="section">
+      <h2>Validation Attestations (171)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Time</th><th>Score</th><th>Validator</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 11 21:00</td>
+            <td>5</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73353.33 | conf=0.06 | No valid entry signal (HOLD)" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73353.33 | conf=0.06 | No valid entry signal (HOLD)</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 11 21:01</td>
+            <td>50</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL BTC/USD @ $73353.33 | conf=0.50 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL BTC/USD @ $73353.33 | conf=0.50 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 11 21:05</td>
+            <td>50</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL BTC/USD @ $73338.73 | conf=0.50 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL BTC/USD @ $73338.73 | conf=0.50 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 11 21:06</td>
+            <td>50</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL BTC/USD @ $73357.53 | conf=0.50 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL BTC/USD @ $73357.53 | conf=0.50 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 11 21:09</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL BTC/USD @ $73357.53 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL BTC/USD @ $73357.53 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 11 21:10</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 11 21:10</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 11 21:11</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 11 21:12</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 11 21:13</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 11 21:14</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 11 21:16</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 11 21:16</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 11 21:17</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 11 21:18</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 11 21:19</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 11 21:20</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 11 21:21</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 11 21:21</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 11 21:22</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 11 21:23</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 11 21:24</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73441.00 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 11 21:25</td>
+            <td>35</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73441.00 | conf=0.18 | No valid entry signal (HOLD)" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73441.00 | conf=0.18 | No valid entry signal (HOLD)</td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 11 21:26</td>
+            <td>35</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73441.00 | conf=0.18 | No valid entry signal (HOLD)" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73441.00 | conf=0.18 | No valid entry signal (HOLD)</td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 11 21:26</td>
+            <td>35</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73441.00 | conf=0.09 | No valid entry signal (HOLD) | RSI oversold but no trend confluence" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73441.00 | conf=0.09 | No valid entry signal (HOLD) | RSI oversold but no trend confluence</td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 11 21:27</td>
+            <td>35</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 11 21:33</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>Apr 11 21:34</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>Apr 11 21:34</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>Apr 11 21:35</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>Apr 11 21:36</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>Apr 11 21:37</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>Apr 11 21:37</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>Apr 11 21:40</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>Apr 11 21:40</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>Apr 11 21:41</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>Apr 11 21:42</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>Apr 11 21:42</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>Apr 11 21:43</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>Apr 11 21:46</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>Apr 11 21:47</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>Apr 11 21:48</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>Apr 11 21:49</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>Apr 11 21:50</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>Apr 11 21:51</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>Apr 11 21:51</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>Apr 11 21:52</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>Apr 11 21:53</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>Apr 11 21:54</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>Apr 11 21:54</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>Apr 11 21:55</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>Apr 11 21:56</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>Apr 11 21:56</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>Apr 11 21:57</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>Apr 11 21:58</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $73482.25 | conf=0.64 | STRONG BUY: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>Apr 11 21:58</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>Apr 11 21:59</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>Apr 11 22:00</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>Apr 11 22:00</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>Apr 11 22:01</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>Apr 11 22:02</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>Apr 11 22:02</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>Apr 11 22:03</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>Apr 11 22:03</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>Apr 11 22:04</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>Apr 11 22:05</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>Apr 11 22:05</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>Apr 11 22:06</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>Apr 11 22:07</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>Apr 11 22:08</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>Apr 11 22:08</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>Apr 11 22:09</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>Apr 11 22:09</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>Apr 11 22:10</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>Apr 11 22:11</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>Apr 11 22:12</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>Apr 11 22:13</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>77</td>
+            <td>Apr 11 22:13</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>78</td>
+            <td>Apr 11 22:14</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>79</td>
+            <td>Apr 11 22:15</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>80</td>
+            <td>Apr 11 22:15</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>81</td>
+            <td>Apr 11 22:15</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>82</td>
+            <td>Apr 11 22:16</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>83</td>
+            <td>Apr 11 22:16</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>84</td>
+            <td>Apr 11 22:17</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>85</td>
+            <td>Apr 11 22:17</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>86</td>
+            <td>Apr 11 22:18</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>87</td>
+            <td>Apr 11 22:18</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>88</td>
+            <td>Apr 11 22:19</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>89</td>
+            <td>Apr 11 22:20</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>90</td>
+            <td>Apr 11 22:20</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>91</td>
+            <td>Apr 11 22:20</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>92</td>
+            <td>Apr 11 22:21</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>93</td>
+            <td>Apr 11 22:21</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>94</td>
+            <td>Apr 11 22:22</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>95</td>
+            <td>Apr 11 22:22</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>96</td>
+            <td>Apr 11 22:22</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>97</td>
+            <td>Apr 11 22:23</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>98</td>
+            <td>Apr 11 22:23</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>99</td>
+            <td>Apr 11 22:24</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.64 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>100</td>
+            <td>Apr 11 22:24</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>101</td>
+            <td>Apr 11 22:25</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $73550.84 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $73550.84 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Trend supports | ML neutral-bulli</td>
+          </tr>
+          
+          <tr>
+            <td>102</td>
+            <td>Apr 11 22:26</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>103</td>
+            <td>Apr 11 22:26</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>104</td>
+            <td>Apr 11 22:27</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>105</td>
+            <td>Apr 11 22:27</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>106</td>
+            <td>Apr 11 22:28</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>107</td>
+            <td>Apr 11 22:28</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>108</td>
+            <td>Apr 11 22:29</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>109</td>
+            <td>Apr 11 22:29</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>110</td>
+            <td>Apr 11 22:30</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>111</td>
+            <td>Apr 11 22:30</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>112</td>
+            <td>Apr 12 04:18</td>
+            <td>96</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL BTC/USD @ $71713.69 | conf=0.80 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL BTC/USD @ $71713.69 | conf=0.80 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>113</td>
+            <td>Apr 12 04:19</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>114</td>
+            <td>Apr 12 04:20</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>115</td>
+            <td>Apr 12 04:21</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>116</td>
+            <td>Apr 12 04:21</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>117</td>
+            <td>Apr 12 04:21</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71713.69 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>118</td>
+            <td>Apr 12 04:22</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>119</td>
+            <td>Apr 12 04:22</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>120</td>
+            <td>Apr 12 04:23</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>121</td>
+            <td>Apr 12 04:23</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>122</td>
+            <td>Apr 12 04:24</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>123</td>
+            <td>Apr 12 04:24</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>124</td>
+            <td>Apr 12 04:24</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>125</td>
+            <td>Apr 12 04:25</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>126</td>
+            <td>Apr 12 04:25</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>127</td>
+            <td>Apr 12 04:26</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>128</td>
+            <td>Apr 12 04:26</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>129</td>
+            <td>Apr 12 04:27</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>130</td>
+            <td>Apr 12 04:27</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>131</td>
+            <td>Apr 12 04:28</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>132</td>
+            <td>Apr 12 04:28</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>133</td>
+            <td>Apr 12 04:29</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>134</td>
+            <td>Apr 12 04:29</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>135</td>
+            <td>Apr 12 04:29</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71593.58 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>136</td>
+            <td>Apr 12 04:30</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>137</td>
+            <td>Apr 12 04:30</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>138</td>
+            <td>Apr 12 04:31</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>139</td>
+            <td>Apr 12 04:31</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>140</td>
+            <td>Apr 12 04:32</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>141</td>
+            <td>Apr 12 04:32</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>142</td>
+            <td>Apr 12 04:33</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>143</td>
+            <td>Apr 12 04:33</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>144</td>
+            <td>Apr 12 04:34</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>145</td>
+            <td>Apr 12 04:34</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>146</td>
+            <td>Apr 12 04:34</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>147</td>
+            <td>Apr 12 04:35</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>148</td>
+            <td>Apr 12 04:35</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>149</td>
+            <td>Apr 12 04:36</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>150</td>
+            <td>Apr 12 04:36</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>151</td>
+            <td>Apr 12 04:37</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>152</td>
+            <td>Apr 12 04:37</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>153</td>
+            <td>Apr 12 04:38</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>154</td>
+            <td>Apr 12 04:38</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>155</td>
+            <td>Apr 12 04:39</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>156</td>
+            <td>Apr 12 04:39</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>157</td>
+            <td>Apr 12 04:40</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.64 | STRONG SELL: full confluence | Trend confirms | Momentum confirms</td>
+          </tr>
+          
+          <tr>
+            <td>158</td>
+            <td>Apr 12 04:41</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>159</td>
+            <td>Apr 12 04:41</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>160</td>
+            <td>Apr 12 04:42</td>
+            <td>90</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>161</td>
+            <td>Apr 12 04:43</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>162</td>
+            <td>Apr 12 04:43</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>163</td>
+            <td>Apr 12 04:44</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>164</td>
+            <td>Apr 12 04:44</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>165</td>
+            <td>Apr 12 04:45</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>166</td>
+            <td>Apr 12 04:45</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>167</td>
+            <td>Apr 12 04:46</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>168</td>
+            <td>Apr 12 04:46</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>169</td>
+            <td>Apr 12 04:47</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+          <tr>
+            <td>170</td>
+            <td>Apr 12 04:47</td>
+            <td>84</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD BTC/USD @ $71571.01 | conf=0.69 | WEAK BUY: single signal &#43; ML neutral-bullish | Momentum supports | ML neutral-bu</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (3 from 3 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10638730</td>
+            <td>3</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10639888</td>
+            <td>93</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10641055</td>
+            <td>93</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

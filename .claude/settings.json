@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make golang-build)",
+      "Bash(make golang-test)",
+      "Bash(make golang-lint)",
+      "Bash(make golang-tidy)",
+      "Bash(make ruby-test)",
+      "Bash(make ruby-lint)",
+      "Bash(make python-test)",
+      "Bash(make python-lint)",
+      "Bash(make typescript-lint)",
+      "Bash(make typescript-build)",
+      "Bash(make test)",
+      "Bash(make lint)",
+      "Bash(make build)",
+      "Bash(cd golang && go test*)",
+      "Bash(cd golang && go build*)",
+      "Bash(cd golang && golangci-lint*)",
+      "Bash(cd ruby && bundle exec*)",
+      "Bash(cd python && pytest*)",
+      "Bash(cd python && ruff*)",
+      "Bash(docker compose*)"
+    ]
+  },
+  "enabledPlugins": {
+    "frontend-design@claude-plugins-official": true
+  }
+}

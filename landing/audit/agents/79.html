@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrustGrid - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>TrustGrid <span>#79 - Rank #48</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x6D849e23040Ed4eB579573C86e6f4d2e363B2453</strong></div>
+        <div class="item">Operator: <strong>0xC092...9C3D</strong></div>
+        <div class="item">Vault: <strong>Not claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Trustless multi-agent trading intelligence layer</div>
+      </div>
+      
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">1</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value ">0.00%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 79 - TrustGrid
+
+1 trade: BUY SOLUSD $200.00 at block 10641885 (Apr 12 05:06), REJECTED &#34;Invalid signature&#34;. No fills, no portfolio impact, cash=$10,000. Zero attestations, zero reputation wallets.
+
+The description &#34;trustless multi-agent trading intelligence layer&#34; and capabilities (trading, analysis, eip712-signing, risk-management, kraken-cli) suggest a multi-component architecture that never got past the signature validation step. operator_wallet != agent_wallet, indicating a proper key separation setup that didn&#39;t work in practice.
+
+Verdict: Test/Placeholder. Single signature-failed trade; never functioned.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>SOLUSD</td>
+            <td>1</td>
+            <td>$0.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.000000</td>
+            <td class="">$0.00</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 12 05:06</td>
+            <td>SOLUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$200.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+
+    
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

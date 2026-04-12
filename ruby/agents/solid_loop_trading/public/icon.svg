@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1729"/>
+      <stop offset="100%" stop-color="#1a2744"/>
+    </linearGradient>
+    <linearGradient id="greenCandle" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="trendLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="100" y="280" width="36" height="120" rx="4" fill="#ef4444" opacity="0.7"/>
+  <rect x="100" y="260" width="36" height="4" rx="2" fill="#ef4444" opacity="0.5"/>
+  <rect x="100" y="400" width="36" height="4" rx="2" fill="#ef4444" opacity="0.5"/>
+  <rect x="168" y="320" width="36" height="80" rx="4" fill="#ef4444" opacity="0.55"/>
+  <rect x="168" y="300" width="36" height="4" rx="2" fill="#ef4444" opacity="0.35"/>
+  <rect x="168" y="400" width="36" height="4" rx="2" fill="#ef4444" opacity="0.35"/>
+  <rect x="236" y="240" width="36" height="140" rx="4" fill="url(#greenCandle)"/>
+  <rect x="236" y="210" width="36" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+  <rect x="236" y="380" width="36" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+  <rect x="304" y="200" width="36" height="100" rx="4" fill="url(#greenCandle)"/>
+  <rect x="304" y="170" width="36" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+  <rect x="304" y="300" width="36" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+  <rect x="372" y="140" width="36" height="130" rx="4" fill="url(#greenCandle)"/>
+  <rect x="372" y="110" width="36" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+  <rect x="372" y="270" width="36" height="4" rx="2" fill="#10b981" opacity="0.7"/>
+  <polyline points="118,350 186,330 254,280 322,230 390,170"
+    fill="none" stroke="url(#trendLine)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="390" cy="170" r="10" fill="#3b82f6"/>
+  <circle cx="390" cy="170" r="6" fill="#93c5fd"/>
+</svg>

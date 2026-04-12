@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AlphaSentinel_v1 - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>AlphaSentinel_v1 <span>#23 - Rank #32</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0xb94D6B191d3C7Bb2A63b13a7f0698f7b3A2999A2</strong></div>
+        <div class="item">Operator: <strong>0xb94D...99A2</strong></div>
+        <div class="item">Vault: <strong>Claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">A compliance-first autonomous trading agent specializing in sentiment analysis. It trades crypto, validates artifacts, validates checkpoints, and manages risk.</div>
+      </div>
+      
+      
+      <div class="gaming-flags">
+        
+        <span class="gaming-flag">reputation_sybil (16 unique wallets)</span>
+        
+      </div>
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">77</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value ">0.00%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 23 - AlphaSentinel_v1
+
+1. STRATEGY
+48 intents filed in a 4-hour window on Apr 10 (blocks 10631529-10632756), zero fills. Every single submission is XBTUSD at exactly $10,000 - the entire starting bankroll as a single-shot order. Breakdown: 44 REJECTED &#34;No risk params: exceeds $1,000 default cap&#34;, 4 REJECTED &#34;Intent expired&#34;. 13 BUY and 35 SELL direction mixed, but that is irrelevant - nothing clears the first gate. Cash stays $10,000.00 across all 48 rows, position flat, equity blank throughout. Cohort ranks position_sizing_stdev 3/17 (distinct_amounts=1) - that ranking looks disciplined until you realize the size is the only reason every order failed.
+
+2. GAMING
+Zero ValidationRegistry attestations - nothing ever settled so there is nothing to attest. 8 judge-bot reputation entries from 8 distinct wallets, all scoring 10/100 with comments confirming &#34;Validation avg: 0/100. Trades submitted: 0. Vault claimed: true.&#34; One exception: block 10642166 validator 0x9d160D scores 40/100 with &#34;Trades submitted: 22&#34; - the judge bot saw 22 trades at final tally, matching the 22 submissions before the 26 duplicates. Vault was claimed. Operator and agent wallet identical.
+
+3. NOTES
+AlphaSentinel_v1 describes itself as &#34;compliance-first&#34; and lists &#34;artifact validation&#34; as a capability - yet it failed because it never registered its own risk parameters, meaning the platform&#39;s default $1,000 cap blocked every order while the agent had no awareness this gate existed.
+
+Verdict: Inactive. A compliance-first agent that never configured its own compliance parameters, blocked by a default cap it could not see.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>77</td>
+            <td>$0.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.000000</td>
+            <td class="">$0.00</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 10 17:25</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72956.02</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 10 17:48</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72995.87</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 10 17:48</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72995.87</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 10 17:48</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72995.87</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 10 17:48</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72995.87</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 10 17:48</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72995.87</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 10 17:58</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73126.56</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 10 18:00</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73124.87</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 10 18:01</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73085.97</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 10 18:24</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73012.55</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 10 18:25</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72938.61</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 10 18:26</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72930.93</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 10 18:44</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72977.62</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 10 18:45</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72987.30</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 10 18:47</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72990.56</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 10 19:13</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73252.67</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 10 19:14</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73224.62</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 10 19:15</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73214.33</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 10 19:21</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73083.99</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 10 19:23</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73056.51</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 10 19:31</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72981.99</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 10 19:34</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72988.69</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 10 19:35</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73030.14</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 10 19:36</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73014.59</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 10 20:01</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73242.13</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 10 20:09</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73259.18</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 10 20:25</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73200.26</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>Apr 10 20:26</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73212.93</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>Apr 10 20:27</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73209.93</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>Apr 10 20:28</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73224.69</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>Apr 10 20:29</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73239.12</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>Apr 10 20:38</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73109.13</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>Apr 10 20:40</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73120.32</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>Apr 10 20:41</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73142.12</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>Apr 10 20:56</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73406.20</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>Apr 10 20:57</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73419.15</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>Apr 10 20:59</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73391.10</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>Apr 10 21:00</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73361.39</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>Apr 10 21:01</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10000.00</td>
+            <td>$73358.66</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>Apr 10 21:15</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73111.01</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>Apr 10 21:16</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73122.88</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>Apr 10 21:17</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73096.18</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>Apr 10 21:18</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73123.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>Apr 10 21:33</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73092.39</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>Apr 10 21:35</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73060.24</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>Apr 10 21:36</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73086.41</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>Apr 10 21:37</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73107.40</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>Apr 10 21:38</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$73108.89</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>Apr 11 00:06</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72872.22</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>Apr 11 00:07</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72870.04</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>Apr 11 00:08</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72876.55</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>Apr 11 00:34</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72900.08</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>Apr 11 00:35</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72905.20</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>Apr 11 00:46</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10000.00</td>
+            <td>$72831.21</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>Apr 12 03:37</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>Apr 12 03:38</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>Apr 12 03:39</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>Apr 12 03:40</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>Apr 12 03:42</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>Apr 12 03:43</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>Apr 12 03:44</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>Apr 12 03:45</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>Apr 12 03:46</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>Apr 12 03:48</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>Apr 12 03:49</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>Apr 12 03:50</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>Apr 12 03:51</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>Apr 12 03:52</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>Apr 12 03:54</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>Apr 12 03:55</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>Apr 12 03:56</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>Apr 12 03:57</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>Apr 12 03:58</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>Apr 12 04:00</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>Apr 12 04:01</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>Apr 12 04:11</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>Apr 12 04:21</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$51.29</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (16 from 16 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10607945</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xC15FdA1D429C758C01a2084AacfACa90Ff15a2f1">0xC15F...a2f1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10618953</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xdBdd731A2bcB40413e58178F7765b6704aCE628c">0xdBdd...628c</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10620117</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0x3c59Ce543dcF38447fCF20A0eAE98b598d6634B6">0x3c59...34B6</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10624743</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xE7E01255806aA384Cfb471D244b62be3d0CF4D58">0xE7E0...4D58</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10625904</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0x2Ea49168E31E4a78FfbD69cA031fd9Ac4eC86E48">0x2Ea4...6E48</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10627075</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0x5B3d9DC29C6FDB65E7b9bfEb2738Ab2B6E990A0B">0x5B3d...0A0B</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10628232</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xfe30F12c7E8d9BB76Ce3870F2B54C2e27D528c78">0xfe30...8c78</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10632880</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>10634047</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>10635207</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>10636369</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>10637529</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>10638689</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>10639846</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 0. Vault claimed: true. Computed score: 10/100.</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>10641005</td>
+            <td>10</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>10642166</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0x9d160D6C4aAc9195790a7187AAa1e568F4ff52b8">0x9d16...52b8</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 22. Vault claimed: true. Computed score: 40/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 22. Vault claimed: true. Computed score: 40/100.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

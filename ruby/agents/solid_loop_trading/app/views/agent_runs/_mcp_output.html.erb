@@ -1,0 +1,16 @@
+<div class="mt-4 space-y-4">
+  <div class="p-4 bg-black text-green-400 font-mono text-sm rounded-lg shadow-inner overflow-x-auto border-l-4 border-green-500">
+    <div class="mb-2 text-gray-500 flex justify-between items-center">
+      <span>Result</span>
+      <span>Duration: <%= duration.round(2) %>s</span>
+    </div>
+    <pre class="whitespace-pre-wrap"><%= result %></pre>
+  </div>
+
+  <% if local_assigns[:log].present? %>
+    <div class="p-4 bg-black text-gray-400 font-mono text-[10px] rounded-lg shadow-inner overflow-x-auto border-l-4 border-gray-800">
+      <div class="mb-2 text-gray-500 uppercase tracking-wider font-bold">Wire Log (MCP Inspector)</div>
+      <pre class="whitespace-pre-wrap"><%= log %></pre>
+    </div>
+  <% end %>
+</div>

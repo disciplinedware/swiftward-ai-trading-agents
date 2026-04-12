@@ -1,0 +1,52 @@
+{
+  "id": "small-trade-approved",
+  "comment": "Normal small trade within all limits - approved, rate bucket incremented",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 1000,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "EMA12 crossed above EMA26, bullish momentum confirmed",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "approved",
+      "priority": 1,
+      "response": {},
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": []
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders"
+      ]
+    }
+  }
+}

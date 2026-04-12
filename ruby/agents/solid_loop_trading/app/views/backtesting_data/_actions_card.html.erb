@@ -1,0 +1,47 @@
+<div class="bg-gray-900 p-6 rounded-lg shadow-sm ring-1 ring-gray-700 lg:col-span-2">
+  <h2 class="text-xl font-semibold text-gray-100 mb-4">Actions</h2>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        <%= button_to download_candles_backtesting_data_path, method: :post, disabled: @download_candles_running, class: "rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed" do %>
+          Download Candles
+        <% end %>
+        <% if @download_candles_running %>
+          <span class="inline-flex items-center rounded-full bg-yellow-900/50 px-2.5 py-0.5 text-xs font-medium text-yellow-300">
+            Running
+          </span>
+        <% end %>
+      </div>
+      <p class="text-sm text-gray-400">Fetch OHLC candles from Binance for all tickers. Job is singleton &mdash; already running jobs block new enqueues.</p>
+      <p class="text-xs text-gray-500 mt-1">Status: <%= @candles_job_status %><%= " #{distance_of_time_in_words(@candles_job_last.finished_at, Time.current)} ago" if @candles_job_last&.finished_at && @candles_job_status == "Completed" %><%= " #{distance_of_time_in_words(@candles_job_last.created_at, Time.current)} ago" if @candles_job_last && @candles_job_status == "Running..." %></p>
+    </div>
+
+    <div>
+      <div class="flex items-center gap-3 mb-2">
+        <%= button_to parse_news_backtesting_data_path, method: :post, disabled: @parse_news_running, class: "rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed" do %>
+          Parse News
+        <% end %>
+        <% if @parse_news_running %>
+          <span class="inline-flex items-center rounded-full bg-yellow-900/50 px-2.5 py-0.5 text-xs font-medium text-yellow-300">
+            Running
+          </span>
+        <% end %>
+      </div>
+      <p class="text-sm text-gray-400">Import Telegram JSON exports from <code class="text-gray-300">storage/external/news/</code>. Job is singleton &mdash; won't run twice in parallel.</p>
+      <p class="text-xs text-gray-500 mt-1">Status: <%= @news_job_status %><%= " #{distance_of_time_in_words(@news_job_last.finished_at, Time.current)} ago" if @news_job_last&.finished_at && @news_job_status == "Completed" %><%= " #{distance_of_time_in_words(@news_job_last.created_at, Time.current)} ago" if @news_job_last && @news_job_status == "Running..." %></p>
+      <% if @news_files.any? %>
+        <div class="mt-3 bg-gray-800/50 rounded p-3 max-h-40 overflow-y-auto">
+          <p class="text-xs text-gray-400 mb-1"><%= @news_files.size %> file<%= @news_files.size == 1 ? '' : 's' %> found:</p>
+          <ul class="text-xs text-gray-500 space-y-0.5 font-mono">
+            <% @news_files.each do |f| %>
+              <li><%= File.basename(f) %> <span class="text-gray-600">(<%= number_to_human_size(File.size(f)) %>)</span></li>
+            <% end %>
+          </ul>
+        </div>
+      <% else %>
+        <p class="mt-3 text-xs text-gray-600 italic">No JSON files found in storage/external/news/</p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Random Trader",
+  "description": "Random coin-flip trading agent. No strategy, no AI - pure randomness. Baseline benchmark for comparing AI agents.",
+
+  "services": [],
+  "active": true,
+  "supportedTrust": ["validation", "reputation"]
+}

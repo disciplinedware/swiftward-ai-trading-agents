@@ -1,0 +1,75 @@
+{
+  "id": "close-only-mode",
+  "comment": "Portfolio dropped 6% intraday (47000/50000-1 = -0.06 < -0.05) - close-only mode (tier 3), buy blocked + Telegram alert",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "ingested_at": "2026-04-02T14:37:00Z",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 1000,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "Buying the dip",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 47000,
+        "peak": 50000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    },
+    "trading/compute_window_end": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 105,
+      "response": {
+        "reason": "Close-only mode active (intraday drawdown > 5%) - only position exits allowed",
+        "tag": "close_only",
+        "risk_tier": 3,
+        "retry_after": "2026-04-02T15:00:00Z"
+      },
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": [
+        {
+          "action": "http/request",
+          "params": {
+            "method": "POST",
+            "url": "https://api.telegram.org/bot/sendMessage",
+            "payload": {
+              "chat_id": "",
+              "message_thread_id": "",
+              "text": "[CLOSE-ONLY] Agent: agent-42\nIntraday drawdown exceeded 5%. Only exits allowed until 2026-04-02T15:00:00Z.\nPair: ETH-USD | buy"
+            }
+          }
+        }
+      ]
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "close_only_mode"
+      ]
+    }
+  }
+}

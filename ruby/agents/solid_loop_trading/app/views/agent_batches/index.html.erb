@@ -1,0 +1,73 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-100">Agent Batches</h1>
+        <p class="mt-2 text-sm text-gray-300">List of batches.</p>
+      </div>
+    </div>
+
+    <div class="mt-8 flow-root">
+      <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-700">
+              <thead class="bg-gray-800/50">
+                <tr>
+                   <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-100 sm:pl-6">ID</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Prefix</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Model</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Conc.</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Att.</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Status</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Progress</th>
+                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Created At</th>
+                   <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                     <span class="sr-only">Actions</span>
+                   </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-700 bg-gray-900">
+                <% @agent_batches.each do |benchmark| %>
+                  <tr>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-100 sm:pl-6">
+                      <%= link_to benchmark.id, benchmark, class: "text-indigo-400 hover:text-indigo-300" %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-100 border-l border-gray-700">
+                      <%= link_to benchmark, class: "hover:underline font-bold" do %>
+                        <%= benchmark.prefix.presence || "No Prefix" %>
+                      <% end %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                      <%= benchmark.agent_model&.name %>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400"><%= benchmark.concurrency %></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400"><%= benchmark.attempts %></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                       <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset
+                         <%= case benchmark.status
+                             when 'init' then 'bg-gray-800/50 text-gray-300 ring-gray-700/50'
+                             when 'started' then 'bg-green-950/50 text-green-300 ring-green-700/50'
+                             when 'completed' then 'bg-blue-950/50 text-blue-300 ring-blue-700/30'
+                             when 'error' then 'bg-red-950/50 text-red-400 ring-red-700/50'
+                             else 'bg-gray-800/50 text-gray-300 ring-gray-700/50'
+                             end %>">
+                         <%= benchmark.status.humanize %>
+                       </span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                        <% stats = benchmark.progress_stats %>
+                        <%= stats[:completed] %> / <%= stats[:total] %> (<%= stats[:percent] %>%)
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400"><%= benchmark.created_at.to_fs(:short) %></td>
+                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 flex items-center justify-end gap-2">
+                       <%= link_to "Show", benchmark, class: "bg-indigo-600 text-white px-2 py-1 rounded text-xs hover:bg-indigo-500" %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

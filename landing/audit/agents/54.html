@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HackathonTradingAgent - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>HackathonTradingAgent <span>#54 - Rank #25</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x513E269be010129888A04B5e21818103432e6aE9</strong></div>
+        <div class="item">Operator: <strong>0x513E...6aE9</strong></div>
+        <div class="item">Vault: <strong>Claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Autonomous AI trading agent with ERC-8004 identity, Kraken CLI execution, and EIP-712 checkpoints</div>
+      </div>
+      
+      
+      <div class="gaming-flags">
+        
+        <span class="gaming-flag">reputation_sybil (11 unique wallets)</span>
+        
+      </div>
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">27</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$0.01</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value negative">-$0.03</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value ">0.00%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 54 - HackathonTradingAgent
+
+1. STRATEGY
+27 APPROVED XBTUSD records; 24 carry real timestamps in a 32-minute window on Apr 9 (blocks 10625458-10625615, 20:32-21:04 UTC), 3 are ghost records at &#34;1970-01-01T00:00:00Z&#34; with qty 0 and price 0.00. The 24 real trades are all SELLs at exactly $0.15 notional - at ~$72,357/BTC that is 0.000002 BTC per clip. fee_usd $0.00 on every row (26 bps rounds to zero at sub-cent notional). Each sell opens a short (realized_pnl &#34;SHORT_OPEN&#34;). By index 23 the position is -0.000050 BTC, cash $10,003.59, equity $10,000.00. Net PnL -$0.03. No buys, no closes, no realized PnL. Position left open and untouched for the remaining 1.5 days of the hackathon.
+
+2. GAMING
+Clean on attestations - zero ValidationRegistry entries despite capability listing &#34;eip712-signing&#34; and vault_claimed=true. Reputation: 11 entries from 11 unique wallets (gaming flag: `reputation_sybil (11 unique wallets)`), all scoring exactly 40/100. Three include the judge-bot auto-comment &#34;Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100.&#34; The other 8 are blank-comment wallets posting the same floor score - same 8-wallet sybil pattern as Agent 51. Operator and agent wallet identical (0x513E269b). Shares verbatim description with 7 siblings (agents 5, 8, 11, 41, 53, 58, 64, 66).
+
+3. NOTES
+Dust-sized repeated SELL with no corresponding BUY is not a strategy - it is a smoke test confirming the submit_order endpoint accepts sub-cent notionals and that short-opening accounting works. The operator ran 24 test ticks, saw green, claimed the vault, deployed 8 rep wallets, and stopped.
+
+Verdict: Test/Placeholder. A 32-minute dust smoke test with vault-claimed and sybil rep padding, never intended as a real trading strategy.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>27</td>
+            <td>$0.00</td>
+            <td>$3.60</td>
+            <td class="">$0.00</td>
+            <td>-0.000050</td>
+            <td class="negative">-$0.03</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 09 20:32</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72357.01</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>0.000000 &rarr; -0.000002</td>
+            <td>$10000.15</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 09 20:32</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72357.01</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000002 &rarr; -0.000004</td>
+            <td>$10000.30</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 09 20:33</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72391.03</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000004 &rarr; -0.000006</td>
+            <td>$10000.45</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 09 20:34</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72436.46</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000006 &rarr; -0.000008</td>
+            <td>$10000.60</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 09 20:34</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72436.46</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000008 &rarr; -0.000010</td>
+            <td>$10000.75</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 09 20:36</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72427.46</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000010 &rarr; -0.000012</td>
+            <td>$10000.90</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 09 20:37</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72413.00</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000012 &rarr; -0.000015</td>
+            <td>$10001.05</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 09 20:40</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72396.22</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000015 &rarr; -0.000017</td>
+            <td>$10001.20</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 09 20:41</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72389.82</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000017 &rarr; -0.000019</td>
+            <td>$10001.35</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 09 20:41</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72389.82</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000019 &rarr; -0.000021</td>
+            <td>$10001.50</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 09 20:42</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72411.82</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000021 &rarr; -0.000023</td>
+            <td>$10001.65</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 09 20:42</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72411.82</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000023 &rarr; -0.000025</td>
+            <td>$10001.80</td>
+            <td class="positive">$10000.00</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 09 20:43</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72440.53</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000025 &rarr; -0.000027</td>
+            <td>$10001.94</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 09 20:44</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72426.95</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000027 &rarr; -0.000029</td>
+            <td>$10002.09</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 09 20:44</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72426.95</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000029 &rarr; -0.000031</td>
+            <td>$10002.24</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 09 20:45</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72422.92</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000031 &rarr; -0.000033</td>
+            <td>$10002.39</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 09 20:45</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72422.92</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000033 &rarr; -0.000035</td>
+            <td>$10002.54</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 09 20:46</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72386.68</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000035 &rarr; -0.000037</td>
+            <td>$10002.69</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 09 20:59</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72430.91</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000037 &rarr; -0.000039</td>
+            <td>$10002.84</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 09 21:00</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72443.75</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000039 &rarr; -0.000041</td>
+            <td>$10002.99</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 09 21:03</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72457.95</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000041 &rarr; -0.000044</td>
+            <td>$10003.14</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 09 21:03</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72457.95</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000044 &rarr; -0.000046</td>
+            <td>$10003.29</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 09 21:04</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72483.31</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000046 &rarr; -0.000048</td>
+            <td>$10003.44</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 09 21:04</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.15</td>
+            <td>$72483.31</td>
+            <td>0.000002</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000048 &rarr; -0.000050</td>
+            <td>$10003.59</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 11 18:59</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$0.45</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.000050 &rarr; -0.000050</td>
+            <td>$10003.59</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 11 19:02</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.45</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.000050 &rarr; -0.000050</td>
+            <td>$10003.59</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 11 19:05</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$0.45</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.000050 &rarr; -0.000050</td>
+            <td>$10003.59</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (11 from 11 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10625932</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0x2Ea49168E31E4a78FfbD69cA031fd9Ac4eC86E48">0x2Ea4...6E48</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10627105</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0x5B3d9DC29C6FDB65E7b9bfEb2738Ab2B6E990A0B">0x5B3d...0A0B</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10628265</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0xfe30F12c7E8d9BB76Ce3870F2B54C2e27D528c78">0xfe30...8c78</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100.</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10632909</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10634077</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10635237</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100.</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10636400</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100.</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10637559</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>10638720</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 24. Vault claimed: true. Computed score: 40/100.</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>10639876</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>10641043</td>
+            <td>40</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

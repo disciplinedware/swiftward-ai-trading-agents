@@ -1,0 +1,32 @@
+## ADDED Requirements
+
+### Requirement: TradeIntent model
+The system SHALL provide a `TradeIntent` Pydantic `BaseModel` at `src/common/models/trade_intent.py` representing a trading instruction from the agent brain to the execution layer.
+
+Fields:
+- `asset: str` — ticker symbol (e.g. `"SOL"`)
+- `action: Literal["LONG", "FLAT"]`
+- `size_pct: Decimal` — fraction of portfolio (e.g. `Decimal("0.09")`)
+- `stop_loss: Decimal` — price level
+- `take_profit: Decimal` — price level
+- `strategy: Literal["trend_following", "breakout", "mean_reversion"]`
+- `reasoning_uri: str` — IPFS URI of reasoning trace
+- `trigger_reason: Literal["clock", "price_spike", "stop_loss", "news", "liquidation", "fear_greed"]`
+
+All `Decimal` fields SHALL serialize to `str` in `model_dump()` and accept `str | Decimal | int | float` in `model_validate()`.
+
+#### Scenario: Round-trip serialization
+- **WHEN** a `TradeIntent` is created with valid fields and `.model_dump()` is called
+- **THEN** `Decimal` fields appear as `str` in the dict, and `model_validate()` of that dict returns an equal `TradeIntent`
+
+#### Scenario: Invalid action rejected
+- **WHEN** `TradeIntent` is constructed with `action="SHORT"`
+- **THEN** Pydantic raises `ValidationError`
+
+#### Scenario: Invalid strategy rejected
+- **WHEN** `TradeIntent` is constructed with `strategy="scalping"`
+- **THEN** Pydantic raises `ValidationError`
+
+#### Scenario: Decimal accepted as string
+- **WHEN** `TradeIntent` is validated from a dict with `stop_loss="142.30"` (string)
+- **THEN** the resulting model has `stop_loss == Decimal("142.30")`

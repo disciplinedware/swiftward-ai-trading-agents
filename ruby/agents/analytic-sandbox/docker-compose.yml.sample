@@ -1,0 +1,38 @@
+# MCP Server — Docker-in-Docker deployment
+#
+# Prerequisites:
+#   1. Build sandbox image: make docker-build
+#   2. Copy this file and adjust as needed
+#
+# Run:
+#   docker compose up -d
+#   docker compose logs -f mcp-server
+#
+# Important:
+#   - /var/run/docker.sock must be mounted for container creation
+#   - analytic-sandbox:latest image must exist on host
+#   - data/ directory is persisted for session storage
+
+services:
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mcp-server:latest
+    container_name: mcp-server
+    ports:
+      - "9091:9091"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/app/data
+    environment:
+      - MCP_SANDBOX_IMAGE=analytic-sandbox:latest
+      - MCP_AUTH_TOKEN=${MCP_AUTH_TOKEN:-}
+      - MCP_INACTIVITY_TIMEOUT=30m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9091/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s

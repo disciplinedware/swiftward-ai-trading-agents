@@ -1,0 +1,15 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Swiftward Trading Agent Beta",
+  "description": "Autonomous AI trading agent with policy-enforced risk management by Swiftward (swiftward.dev). Every trade produces a hash-chained evidence bundle posted to ERC-8004 ValidationRegistry for independent verification.",
+  "image": "ipfs://QmPCtfkHorHpo5Cxyjss9THtyMLeMBeaJCmhmZCi58LdWj",
+  "services": [
+    {
+      "name": "evidence",
+      "endpoint": "https://api.swiftward.dev/v1/evidence",
+      "version": "1.0.0"
+    }
+  ],
+  "active": true,
+  "supportedTrust": ["validation", "reputation"]
+}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title><%= execution.title.presence || "Execution ##{execution.id}" %></title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; color: #333; max-width: 1000px; margin: 40px auto; padding: 0 -webkit-calc(20px); padding: 0 calc(20px); }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 5px; }
+    .subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+    .stats { background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 25px; font-size: 12px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .stat-item b { color: #6b7280; display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .stat-value { font-size: 16px; font-weight: 700; color: #111827; }
+
+    .message { margin-bottom: 25px; padding: 15px; border-radius: 8px; border: 1px solid #eee; position: relative; }
+    .role { font-weight: bold; text-transform: uppercase; font-size: 11px; color: #666; margin-bottom: 10px; display: block; }
+    .user { background-color: #f0f7ff; border-color: #d0e7ff; }
+    .assistant { background-color: #fff; border-color: #eee; }
+    .system { background-color: #f5f5f5; border-color: #e5e5e5; font-style: italic; }
+    .tool { background-color: #fffaf0; border-color: #eee8d5; font-family: monospace; font-size: 13px; }
+
+    pre { white-space: pre-wrap; word-break: break-all; background: #f4f4f4; padding: 10px; border-radius: 4px; border: 1px solid #ddd; margin: 0; font-size: 13px; }
+    .metadata { font-weight: normal; font-size: 10px; color: #999; text-align: right; margin-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 4px; }
+
+    .msg-footer { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; font-size: 9px; font-weight: 600; color: #6b7280; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 8px; justify-content: flex-end; }
+    .metric { padding: 1px 4px; border-radius: 3px; background: rgba(0,0,0,0.03); }
+    .metric-ttft { color: #059669; }
+    .metric-think { color: #7c3aed; }
+    .metric-tps { color: #4f46e5; font-weight: 800; background: #eef2ff; }
+    .metric-latency { color: #db2777; }
+    .metric-tool { color: #d97706; }
+    .metric-sigma { color: #374151; border: 1px solid #e5e7eb; }
+
+    .tool-calls { border-top: 1px dashed #eee; margin-top: 15px; padding-top: 10px; }
+    .tool-call { margin-bottom: 15px; }
+    .tool-call strong { display: block; font-size: 12px; margin-bottom: 5px; color: #444; }
+
+    table.args { width: 100%; border-collapse: collapse; font-size: 11px; background: white; }
+    table.args td { border: 1px solid #ddd; padding: 6px; vertical-align: top; }
+    table.args td.param { font-weight: bold; width: 150px; background: #fcfcfc; color: #555; }
+    table.args td.value pre { background: none; border: none; padding: 0; font-size: inherit; }
+
+    .reasoning { background-color: #f9fafb; border-left: 3px solid #e0e7ff; padding: 10px; margin-bottom: 10px; font-size: 11px; color: #6b7280; font-style: italic; }
+    .reasoning-label { font-weight: bold; font-style: normal; font-size: 9px; text-transform: uppercase; color: #4f46e5; margin-bottom: 4px; display: block; opacity: 0.7; }
+  </style>
+</head>
+<body>
+  <h1><%= execution.title.presence || "Execution ##{execution.id}" %></h1>
+  <div class="subtitle">Generated on <%= Time.current.strftime("%Y-%m-%d %H:%M:%S") %> | UUID: <%= execution.id %></div>
+
+  <%
+    l = execution.loop
+    counts = l&.messages&.group(:role)&.count || {}
+    tool_counts = l&.tool_calls&.group(:is_success)&.count || {}
+  %>
+  <div class="stats">
+    <div class="stat-item">
+      <b>Model</b>
+      <div class="stat-value"><%= execution.agent_model&.name %></div>
+    </div>
+    <div class="stat-item">
+      <b>Messages</b>
+      <div class="stat-value">
+        In: <%= (counts['user'] || 0) + (counts['system'] || 0) %> |
+        Out: <%= counts['assistant'] || 0 %> |
+        Tools: <%= counts['tool'] || 0 %>
+        <span style="font-size: 10px; font-weight: normal; color: #6b7280;">
+          (<span style="color: #059669"><%= tool_counts[true] || 0 %></span>/<span style="color: #dc2626"><%= tool_counts[false] || 0 %></span>)
+        </span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <b>Tokens</b>
+      <div class="stat-value">In: <%= number_with_delimiter(l.tokens_prompt) %> / Out: <%= number_with_delimiter(l.tokens_completion) %></div>
+      <% if l.tokens_prompt_cached > 0 %>
+        <div style="font-size: 10px; color: #6b7280;">Cached: <%= number_with_delimiter(l.tokens_prompt_cached) %></div>
+      <% end %>
+    </div>
+    <div class="stat-item">
+      <b>Latency / TPS</b>
+      <div class="stat-value">
+        <%= l.duration_total.round(1) %>s
+        <span style="font-size: 10px; font-weight: normal; color: #6b7280;">(LLM: <%= l.duration_generation.round(1) %>s)</span>
+      </div>
+      <div style="font-size: 10px; font-weight: bold; color: #4f46e5;">
+        TPS: <%= l.duration_generation > 0 ? (l.tokens_completion.to_f / l.duration_generation).round(2) : "0.00" %>
+      </div>
+    </div>
+    <div class="stat-item"><b>Status</b> <div class="stat-value"><%= l.status.humanize %></div></div>
+  </div>
+
+  <% if execution.system_prompt.present? %>
+    <div class="message system">
+      <span class="role">system</span>
+      <div class="content"><pre><%= execution.system_prompt %></pre></div>
+    </div>
+  <% end %>
+
+  <div class="messages">
+    <% messages.each do |msg| %>
+      <div class="message <%= msg.role %>">
+        <div class="metadata">
+          <span class="timestamp"><%= msg.created_at.strftime("%Y-%m-%d %H:%M:%S.%L") %></span>
+        </div>
+
+        <span class="role"><%= msg.role %></span>
+
+        <% if msg.reasoning_content.present? %>
+          <div class="reasoning">
+            <span class="reasoning-label">Thinking</span>
+            <div style="white-space: pre-wrap;"><%= msg.reasoning_content %></div>
+          </div>
+        <% end %>
+
+        <div class="content">
+          <pre><%= msg.content %></pre>
+        </div>
+
+        <% if msg.tool_calls.any? %>
+          <div class="tool-calls">
+            <% msg.tool_calls.each do |atc| %>
+              <div class="tool-call">
+                <strong>Tool: <%= atc.function_name %>
+                  <% if atc.is_success %>
+                    <span style="color: green; font-weight: bold;">[SUCCESS]</span>
+                  <% else %>
+                    <span style="color: red; font-weight: bold;">[FAILED]</span>
+                  <% end %>
+                  <% if atc.duration > 0 %>
+                    <span style="font-size: 10px; color: #d97706; margin-left: 5px;"><%= atc.duration.round(3) %>s</span>
+                  <% end %>
+                </strong>
+                <table class="args">
+                  <% (atc.arguments || {}).each do |param, value| %>
+                    <tr>
+                      <td class="param"><%= param %></td>
+                      <td class="value">
+                        <% if value.to_s.include?("\n") %>
+                          <pre><%= value %></pre>
+                        <% else %>
+                          <%= value %>
+                        <% end %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="msg-footer">
+          <% if msg.role == "assistant" %>
+             <% if msg.respond_to?(:ttft) && msg.ttft.to_f > 0 %>
+               <span class="metric metric-ttft">TTFT: <%= number_with_precision(msg.ttft, precision: 2) %>s</span>
+             <% end %>
+             <% if msg.respond_to?(:duration_thinking) && msg.duration_thinking.to_f > 0 %>
+               <span class="metric metric-think">Think: <%= number_with_precision(msg.duration_thinking, precision: 2) %>s</span>
+             <% end %>
+             <% tps = msg.respond_to?(:tps) ? msg.tps.to_f : 0 %>
+             <% if tps > 0 %>
+               <span class="metric metric-tps">TPS: <%= number_with_precision(tps, precision: 2) %></span>
+             <% end %>
+             <% latency = msg.duration_generation.to_f %>
+             <% if latency > 0 %>
+               <span class="metric metric-latency">Latency: <%= number_with_precision(latency, precision: 3) %>s</span>
+             <% end %>
+          <% end %>
+
+          <% if msg.role == "tool" %>
+            <% tool_dur = msg.tool_calls.to_a.sum { |tc| tc.duration.to_f } %>
+            <% if tool_dur > 0 %>
+              <span class="metric metric-tool">Tool: <%= number_with_precision(tool_dur, precision: 3) %>s</span>
+            <% end %>
+          <% end %>
+
+          <span class="metric metric-sigma">Σ <%=
+             cum_dur = msg.respond_to?(:cumulative_duration) ? (msg.cumulative_duration || 0.0) : 0.0
+             cum_dur > 300 ? distance_of_time_in_words(cum_dur) : "#{number_with_precision(cum_dur, precision: 1)}s"
+          %></span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</body>
+</html>

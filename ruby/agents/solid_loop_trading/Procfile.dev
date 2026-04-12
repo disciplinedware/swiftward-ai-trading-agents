@@ -1,0 +1,7 @@
+web: bin/rails server
+css: bin/rails tailwindcss:watch
+job_llm1: bundle exec good_job --queues solid_loop_llm
+job_llm2: bundle exec good_job --queues solid_loop_llm
+job_tools: bundle exec good_job --queues solid_loop_tool
+job_broadcasts: bundle exec good_job --queues broadcasts
+job_default: bundle exec good_job --queues default

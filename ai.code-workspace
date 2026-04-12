@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "root",
+			"path": "."
+		},
+		{
+			"name": "python",
+			"path": "./python"
+		}
+	],
+	"settings": {
+		// General
+        "files.exclude": {
+            "**/__pycache__": true,
+            // exclude folders from `root` folder
+            "python": true,
+        },
+        "search.exclude": {
+            "**/__pycache__": true,
+            "**/node_modules": true
+        },
+	}
+}

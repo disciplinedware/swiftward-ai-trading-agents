@@ -1,0 +1,57 @@
+<div class="bg-gray-900 p-6 rounded-lg shadow-sm ring-1 ring-gray-700">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-xl font-semibold text-gray-100">Candles</h2>
+    <span class="inline-flex items-center rounded-full bg-emerald-900/50 px-3 py-0.5 text-sm font-medium text-emerald-300">
+      <%= number_with_delimiter(@candles_count) %> candles
+    </span>
+  </div>
+
+  <% if @candles_first && @candles_last %>
+    <div class="mb-4 bg-gray-800/50 rounded p-3 space-y-1">
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-400">First candle</span>
+        <span class="text-gray-100"><%= @candles_first.timestamp.strftime("%Y-%m-%d %H:%M") %></span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-400">Last candle</span>
+        <span class="text-gray-100"><%= @candles_last.timestamp.strftime("%Y-%m-%d %H:%M") %></span>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-gray-400">Date range</span>
+        <span class="text-gray-100"><%= distance_of_time_in_words(@candles_first.timestamp, @candles_last.timestamp) %></span>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @available_tickers.any? %>
+    <div>
+      <p class="text-sm text-gray-300 mb-2">Available tickers</p>
+      <div class="flex flex-wrap gap-2">
+        <% @available_tickers.each do |ticker| %>
+          <span class="inline-flex items-center rounded bg-gray-800 px-2.5 py-1 text-xs font-mono text-emerald-300 ring-1 ring-inset ring-gray-700">
+            <%= ticker %>
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <p class="text-sm text-gray-300 mb-2">Candles per ticker</p>
+      <div class="space-y-1">
+        <% ticker_counts = OhlcCandle.group(:symbol).count.sort_by { |_k, v| -v } %>
+        <% max_val = ticker_counts.map(&:last).max.to_f %>
+        <% ticker_counts.each do |symbol, count| %>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono text-gray-300 w-24 shrink-0"><%= symbol %></span>
+            <div class="flex-1 bg-gray-800 rounded h-3 overflow-hidden">
+              <div class="bg-emerald-600/70 h-full rounded" style="width: <%= (count.to_f / max_val * 100).round %>%;"></div>
+            </div>
+            <span class="text-xs text-gray-400 w-16 text-right"><%= number_with_delimiter(count) %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-500 italic">No candle data. Download from Binance.</p>
+  <% end %>
+</div>

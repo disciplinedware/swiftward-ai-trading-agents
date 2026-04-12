@@ -1,0 +1,444 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100">Trading Session Details</h1>
+      <p class="mt-2 text-sm text-mono text-gray-400"><%= @presenter.uuid %></p>
+    </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+      <%= link_to "Back to Sessions", trading_sessions_path, class: "block rounded-md bg-gray-800 px-3 py-2 text-center text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-800/50" %>
+    </div>
+  </div>
+
+  <%
+    initial_balance    = @presenter.initial_balance
+    total_live_equity  = @presenter.total_equity_usdt
+    live_snapshot      = @presenter.equity_snapshot
+    v_now              = @presenter.virtual_now
+    equity_1h          = @presenter.live? ? nil : @presenter.total_equity_usdt_projected(offset_seconds: 3600)
+    equity_1d          = @presenter.live? ? nil : @presenter.total_equity_usdt_projected(offset_seconds: 86400)
+    chart_points       = @presenter.chart_points
+    ledger_rows        = @presenter.ledger_rows
+
+    def calc_change(now, fut)
+      return 0.0 if now == 0
+      ((fut - now) / now * 100).round(2)
+    end
+
+    all_vals = chart_points.map { |p| p[:val] }
+    c_min = all_vals.min
+    c_max = all_vals.max
+    c_range = (c_max - c_min).abs
+
+    if c_range == 0
+      d_min = c_min * 0.9
+      d_max = c_min * 1.1
+    else
+      d_min = c_min - (c_range * 0.1)
+      d_max = c_max + (c_range * 0.1)
+    end
+    d_range = (d_max - d_min).abs
+    d_range = 1.0 if d_range == 0
+  %>
+
+  <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <!-- Current Equity Card -->
+    <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow-sm border border-gray-700">
+      <dt class="truncate text-xs font-bold text-gray-400 uppercase tracking-widest">Current Equity (Live)</dt>
+      <dd class="mt-1 text-2xl font-bold tracking-tight text-green-400"><%= number_to_currency(total_live_equity, unit: "$") %></dd>
+
+      <div class="mt-4 pt-4 border-t border-gray-800">
+        <h4 class="text-[10px] font-bold text-gray-500 uppercase mb-2">Live Asset Breakdown</h4>
+        <div class="space-y-1">
+          <% live_snapshot.each do |symbol, data| %>
+            <% next if data[:amount] == 0 && symbol != "USDT" %>
+            <div class="flex justify-between text-xs font-mono">
+              <span class="text-gray-400"><%= symbol %></span>
+              <div class="text-right">
+                <span class="text-gray-100 font-bold"><%= number_to_currency(data[:value_usdt], unit: "$") %></span>
+                <span class="text-gray-500 text-[10px] block"><%= data[:amount] %> units</span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% unless @presenter.live? %>
+    <!-- Future Projections Card -->
+    <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow-sm border border-gray-700">
+      <dt class="truncate text-xs font-bold text-gray-400 uppercase tracking-widest">Future (Hold Strategy)</dt>
+      <div class="mt-4 space-y-4">
+        <div>
+          <span class="text-[10px] text-gray-500 uppercase font-bold">In 1 Hour:</span>
+          <div class="flex items-baseline space-x-2">
+            <span class="text-lg font-bold text-gray-100"><%= number_to_currency(equity_1h, unit: "$") %></span>
+            <% change_1h = calc_change(total_live_equity, equity_1h) %>
+            <span class="text-xs font-bold <%= change_1h >= 0 ? 'text-green-400' : 'text-red-400' %>">
+              <%= change_1h >= 0 ? '↑' : '↓' %> <%= change_1h.abs %>%
+            </span>
+          </div>
+        </div>
+        <div>
+          <span class="text-[10px] text-gray-500 uppercase font-bold">In 24 Hours:</span>
+          <div class="flex items-baseline space-x-2">
+            <span class="text-lg font-bold text-gray-100"><%= number_to_currency(equity_1d, unit: "$") %></span>
+            <% change_1d = calc_change(total_live_equity, equity_1d) %>
+            <span class="text-xs font-bold <%= change_1d >= 0 ? 'text-green-400' : 'text-red-400' %>">
+              <%= change_1d >= 0 ? '↑' : '↓' %> <%= change_1d.abs %>%
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-800 text-[9px] text-gray-600 italic">
+        * Value if current assets are held without further trades.
+      </div>
+    </div>
+    <% end %>
+
+    <!-- Time Card -->
+    <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow-sm border border-gray-700 flex flex-col justify-between">
+      <div>
+        <dt class="truncate text-xs font-bold text-gray-400 uppercase tracking-widest"><%= @presenter.live? ? "Live Time" : "Simulation Time" %></dt>
+        <dd class="mt-1 text-lg font-semibold tracking-tight text-gray-100"><%= v_now.strftime("%H:%M:%S") %> UTC</dd>
+        <div class="text-[10px] text-gray-500 font-mono mt-1"><%= v_now.strftime("%Y-%m-%d") %></div>
+      </div>
+      <div class="mt-4 text-[10px] text-gray-500 font-mono">
+        Status: <%= @presenter.open_orders.any? ? "TRADING ACTIVE" : "IDLE" %>
+      </div>
+    </div>
+
+    <!-- Active Orders Card -->
+    <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow-sm border border-gray-700 flex flex-col justify-between">
+      <div>
+        <dt class="truncate text-xs font-bold text-gray-400 uppercase tracking-widest">Active Orders</dt>
+        <dd class="mt-1 text-2xl font-bold tracking-tight text-indigo-400">
+          <%= @presenter.open_orders.size %>
+        </dd>
+      </div>
+      <div class="mt-4 space-y-1">
+        <% @presenter.open_orders.first(2).each do |o| %>
+          <div class="text-[9px] text-gray-400 flex justify-between border-b border-gray-800 pb-1">
+            <span class="uppercase font-bold"><%= o["side"] %> <%= o["symbol"] %></span>
+            <span>@ <%= number_to_currency(o["price"], unit: "$") %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Total PnL Card -->
+    <% total_pnl = total_live_equity - initial_balance
+       total_pnl_pct = initial_balance > 0 ? (total_pnl / initial_balance * 100).round(2) : 0 %>
+    <div class="overflow-hidden rounded-lg bg-gray-900 px-4 py-5 shadow-sm border border-gray-700 flex flex-col justify-between">
+      <div>
+        <dt class="truncate text-xs font-bold text-gray-400 uppercase tracking-widest">Total P&amp;L</dt>
+        <dd class="mt-1 text-2xl font-bold tracking-tight <%= total_pnl >= 0 ? 'text-green-400' : 'text-red-400' %>">
+          <%= total_pnl >= 0 ? '+' : '' %><%= number_to_currency(total_pnl, unit: "$") %>
+        </dd>
+        <div class="mt-1 text-sm font-bold <%= total_pnl_pct >= 0 ? 'text-green-500' : 'text-red-500' %>">
+          <%= total_pnl_pct >= 0 ? '↑' : '↓' %> <%= total_pnl_pct.abs %>%
+        </div>
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-800 text-[10px] text-gray-500 font-mono">
+        Start: <%= number_to_currency(initial_balance, unit: "$") %>
+      </div>
+    </div>
+  </div>
+
+  <!-- EQUITY PERFORMANCE CHART -->
+  <%
+    svg_w = 1000
+    svg_h = 200
+    pad_l = 10
+    pad_r = 10
+    pad_t = 20
+    pad_b = 10
+    inner_w = svg_w - pad_l - pad_r
+    inner_h = svg_h - pad_t - pad_b
+    n = chart_points.size
+
+    pts = chart_points.each_with_index.map do |p, i|
+      x = (n == 1) ? (pad_l + inner_w / 2.0) : (pad_l + (i.to_f / (n - 1)) * inner_w)
+      y = pad_t + inner_h - (((p[:val] - d_min) / d_range) * inner_h)
+      y = [[y, pad_t].max, pad_t + inner_h].min
+      { x: x.round(2), y: y.round(2), val: p[:val], time: p[:time] }
+    end
+
+    polyline_pts = pts.map { |p| "#{p[:x]},#{p[:y]}" }.join(" ")
+
+    area_path = "M #{pts.first[:x]},#{pad_t + inner_h} " +
+                pts.map { |p| "L #{p[:x]},#{p[:y]}" }.join(" ") +
+                " L #{pts.last[:x]},#{pad_t + inner_h} Z"
+
+    final_val  = chart_points.last[:val]
+    overall_up = final_val >= initial_balance
+    line_color = overall_up ? "#22c55e" : "#ef4444"
+    area_color = overall_up ? "#22c55e" : "#ef4444"
+  %>
+  <div class="mt-10 bg-gray-900 p-6 shadow-sm border border-gray-700 rounded-lg">
+    <h2 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Equity Performance Curve</h2>
+    <div class="relative w-full" style="padding-bottom: 0;">
+      <svg id="equity-chart" viewBox="0 0 <%= svg_w %> <%= svg_h %>" preserveAspectRatio="none"
+           class="w-full" style="height: 180px; display: block; overflow: visible;">
+        <defs>
+          <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="<%= area_color %>" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="<%= area_color %>" stop-opacity="0.01"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Grid lines -->
+        <% [0.25, 0.5, 0.75].each do |frac| %>
+          <% gy = (pad_t + inner_h * (1 - frac)).round(2) %>
+          <line x1="<%= pad_l %>" y1="<%= gy %>" x2="<%= svg_w - pad_r %>" y2="<%= gy %>"
+                stroke="#374151" stroke-width="1"/>
+        <% end %>
+
+        <!-- Baseline -->
+        <%
+          base_y = (pad_t + inner_h - (((initial_balance - d_min) / d_range) * inner_h)).round(2)
+          base_y = [[base_y, pad_t].max, pad_t + inner_h].min
+        %>
+        <line x1="<%= pad_l %>" y1="<%= base_y %>" x2="<%= svg_w - pad_r %>" y2="<%= base_y %>"
+              stroke="#4b5563" stroke-width="1" stroke-dasharray="4,4"/>
+
+        <!-- Area fill (animated) -->
+        <path id="equity-area" d="<%= area_path %>" fill="url(#area-grad)" opacity="0">
+          <animate attributeName="opacity" from="0" to="1" dur="0.6s" begin="equity-line-anim.end" fill="freeze"/>
+        </path>
+
+        <!-- Main line (draw animation) -->
+        <polyline id="equity-line" points="<%= polyline_pts %>"
+                  fill="none" stroke="<%= line_color %>" stroke-width="2.5"
+                  stroke-linecap="round" stroke-linejoin="round"
+                  filter="url(#glow)"
+                  style="stroke-dasharray: 9999; stroke-dashoffset: 9999;">
+          <animate id="equity-line-anim"
+                   attributeName="stroke-dashoffset"
+                   from="9999" to="0"
+                   dur="1.2s" begin="0.1s"
+                   calcMode="spline" keySplines="0.4 0 0.2 1"
+                   fill="freeze"/>
+        </polyline>
+
+        <!-- Dots (appear after line) -->
+        <% pts.each_with_index do |p, i| %>
+          <% is_up = i == 0 || p[:val] >= chart_points[i-1][:val] %>
+          <% dot_color = is_up ? "#22c55e" : "#ef4444" %>
+          <g class="equity-dot" style="cursor: pointer;">
+            <circle cx="<%= p[:x] %>" cy="<%= p[:y] %>" r="14" fill="transparent"
+                    onmouseenter="showEquityTooltip(event, '<%= p[:time] %>', '<%= number_to_currency(p[:val], unit: "$") %>')"
+                    onmouseleave="hideEquityTooltip()"/>
+            <circle cx="<%= p[:x] %>" cy="<%= p[:y] %>" r="3.5"
+                    fill="<%= dot_color %>" stroke="white" stroke-width="1.5"
+                    opacity="0">
+              <animate attributeName="opacity" from="0" to="1" dur="0.3s"
+                       begin="<%= (0.1 + 1.2 * (i.to_f / [n-1, 1].max)).round(3) %>s" fill="freeze"/>
+              <animate attributeName="r" from="0" to="3.5" dur="0.3s"
+                       begin="<%= (0.1 + 1.2 * (i.to_f / [n-1, 1].max)).round(3) %>s" fill="freeze"/>
+            </circle>
+          </g>
+        <% end %>
+
+        <!-- Last point highlight pulse -->
+        <% last = pts.last %>
+        <circle cx="<%= last[:x] %>" cy="<%= last[:y] %>" r="8"
+                fill="<%= line_color %>" opacity="0">
+          <animate attributeName="opacity" values="0;0;0.25;0" dur="2s" begin="1.5s" repeatCount="indefinite"/>
+          <animate attributeName="r" values="3;8;14;3" dur="2s" begin="1.5s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+
+      <!-- Floating tooltip (JS-driven) -->
+      <div id="equity-tooltip"
+           class="pointer-events-none absolute z-30 hidden bg-gray-900 text-white text-[10px] rounded px-2 py-1 whitespace-nowrap shadow-2xl font-mono border border-gray-700"
+           style="transform: translate(-50%, -110%);">
+        <div id="equity-tooltip-time" class="text-gray-400"></div>
+        <div id="equity-tooltip-val" class="font-bold text-green-400"></div>
+      </div>
+    </div>
+    <div class="flex justify-between mt-1 text-[9px] text-gray-500 font-mono uppercase">
+      <span><%= chart_points.first[:time] %></span>
+      <span class="text-gray-700">Execution Timeline</span>
+      <span><%= chart_points.last[:time] %></span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var svg = document.getElementById('equity-chart');
+      var tooltip = document.getElementById('equity-tooltip');
+      var tipTime = document.getElementById('equity-tooltip-time');
+      var tipVal  = document.getElementById('equity-tooltip-val');
+
+      var line = document.getElementById('equity-line');
+      if (line) {
+        var len = line.getTotalLength ? line.getTotalLength() : 9999;
+        line.style.strokeDasharray = len;
+        line.style.strokeDashoffset = len;
+        var anim = line.querySelector('animate');
+        if (anim) { anim.setAttribute('from', len); }
+      }
+
+      window.showEquityTooltip = function(evt, time, val) {
+        tipTime.textContent = time;
+        tipVal.textContent  = val;
+        tooltip.classList.remove('hidden');
+        positionTooltip(evt);
+      };
+
+      window.hideEquityTooltip = function() {
+        tooltip.classList.add('hidden');
+      };
+
+      function positionTooltip(evt) {
+        var rect = svg.closest('.relative').getBoundingClientRect();
+        var x = evt.clientX - rect.left;
+        var y = evt.clientY - rect.top;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top  = y + 'px';
+      }
+
+      svg && svg.addEventListener('mousemove', function(evt) {
+        if (!tooltip.classList.contains('hidden')) positionTooltip(evt);
+      });
+    })();
+  </script>
+
+  <div class="mt-10">
+    <h2 class="text-xl font-semibold text-gray-100 mb-4 text-center">Execution Ledger</h2>
+    <div class="bg-gray-900 shadow-sm ring-1 ring-gray-700 sm:rounded-lg overflow-hidden font-mono text-xs">
+      <table class="min-w-full border-separate border-spacing-0">
+        <thead class="bg-gray-800">
+          <tr>
+            <th class="px-4 py-2 text-left font-bold text-gray-400 border-b border-gray-700">TIME<%= " (VIRTUAL)" unless @presenter.live? %></th>
+            <th class="px-4 py-2 text-left font-bold text-gray-400 border-b border-gray-700">PHASE</th>
+            <th class="px-4 py-2 text-left font-bold text-gray-400 border-b border-gray-700">SNAPSHOT / TRANSACTION DETAILS</th>
+            <th class="px-4 py-2 text-left font-bold text-gray-400 border-b border-gray-700">FINANCIALS</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-800">
+          <%
+            now_pnl = total_live_equity - initial_balance
+            now_pnl_pct = initial_balance > 0 ? (now_pnl / initial_balance * 100).round(2) : 0
+          %>
+          <tr class="bg-indigo-950/30 border-b-2 border-indigo-900">
+            <td class="px-4 py-3 border-r border-gray-700 text-gray-500 font-bold whitespace-nowrap text-[10px] uppercase tracking-wide">
+              NOW
+            </td>
+            <td class="px-4 py-3 font-bold text-indigo-400 border-r border-gray-800 text-[10px] uppercase tracking-wide">Current</td>
+            <td class="px-4 py-3 border-r border-gray-800 text-gray-400 text-[10px]">
+              <% live_snapshot.reject { |_, v| v[:amount].round(8) == 0 }.each do |symbol, data| %>
+                <span class="mr-2"><%= symbol %>: <%= data[:amount].round(4) %></span>
+              <% end %>
+            </td>
+            <td class="px-4 py-3">
+              <div class="font-bold text-sm <%= total_live_equity >= initial_balance ? 'text-green-400' : 'text-red-400' %>">
+                <%= number_to_currency(total_live_equity, unit: "$") %>
+              </div>
+              <div class="text-[9px] <%= now_pnl >= 0 ? 'text-green-400' : 'text-red-400' %>">
+                <%= now_pnl >= 0 ? '+' : '' %><%= number_to_currency(now_pnl, unit: "$") %> (<%= now_pnl >= 0 ? '+' : '' %><%= now_pnl_pct %>%)
+              </div>
+            </td>
+          </tr>
+          <tr><td colspan="4" class="h-2 bg-gray-800/50"></td></tr>
+
+<% if ledger_rows.empty? %>
+            <tr><td colspan="4" class="px-6 py-20 text-center text-gray-500 italic">No trade history recorded yet.</td></tr>
+          <% end %>
+
+          <% if ledger_rows.any? %>
+            <% last_row = ledger_rows.last %>
+            <% drift = total_live_equity - last_row.equity_after %>
+            <% if drift.abs > 0.01 %>
+            <tr class="bg-amber-950/30">
+              <td class="px-4 py-1 border-r border-gray-700 text-gray-500 text-[10px] uppercase font-bold whitespace-nowrap"><%= v_now.strftime("%H:%M") %></td>
+              <td colspan="2" class="px-4 py-1 border-r border-gray-800 text-[10px] text-gray-400 italic">
+                Market drift since last trade
+              </td>
+              <td class="px-4 py-1">
+                <div class="font-bold <%= drift >= 0 ? 'text-green-400' : 'text-red-400' %> text-[10px]">
+                  <%= drift >= 0 ? '+' : '' %><%= number_to_currency(drift, unit: "$") %>
+                </div>
+              </td>
+            </tr>
+            <tr><td colspan="4" class="h-2 bg-gray-800/50"></td></tr>
+            <% end %>
+          <% end %>
+
+          <% ledger_rows.reverse.each do |row| %>
+            <tr class="bg-green-900/30">
+              <td rowspan="3" class="px-4 py-4 align-top border-r border-gray-700 text-gray-400 font-bold whitespace-nowrap">
+                <%= row.executed_at.strftime("%Y-%m-%d %H:%M:%S") %>
+              </td>
+              <td class="px-4 py-1.5 font-bold text-green-400 border-r border-gray-800">AFTER</td>
+              <td class="px-4 py-1.5 text-green-300 border-r border-gray-800 text-[10px]">
+                <%= row.balances_after.reject { |_, v| v.round(8) == 0 }.map { |s, a| "#{s}: #{a.round(4)}" }.join(" | ") %>
+              </td>
+              <td class="px-4 py-1.5 font-bold text-green-400">
+                <%= number_to_currency(row.equity_after, unit: "$") %>
+              </td>
+            </tr>
+            <tr class="bg-gray-900">
+              <td class="px-4 py-2 font-bold text-indigo-400 border-r border-gray-800">TRADE</td>
+              <td class="px-4 py-2 border-r border-gray-800">
+                <div>
+                  <span class="font-bold <%= row.side == 'buy' ? 'text-green-400' : 'text-red-400' %> uppercase"><%= row.side %></span>
+                  <span class="font-bold text-gray-100"><%= row.amount %> <%= row.symbol %> @ <%= number_to_currency(row.price, unit: "$") %></span>
+                  <% if row.status == 'cancelled' %>
+                    <span class="ml-2 text-[9px] font-bold uppercase text-red-500 bg-red-950/50 px-1.5 py-0.5 rounded">cancelled</span>
+                  <% elsif row.status == 'pending' %>
+                    <span class="ml-2 text-[9px] font-bold uppercase text-yellow-300 bg-yellow-950/50 px-1.5 py-0.5 rounded">pending · not filled</span>
+                  <% end %>
+                </div>
+                <% if row.reasoning.present? %>
+                  <div class="mt-1 text-[10px] text-gray-500 italic"><%= row.reasoning %></div>
+                <% end %>
+              </td>
+              <td class="px-4 py-2">
+                <div class="font-bold <%= row.impact >= 0 ? 'text-green-400' : 'text-red-400' %>">
+                  <%= row.impact >= 0 ? '+' : '' %><%= number_to_currency(row.impact, unit: "$") %>
+                </div>
+                <div class="text-[9px] text-gray-500">Total PnL: <%= row.total_pnl >= 0 ? '+' : '' %><%= number_to_currency(row.total_pnl, unit: "$") %></div>
+              </td>
+            </tr>
+            <tr class="bg-gray-800/30">
+              <td class="px-4 py-1.5 font-bold text-gray-500 border-r border-gray-800">BEFORE</td>
+              <td class="px-4 py-1.5 text-gray-500 border-r border-gray-800 text-[10px]">
+                <%= row.balances_before.reject { |_, v| v.round(8) == 0 }.map { |s, a| "#{s}: #{a.round(4)}" }.join(" | ") %>
+              </td>
+              <td class="px-4 py-1.5 text-gray-500">
+                <%= number_to_currency(row.equity_before, unit: "$") %>
+              </td>
+            </tr>
+
+            <% if row.wait_pnl.present? && row.wait_pnl.abs > 0.001 %>
+              <tr class="bg-blue-950/20">
+                <td colspan="2" class="px-4 py-1 border-r border-gray-800 italic text-gray-500 text-right uppercase font-bold text-[9px]">
+                  Market Movement / Waiting
+                </td>
+                <td class="px-4 py-1 border-r border-gray-800 text-[10px] text-gray-400 italic">
+                  <% if row.wait_duration %>
+                    Held for <%= distance_of_time_in_words(row.wait_duration) %>
+                  <% else %>
+                    Since session start
+                  <% end %>
+                </td>
+                <td class="px-4 py-1">
+                  <div class="font-bold <%= row.wait_pnl >= 0 ? 'text-green-400' : 'text-red-400' %> text-[10px]">
+                    <%= row.wait_pnl >= 0 ? '+' : '' %><%= number_to_currency(row.wait_pnl, unit: "$") %>
+                  </div>
+                </td>
+              </tr>
+            <% end %>
+
+            <tr><td colspan="4" class="h-2 bg-gray-800/50"></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

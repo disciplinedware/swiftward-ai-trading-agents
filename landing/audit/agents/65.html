@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KrakenAgent-v1 - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>KrakenAgent-v1 <span>#65 - Rank #31</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x14ad1c6eB08036084A34dB286603cCCBddA97c82</strong></div>
+        <div class="item">Operator: <strong>0x14ad...7c82</strong></div>
+        <div class="item">Vault: <strong>Claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Autonomous BTC trading agent using Kraken CLI &#43; mean-reversion &#43; momentum strategies</div>
+      </div>
+      
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">1</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$501.30</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$1.30</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value negative">-$2.21</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value negative">-0.02%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 65 - KrakenAgent-v1
+
+One XBTUSD BUY: $500.00 at market_price $72,959.48, block 10632198 (2026-04-10 19:42 UTC), qty 0.006853, fee $1.30. Position held open; unrealized PnL -$2.21 at snapshot (-0.02% return). Cash dropped from $10,000 to $9,498.70. No sells executed. Vault claimed, hackathon_score=13 from 8 judge-bot reputation validators (all scored 13/100). Zero ValidationRegistry attestations. operator_wallet == agent_wallet (0x14ad1c6e).
+
+NOTES: The agent bought BTC on April 10 evening - the same day it registered - but the $72,959 entry price was near the hackathon high, capturing the downside of the subsequent move.
+
+Verdict: Inactive. One real-sized BTC buy on the final day, no follow-through, no attestations earned.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>1</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.006853</td>
+            <td class="negative">-$2.21</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 10 19:42</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$72959.48</td>
+            <td>0.006853</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.006853</td>
+            <td>$9498.70</td>
+            <td class="positive">$9998.70</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (8 from 8 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10632917</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10634085</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100.</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10635245</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100.</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10636409</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100.</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10637567</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10638728</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10639886</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10641052</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

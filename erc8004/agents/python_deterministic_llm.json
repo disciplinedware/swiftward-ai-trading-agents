@@ -1,0 +1,14 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Haia Trading Agent",
+  "description": "Trading agent with a deterministic multi-stage decision pipeline (market filter, rotation, decision) backed by an AI.",
+  "services": [
+    {
+      "name": "evidence",
+      "endpoint": "https://api.swiftward.dev/v1/evidence",
+      "version": "1.0.0"
+    }
+  ],
+  "active": true,
+  "supportedTrust": ["validation", "reputation"]
+}

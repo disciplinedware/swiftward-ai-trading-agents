@@ -1,0 +1,15 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Swiftward Beta",
+  "description": "Multi-strategy AI trading agent with Swiftward policy enforcement, on-chain evidence chains, and autonomous portfolio rebalancing. Built by Swiftward (swiftward.dev).",
+  "image": "ipfs://QmPCtfkHorHpo5Cxyjss9THtyMLeMBeaJCmhmZCi58LdWj",
+  "services": [
+    {
+      "name": "evidence",
+      "endpoint": "https://api.swiftward.dev/v1/evidence",
+      "version": "1.0.0"
+    }
+  ],
+  "active": false,
+  "supportedTrust": ["validation", "reputation"]
+}

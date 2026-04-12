@@ -1,0 +1,59 @@
+[
+  {
+    "name": "submitTradeIntent",
+    "type": "function",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "name": "intent",
+        "type": "tuple",
+        "components": [
+          { "name": "agentId", "type": "uint256" },
+          { "name": "agentWallet", "type": "address" },
+          { "name": "pair", "type": "string" },
+          { "name": "action", "type": "string" },
+          { "name": "amountUsdScaled", "type": "uint256" },
+          { "name": "maxSlippageBps", "type": "uint256" },
+          { "name": "nonce", "type": "uint256" },
+          { "name": "deadline", "type": "uint256" }
+        ]
+      },
+      { "name": "signature", "type": "bytes" }
+    ],
+    "outputs": [
+      { "name": "approved", "type": "bool" },
+      { "name": "reason", "type": "string" }
+    ]
+  },
+  {
+    "name": "getIntentNonce",
+    "type": "function",
+    "stateMutability": "view",
+    "inputs": [
+      { "name": "agentId", "type": "uint256" }
+    ],
+    "outputs": [
+      { "name": "", "type": "uint256" }
+    ]
+  },
+  {
+    "anonymous": false,
+    "name": "TradeApproved",
+    "type": "event",
+    "inputs": [
+      { "name": "agentId", "type": "uint256", "indexed": true },
+      { "name": "intentHash", "type": "bytes32", "indexed": true },
+      { "name": "amountUsdScaled", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "anonymous": false,
+    "name": "TradeRejected",
+    "type": "event",
+    "inputs": [
+      { "name": "agentId", "type": "uint256", "indexed": true },
+      { "name": "intentHash", "type": "bytes32", "indexed": true },
+      { "name": "reason", "type": "string", "indexed": false }
+    ]
+  }
+]

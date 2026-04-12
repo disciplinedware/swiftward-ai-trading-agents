@@ -1,0 +1,62 @@
+<%= form_with(model: conversation, class: "bg-gray-900 shadow-sm ring-1 ring-gray-700 sm:rounded-xl md:col-span-2") do |f| %>
+  <div class="px-4 py-6 sm:p-8">
+    <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+      <div class="sm:col-span-4">
+        <%= f.label :title, class: "block text-sm font-medium leading-6 text-gray-100" %>
+        <div class="mt-2">
+          <%= f.text_field :title, placeholder: "Title of the run...", class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <div class="sm:col-span-4">
+        <%= f.label :agent_model_id, "Agent Model", class: "block text-sm font-medium leading-6 text-gray-100" %>
+        <div class="mt-2">
+          <%= f.collection_select :agent_model_id, AgentModel.all, :id, :name, { prompt: "Select a model..." }, required: true, class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <% if conversation.new_record? %>
+        <div class="col-span-full">
+          <label for="system_prompt" class="block text-sm font-medium leading-6 text-gray-100">System Prompt</label>
+          <p class="mt-1 text-xs text-gray-500">Note: Selecting a template below will override any custom text entered here.</p>
+          <div class="mt-2">
+            <% if @system_prompt_templates.present? %>
+              <select name="agent_run[system_prompt_template_id]" id="system_prompt_template_select" class="block w-full rounded-md border-0 py-1.5 mb-2 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <option value="">Select a template (priority)...</option>
+                <% @system_prompt_templates.each do |template| %>
+                  <option value="<%= template.id %>"><%= template.name %></option>
+                <% end %>
+              </select>
+            <% end %>
+            <%= text_area_tag :system_prompt, nil, rows: 3, placeholder: "Or enter manual system prompt here...", class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+
+        <div class="col-span-full">
+          <label for="user_prompt" class="block text-sm font-medium leading-6 text-gray-100">Initial User Prompt</label>
+          <div class="mt-2">
+            <%= text_area_tag :user_prompt, nil, rows: 3, class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="col-span-full">
+        <%= f.label :conclusion, "Expert Conclusion", class: "block text-sm font-medium leading-6 text-gray-100" %>
+        <div class="mt-2">
+          <%= f.text_area :conclusion, rows: 4, placeholder: "Summary or conclusion by expert...", class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+      </div>
+
+      <div class="sm:col-span-full">
+         <%= f.label :filename, "Context Filename (e.g. data.csv)", class: "block text-sm font-medium leading-6 text-gray-100" %>
+         <div class="mt-2">
+           <%= f.text_field :filename, placeholder: "e.g. data.csv", class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+         </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex items-center justify-end gap-x-6 border-t border-gray-700 px-4 py-4 sm:px-8">
+    <%= link_to "Cancel", conversation.new_record? ? agent_runs_path : agent_run_path(conversation), class: "text-sm font-semibold leading-6 text-gray-300" %>
+    <%= f.submit conversation.new_record? ? "Create & Start" : "Save Changes", class: "rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+  </div>
+<% end %>

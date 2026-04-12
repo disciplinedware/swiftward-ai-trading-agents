@@ -1,0 +1,896 @@
+# ERC-8004 Trading Gateway - Policy Ruleset v1
+#
+# Graduated risk management with industry-standard drawdown controls.
+# Research: docs/researches/risk-management-research.md
+#
+# One ruleset, one entity (agent), three event types with shared state:
+#
+#   1. trade_order (sync) - pre-trade gate with graduated risk tiers.
+#      Intraday drawdown from day-start equity determines risk tier (0-3).
+#      Tier 0: full trading. Tier 1-2: reduced limits. Tier 3: close-only.
+#      Also checks: halted? -> loss streak? -> position limits -> whitelist -> rate.
+#
+#   2. heartbeat (sync) - between-trade health check. Two layers:
+#      trailing 24h peak drawdown > 8%? -> absolute > 15% from initial capital?
+#      Either breach = agent halted (manual resume required).
+#
+#   3. execution_report (async) - post-trade bookkeeping (fills + drift detection).
+#
+# Telegram alerts on critical rejections (set TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID).
+#
+# ---------------------------------------------------------------------------
+# Event fields reference (all .value fields are portfolio-currency denominated)
+# ---------------------------------------------------------------------------
+#
+# trade_order event.data (enriched by Trading MCP from DB + trades table):
+#   order.pair              string    trading pair, e.g. "ETH-USDC"
+#   order.side              string    "buy" or "sell"
+#   order.value             number    notional value in portfolio currency
+#   order.leverage          int       leverage multiplier (default 1, spot = 1)
+#   order.is_risk_reducing  boolean   true if selling a held position (exits only)
+#   portfolio.value         number    total portfolio: cash + positions at current prices
+#   portfolio.peak          number    highest portfolio value ever recorded (ATH)
+#   portfolio.cash          number    available cash balance
+#   portfolio.day_start_value   number    yesterday's closing equity (day-start reference)
+#   portfolio.rolling_peak_24h  number    highest equity in last 24h
+#   portfolio.initial_value     number    initial capital at agent creation
+#
+# heartbeat event.data (sent by Trading MCP with live exchange prices):
+#   prices               object    {pair: price}
+#   check_type           string    "periodic" or "on_demand"
+#   portfolio.value      number    current equity at live prices
+#   portfolio.peak       number    ATH peak
+#   portfolio.rolling_peak_24h  number    highest equity in last 24h
+#   portfolio.day_start_value   number    yesterday's closing equity
+#   portfolio.initial_value     number    initial capital
+#
+# execution_report event.data (sent by Trading MCP after on-chain execution):
+#   status           string    "fill" or "reject"
+#   decision_hash    string    links back to the Swiftward decision
+#   fill.*           object    fill details (pair, side, qty, price, value, pnl, tx_hash)
+#   reject.*         object    rejection details (source, reason)
+#
+# ---------------------------------------------------------------------------
+# Available actions (defined in swiftward-core/golang/functions/actions/)
+# ---------------------------------------------------------------------------
+#
+# log_action - write a structured log line to worker output
+#   params:
+#     message    string  REQUIRED  the log message (supports {{ templates }})
+#
+# http/request - send an HTTP request (used for Telegram webhooks, etc.)
+#   params:
+#     url        string  REQUIRED  target URL
+#     method     string  optional  GET/POST/PUT/PATCH/DELETE (default: POST)
+#     headers    map     optional  {Header-Name: value}
+#     payload    map     optional  JSON body (auto-sets Content-Type: application/json)
+#
+# emit_event - create a secondary event for processing by another rule
+#   params:
+#     entity_id  string  REQUIRED  target entity for the new event
+#     type       string  REQUIRED  event type name
+#     data       map     optional  event payload
+#
+# request_validation_erc8004 - post validation request to ERC-8004 on-chain
+#   params:
+#     decision_hash    string  REQUIRED  links to the Swiftward decision
+#     agent_token_id   string  optional  agent's on-chain token ID
+#
+# syslog/send - send RFC 5424 syslog message to SIEM
+#   params:
+#     message    string  REQUIRED  syslog message body
+#     address    string  optional  host:port (default: syslog:514)
+#     protocol   string  optional  udp or tcp (default: udp)
+#     facility   string  optional  e.g. local0 (default: local0)
+#     severity   string  optional  e.g. warning (default: warning)
+#     app_name   string  optional  (default: swiftward)
+#
+# ban_user - log a ban event (placeholder, no enforcement yet)
+#   params:
+#     entity     string  optional  target entity (default: event's entity_id)
+#     comment    string  optional  reason
+#     duration   string  optional  e.g. "24h", "permanent" (default: permanent)
+#
+# notify_admin - log an admin notification (placeholder, no delivery yet)
+#   params:
+#     channel    string  REQUIRED  notification channel name
+#     message    string  REQUIRED  notification body
+#     priority   string  optional  low/medium/high (default: medium)
+
+dsl_version: 2
+
+default_effects:
+  verdict: approved
+
+# --- State model ---
+state_models:
+  agent:
+    key: "{{ event.entity_id }}"
+    counters:
+      fill_count:
+      reject_count:
+      loss_streak:
+      loss_streak_paused:
+        default_ttl: "1h"
+    metadata:
+      agent_token_id:
+      loss_streak_paused_until:
+    labels:
+      halted:
+    buckets:
+      orders_10m:
+        type: fixed_window
+        window: "10m"
+        timezone: "UTC"
+
+# --- Thresholds ---
+# Graduated risk tiers based on intraday drawdown from day-start equity.
+# Tier 0 (normal): full limits. Tier 1 (caution): reduced. Tier 2 (warning): minimal.
+# Tier 3 (close-only): exits only. HALTED: manual resume.
+constants:
+  # Intraday drawdown tier thresholds (negative fractions)
+  tier1_drawdown: -0.02       # -2%: caution - reduced sizing
+  tier2_drawdown: -0.035      # -3.5%: warning - minimal exposure
+  tier3_drawdown: -0.05       # -5%: close-only mode
+
+  # Per-tier position limits
+  max_order_pct: 0.15         # Tier 0: single order max 15% of portfolio
+  max_order_pct_tier1: 0.10   # Tier 1: max 10%
+  max_order_pct_tier2: 0.05   # Tier 2: max 5%
+
+  # Per-tier concentration limits
+  max_concentration: 0.50     # Tier 0: max 50% in one asset
+  max_concentration_tier1: 0.35  # Tier 1: max 35%
+  max_concentration_tier2: 0.25  # Tier 2: max 25%
+
+  # Heartbeat thresholds
+  max_drawdown_trailing_24h: -0.08   # -8% from 24h rolling peak -> halt
+  max_drawdown_absolute: -0.15       # -15% from initial capital -> halt (kill switch)
+
+  # Loss streak: N consecutive losses -> 1h buy pause + counter reset
+  max_consecutive_losses: 3
+
+  # Absolute cap in quote currency - must be at or below RiskRouter's on-chain limit.
+  # RiskRouter default: 1,000 (quote currency) when no custom params are set.
+  max_order_value: 1000
+
+  # Rate limiting
+  max_orders_10m: 50
+
+  # Time configuration (used by Go trading MCP, not referenced in rules directly)
+  session_start_hour: 0              # UTC midnight - day_start_value reset boundary
+  rolling_peak_window_hours: 24      # rolling_peak_24h window for heartbeat drawdown
+
+  permitted_pairs:
+    # Top ~50 by market cap on Kraken USD spot.
+    # Excludes stablecoins, exchange-native tokens (BNB), and wrapped assets.
+    # Agents discover markets via list_markets; this whitelist is the guardrail.
+    #
+    # Mega-caps (top 10)
+    - "BTC-USD"
+    - "ETH-USD"
+    - "SOL-USD"
+    - "XRP-USD"
+    - "ADA-USD"
+    - "DOGE-USD"
+    - "TRX-USD"
+    - "AVAX-USD"
+    - "LINK-USD"
+    - "TON-USD"
+    # Large-caps (11-25)
+    - "SUI-USD"
+    - "XLM-USD"
+    - "SHIB-USD"
+    - "DOT-USD"
+    - "BCH-USD"
+    - "HBAR-USD"
+    - "LTC-USD"
+    - "UNI-USD"
+    - "ATOM-USD"
+    - "NEAR-USD"
+    - "APT-USD"
+    - "ICP-USD"
+    - "AAVE-USD"
+    - "RENDER-USD"
+    - "TAO-USD"
+    # Mid-caps (26-50)
+    - "ARB-USD"
+    - "OP-USD"
+    - "FIL-USD"
+    - "FET-USD"
+    - "INJ-USD"
+    - "MATIC-USD"
+    - "GRT-USD"
+    - "IMX-USD"
+    - "MKR-USD"
+    - "PEPE-USD"
+    - "ALGO-USD"
+    - "CRV-USD"
+    - "EOS-USD"
+    - "ZEC-USD"
+    - "MANA-USD"
+    - "SAND-USD"
+    - "CHZ-USD"
+    - "BONK-USD"
+    - "FLOW-USD"
+    - "AXS-USD"
+    - "EGLD-USD"
+    - "KAVA-USD"
+
+signals:
+  # --- Pre-trade signals (trade_order) ---
+
+  position_risk:
+    udf: trading/compute_position_risk
+    params:
+      size: "{{ event.data.order.value }}"
+      portfolio_value: "{{ event.data.portfolio.value }}"
+
+  concentration_check:
+    udf: trading/compute_concentration
+    params:
+      market: "{{ event.data.order.pair }}"
+      size: "{{ event.data.order.value }}"
+      side: "{{ event.data.order.side }}"
+      positions: "{{ event.data.portfolio.positions }}"
+      portfolio_value: "{{ event.data.portfolio.value }}"
+      prices: "{{ event.data.prices }}"
+
+  # Intraday drawdown from day-start equity (not ATH)
+  intraday_drawdown:
+    udf: trading/compute_drawdown
+    params:
+      portfolio_value: "{{ event.data.portfolio.value }}"
+      peak_value: "{{ event.data.portfolio.day_start_value }}"
+
+  # Risk tier: 0=normal, 1=caution, 2=warning, 3=close-only
+  # Uses <= (at-or-below) to match industry convention: exactly -5% = close-only.
+  risk_tier:
+    expr: >
+      signals.intraday_drawdown <= constants.tier3_drawdown ? 3 :
+      signals.intraday_drawdown <= constants.tier2_drawdown ? 2 :
+      signals.intraday_drawdown <= constants.tier1_drawdown ? 1 : 0
+
+  # Is this order risk-reducing? (enriched by Trading MCP)
+  is_risk_reducing:
+    expr: "event.data.order.is_risk_reducing == true"
+
+  order_rate:
+    udf: trading/count_recent_trades
+    params:
+      entity_id: "{{ event.entity_id }}"
+      bucket: "orders_10m"
+
+  # Window-end timestamps for cooldown retry_after (deterministic from event.ingested_at)
+  window_end_10m:
+    udf: trading/compute_window_end
+    params:
+      timestamp: "{{ event.ingested_at }}"
+      window: "10m"
+
+  window_end_1h:
+    udf: trading/compute_window_end
+    params:
+      timestamp: "{{ event.ingested_at }}"
+      window: "1h"
+
+  now_plus_1h:
+    udf: time/timestamp_add
+    params:
+      timestamp: "{{ event.ingested_at }}"
+      duration: "1h"
+
+  # --- Heartbeat signals ---
+  # Uses rolling 24h peak (not ATH) for trailing drawdown.
+  drawdown_heartbeat:
+    udf: trading/compute_drawdown_3layer
+    params:
+      portfolio_value: "{{ event.data.portfolio.value }}"
+      peak_value: "{{ event.data.portfolio.rolling_peak_24h }}"
+      day_start_value: "{{ event.data.portfolio.day_start_value }}"
+      initial_capital: "{{ event.data.portfolio.initial_value }}"
+
+rules:
+  # =========================================================================
+  # PRE-TRADE RULES (trade_order, sync) - graduated risk tiers
+  # =========================================================================
+  #
+  # Priority order (highest = wins):
+  #   110 halted_check                  - hard block, manual resume only
+  #   105 close_only_mode              - tier 3: only risk-reducing orders allowed
+  #   100 loss_streak_check            - pause flag active: new positions blocked
+  #   100 loss_streak_pause            - 3 consecutive losses: 1h buy pause + counter reset
+  #    96 max_order_value_absolute     - hard 1,000 quote-currency cap (matches RiskRouter on-chain limit)
+  #    95 tier2_order_size             - tier 2: max 5% (new positions only)
+  #    93 tier1_order_size             - tier 1: max 10% (new positions only)
+  #    90 max_order_size               - tier 0: max 15% (new positions only)
+  #    89 require_stop_loss            - buy orders must include stop_loss
+  #    88 pair_whitelist               - instrument whitelist
+  #    87 reject_inverted_stop_loss    - stop_loss must be below current price
+  #    87 tier2_concentration          - tier 2: max 25% in one asset (new positions only)
+  #    86 tier1_concentration          - tier 1: max 35% in one asset (new positions only)
+  #    85 concentration_limit          - tier 0: max 50% in one asset (new positions only)
+  #    84 validate_stop_loss_proximity - stop_loss max 15% distance from price
+  #    80 order_rate_limit             - max 50 orders/10min
+  #     1 count_orders                 - always: increment rate bucket
+
+  halted_check:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "state.agent.labels.halted"
+        op: eq
+        value: true
+    effects:
+      verdict: rejected
+      priority: 110
+      response:
+        reason: "Agent is halted - trading paused by risk manager or heartbeat"
+        tag: "halted"
+        hint: "Use risk/resume_agent to resume"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[BLOCKED] Halted Agent\nAgent {{ event.entity_id }} attempted to trade while halted.\nAll trading suspended until manual resume."
+
+  # Tier 3: close-only mode. Only risk-reducing orders (selling held positions) allowed.
+  close_only_mode:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.risk_tier"
+        op: gte
+        value: 3
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+    effects:
+      verdict: rejected
+      priority: 105
+      response:
+        reason: "Close-only mode active (intraday drawdown > 5%) - only position exits allowed"
+        tag: "close_only"
+        risk_tier: 3
+        retry_after: "{{ signals.window_end_1h }}"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[CLOSE-ONLY] Agent: {{ event.entity_id }}\nIntraday drawdown exceeded 5%. Only exits allowed until {{ signals.window_end_1h }}.\nPair: {{ event.data.order.pair }} | {{ event.data.order.side }}"
+
+  # Loss streak: N consecutive losing closes triggers 1h buy pause.
+  # Counter resets to 0 on any winning close, or when this rule fires.
+  # Pause flag has 1h TTL - expires automatically, no idle detection needed.
+  # Risk-reducing exits always allowed.
+  loss_streak_check:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "state.agent.counters.loss_streak_paused"
+        op: gte
+        value: 1
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+    effects:
+      verdict: rejected
+      priority: 100
+      response:
+        reason: "Loss streak pause active - new positions blocked for 1h cooldown (exits still allowed)"
+        tag: "loss_streak"
+        retry_after: "{{ state.agent.metadata.loss_streak_paused_until }}"
+
+  loss_streak_pause:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "state.agent.counters.loss_streak"
+        op: gte
+        value: "{{ constants.max_consecutive_losses }}"
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+    effects:
+      verdict: rejected
+      priority: 100
+      state_changes:
+        agent:
+          set_counters:
+            loss_streak: 0
+            loss_streak_paused: 1
+          set_metadata:
+            loss_streak_paused_until: "{{ signals.now_plus_1h }}"
+      response:
+        reason: "{{ constants.max_consecutive_losses }} consecutive losses - new positions paused for 1h (exits still allowed)"
+        tag: "loss_streak"
+        consecutive_losses: "{{ constants.max_consecutive_losses }}"
+        retry_after: "{{ signals.now_plus_1h }}"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[LOSS STREAK] Agent: {{ event.entity_id }}\n{{ constants.max_consecutive_losses }} consecutive losses. New positions paused for 1h until {{ signals.now_plus_1h }}. Exits still allowed."
+
+  # Absolute cap in quote currency: ensures we never exceed RiskRouter's on-chain default.
+  # Applies to ALL orders (including exits) because RiskRouter checks amountUsdScaled
+  # regardless of direction.
+  max_order_value_absolute:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.value"
+        op: gt
+        value: "{{ constants.max_order_value }}"
+    effects:
+      verdict: rejected
+      priority: 96
+      response:
+        reason: "Order exceeds {{ constants.max_order_value }} quote-currency cap (on-chain RiskRouter limit is 1,000)"
+        tag: "risk_limit"
+        max_value: "{{ constants.max_order_value }}"
+
+  # Tier 2 position limit: max 5% per order (new positions only - exits always allowed)
+  tier2_order_size:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.risk_tier"
+        op: gte
+        value: 2
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.position_risk"
+        op: gte
+        value: "{{ constants.max_order_pct_tier2 }}"
+    effects:
+      verdict: rejected
+      priority: 95
+      response:
+        reason: "Warning tier: order exceeds 5% of portfolio"
+        tag: "risk_limit"
+        risk_tier: 2
+        max_pct: 5
+
+  # Tier 1 position limit: max 10% per order (new positions only - exits always allowed)
+  tier1_order_size:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.risk_tier"
+        op: gte
+        value: 1
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.position_risk"
+        op: gte
+        value: "{{ constants.max_order_pct_tier1 }}"
+    effects:
+      verdict: rejected
+      priority: 93
+      response:
+        reason: "Caution tier: order exceeds 10% of portfolio"
+        tag: "risk_limit"
+        risk_tier: 1
+        max_pct: 10
+
+  # Tier 0 position limit: max 15% per order (new positions only - exits always allowed).
+  # Selling a position that grew beyond 15% must not be blocked - that would trap risk.
+  # No Telegram alert here - tier-specific rules (P:95, P:93) fire first for tier 1/2,
+  # and Swiftward accumulates actions from ALL matched rules. A Telegram here would
+  # send misleading "exceeds 15%" when the actual rejection was 5% or 10%.
+  max_order_size:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.position_risk"
+        op: gte
+        value: "{{ constants.max_order_pct }}"
+    effects:
+      verdict: rejected
+      priority: 90
+      response:
+        reason: "Order exceeds 15% of portfolio"
+        tag: "risk_limit"
+        max_pct: 15
+
+  pair_whitelist:
+    enabled: false
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.pair"
+        op: not_in
+        value: "{{ constants.permitted_pairs }}"
+    effects:
+      verdict: rejected
+      priority: 88
+      response:
+        reason: "Pair not in permitted list"
+        tag: "pair_restriction"
+
+  # Tier 2 concentration limit: max 25% in one asset (new positions only - exits always allowed)
+  tier2_concentration:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.risk_tier"
+        op: gte
+        value: 2
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.concentration_check"
+        op: gte
+        value: "{{ constants.max_concentration_tier2 }}"
+    effects:
+      verdict: rejected
+      priority: 87
+      response:
+        reason: "Warning tier: concentration exceeds 25%"
+        tag: "concentration"
+        risk_tier: 2
+        max_pct: 25
+
+  # Tier 1 concentration limit: max 35% in one asset (new positions only - exits always allowed)
+  tier1_concentration:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.risk_tier"
+        op: gte
+        value: 1
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.concentration_check"
+        op: gte
+        value: "{{ constants.max_concentration_tier1 }}"
+    effects:
+      verdict: rejected
+      priority: 86
+      response:
+        reason: "Caution tier: concentration exceeds 35%"
+        tag: "concentration"
+        risk_tier: 1
+        max_pct: 35
+
+  # Tier 0 concentration limit: max 50% in one asset (new positions only - exits always allowed).
+  # Selling always reduces concentration - blocking exits would trap risk.
+  # No Telegram alert - same reason as max_order_size (action accumulation).
+  concentration_limit:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.is_risk_reducing"
+        op: eq
+        value: false
+      - path: "signals.concentration_check"
+        op: gte
+        value: "{{ constants.max_concentration }}"
+    effects:
+      verdict: rejected
+      priority: 85
+      response:
+        reason: "Concentration exceeds 50%"
+        tag: "concentration"
+        max_pct: 50
+
+  order_rate_limit:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "signals.order_rate"
+        op: gte
+        value: "{{ constants.max_orders_10m }}"
+    effects:
+      verdict: rejected
+      priority: 80
+      response:
+        reason: "Order rate exceeded 50 orders/10min"
+        tag: "velocity"
+        retry_after: "{{ signals.window_end_10m }}"
+
+  # Require stop_loss on buy orders (risk management gate).
+  # Agents must include stop_loss in params of trade/submit_order for buy orders.
+  require_stop_loss:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.side"
+        op: eq
+        value: "buy"
+      - path: "event.data.order.stop_loss"
+        op: not_exists
+    effects:
+      verdict: rejected
+      priority: 89
+      response:
+        reason: "stop_loss required for buy orders - include stop_loss in params"
+        tag: "missing_stop_loss"
+
+  # Validate stop_loss is within 15% of current price.
+  # sl_distance_pct is pre-computed by Go in the event data.
+  validate_stop_loss_proximity:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.side"
+        op: eq
+        value: "buy"
+      - path: "event.data.order.sl_distance_pct"
+        op: exists
+      - path: "event.data.order.sl_distance_pct"
+        op: gt
+        value: 15
+    effects:
+      verdict: rejected
+      priority: 84
+      response:
+        reason: "stop_loss too far from current price (max 15% distance)"
+        tag: "stop_loss_too_far"
+
+  # Reject inverted stop-loss (SL above current price for buy orders).
+  # An SL above the buy price would trigger immediately as a loss.
+  reject_inverted_stop_loss:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+      - path: "event.data.order.sl_inverted"
+        op: eq
+        value: true
+    effects:
+      verdict: rejected
+      priority: 87
+      response:
+        reason: "stop_loss must be below current price for buy orders"
+        tag: "stop_loss_inverted"
+
+  count_orders:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "trade_order"
+    effects:
+      verdict: approved
+      priority: 1
+      state_changes:
+        agent:
+          change_buckets:
+            orders_10m: 1
+
+  # =========================================================================
+  # HEARTBEAT RULES (heartbeat, sync) - trailing 24h + absolute kill switch
+  # =========================================================================
+  # Uses rolling_peak_24h (not ATH) for trailing drawdown - recoverable.
+  # Absolute floor from initial capital is the true kill switch.
+
+  # Trailing: -8% from 24h rolling peak -> halt
+  # Uses lte (at-or-below) for consistency with pre-trade tier thresholds.
+  heartbeat_trailing_24h:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "heartbeat"
+      - path: "signals.drawdown_heartbeat.peak_drawdown_pct"
+        op: lte
+        value: "{{ constants.max_drawdown_trailing_24h }}"
+    effects:
+      verdict: rejected
+      priority: 96
+      state_changes:
+        agent:
+          set_labels:
+            halted:
+      response:
+        reason: "Trailing 24h drawdown exceeded 8% - agent halted"
+        tag: "heartbeat_drawdown"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[AGENT HALTED] Trailing 24h Drawdown\nAgent: {{ event.entity_id }}\nLoss exceeded 8% from 24h peak.\nAll trading suspended until manual resume."
+
+  # Absolute: -15% from initial capital -> halt (kill switch)
+  heartbeat_absolute:
+    enabled: true
+    mode: sync
+    all:
+      - path: "event.type"
+        op: eq
+        value: "heartbeat"
+      - path: "signals.drawdown_heartbeat.floor_drawdown_pct"
+        op: lte
+        value: "{{ constants.max_drawdown_absolute }}"
+    effects:
+      verdict: rejected
+      priority: 97
+      state_changes:
+        agent:
+          set_labels:
+            halted:
+      response:
+        reason: "Absolute drawdown exceeded 15% floor - agent halted"
+        tag: "heartbeat_drawdown"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[AGENT HALTED] Absolute Drawdown\nAgent: {{ event.entity_id }}\nTotal loss exceeded 15% floor (kill switch).\nAll trading suspended until manual resume."
+
+  # =========================================================================
+  # POST-TRADE RULES (execution_report, async) - bookkeeping
+  # =========================================================================
+
+  track_fill:
+    enabled: true
+    mode: async
+    all:
+      - path: "event.type"
+        op: eq
+        value: "execution_report"
+      - path: "event.data.status"
+        op: eq
+        value: "fill"
+    effects:
+      verdict: approved
+      state_changes:
+        agent:
+          change_counters:
+            fill_count: 1
+      actions:
+        - action: log_action
+          params:
+            message: "Trade filled for {{ event.entity_id }}, decision_hash={{ event.data.decision_hash }}"
+            level: "info"
+
+  # Loss streak counter: increment on losing sell (only when not in pause).
+  # Closes during pause are forced/unavoidable - don't penalize them.
+  # Counter resets to 0 on winning sell or when pause fires.
+  track_losing_sell:
+    enabled: true
+    mode: async
+    all:
+      - path: "event.type"
+        op: eq
+        value: "execution_report"
+      - path: "event.data.status"
+        op: eq
+        value: "fill"
+      - path: "event.data.fill.side"
+        op: eq
+        value: "sell"
+      - path: "event.data.fill.pnl"
+        op: lt
+        value: 0
+      - path: "state.agent.counters.loss_streak_paused"
+        op: lt
+        value: 1
+    effects:
+      verdict: approved
+      state_changes:
+        agent:
+          change_counters:
+            loss_streak: 1
+
+  track_winning_sell:
+    enabled: true
+    mode: async
+    all:
+      - path: "event.type"
+        op: eq
+        value: "execution_report"
+      - path: "event.data.status"
+        op: eq
+        value: "fill"
+      - path: "event.data.fill.side"
+        op: eq
+        value: "sell"
+      - path: "event.data.fill.pnl"
+        op: gte
+        value: 0
+    effects:
+      verdict: approved
+      state_changes:
+        agent:
+          set_counters:
+            loss_streak: 0
+
+  router_rejection_alert:
+    enabled: true
+    mode: async
+    all:
+      - path: "event.type"
+        op: eq
+        value: "execution_report"
+      - path: "event.data.status"
+        op: eq
+        value: "reject"
+    effects:
+      verdict: flagged
+      state_changes:
+        agent:
+          change_counters:
+            reject_count: 1
+      actions:
+        - action: log_action
+          params:
+            message: "Risk Router rejected a Swiftward-approved trade - tighten policies"
+            level: "warning"
+

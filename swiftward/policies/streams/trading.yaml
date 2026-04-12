@@ -1,0 +1,14 @@
+code: trading
+description: "Trading Gateway - pre-trade risk controls and post-trade monitoring"
+deployment:
+  active:
+    - arm: "A"
+      path: "../rulesets/trading/v1"
+      traffic_percent: 100
+  # Shadow disabled: v2's stricter thresholds (3% vs 5%) were applying state_changes
+  # (drawdown_cooldown increments) that leaked into the active arm, blocking trades.
+  # Re-enable when Swiftward supports isolated shadow state.
+  # shadow:
+  #   - arm: "B"
+  #     path: "../rulesets/trading/v2"
+  #     traffic_percent: 100

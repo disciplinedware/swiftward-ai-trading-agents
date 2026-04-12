@@ -1,0 +1,64 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100"><%= @agent_model_provider.name %></h1>
+      <p class="mt-2 text-sm text-gray-300">Provider details and associated models.</p>
+    </div>
+    <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none space-x-3">
+      <%= link_to "Edit Provider", edit_agent_model_provider_path(@agent_model_provider), class: "inline-flex items-center rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-800" %>
+      <%= link_to "New Agent Model", new_agent_model_path(agent_model_provider_id: @agent_model_provider.id), class: "inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500" %>
+    </div>
+  </div>
+
+  <div class="mt-6 border-t border-gray-800">
+    <dl class="divide-y divide-gray-800">
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-100">Base URL</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0 font-mono"><%= @agent_model_provider.base_url %></dd>
+      </div>
+      <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+        <dt class="text-sm font-medium leading-6 text-gray-100">Description</dt>
+        <dd class="mt-1 text-sm leading-6 text-gray-300 sm:col-span-2 sm:mt-0"><%= @agent_model_provider.description.presence || "No description" %></dd>
+      </div>
+    </dl>
+  </div>
+
+  <h2 class="mt-10 text-xl font-bold text-gray-100">Associated Models</h2>
+  <div class="mt-4 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+        <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+          <table class="min-w-full divide-y divide-gray-700">
+            <thead class="bg-gray-800/50">
+              <tr>
+                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-100 sm:pl-6">Name</th>
+                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">LLM Model</th>
+                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right">
+                  <span class="sr-only">Actions</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-700 bg-gray-900">
+              <% @agent_model_provider.agent_models.each do |agent_model| %>
+                <tr>
+                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-100 sm:pl-6">
+                    <%= link_to agent_model.name, agent_model, class: "text-indigo-400 hover:text-indigo-300" %>
+                  </td>
+                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400"><%= agent_model.llm_model_name %></td>
+                  <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    <%= link_to "Edit", edit_agent_model_path(agent_model), class: "text-indigo-400 hover:text-indigo-300" %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if @agent_model_provider.agent_models.empty? %>
+                <tr>
+                  <td colspan="3" class="px-6 py-4 text-sm text-gray-400 text-center">No models configured for this provider.</td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

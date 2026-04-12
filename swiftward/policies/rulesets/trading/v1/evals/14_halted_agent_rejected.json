@@ -1,0 +1,77 @@
+{
+  "id": "halted-agent-rejected",
+  "comment": "Agent with halted label tries to trade - rejected immediately with highest priority + Telegram alert",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 100,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "Attempting to trade while halted",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 50000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "initial_state": {
+    "agent": {
+      "labels": [
+        "halted"
+      ]
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 110,
+      "response": {
+        "reason": "Agent is halted - trading paused by risk manager or heartbeat",
+        "tag": "halted",
+        "hint": "Use risk/resume_agent to resume"
+      },
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": [
+        {
+          "action": "http/request",
+          "params": {
+            "method": "POST",
+            "url": "https://api.telegram.org/bot/sendMessage",
+            "payload": {
+              "chat_id": "",
+              "message_thread_id": "",
+              "text": "[BLOCKED] Halted Agent\nAgent agent-42 attempted to trade while halted.\nAll trading suspended until manual resume."
+            }
+          }
+        }
+      ]
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "halted_check"
+      ]
+    }
+  }
+}

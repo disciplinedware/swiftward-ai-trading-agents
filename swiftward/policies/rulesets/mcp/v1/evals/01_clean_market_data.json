@@ -1,0 +1,23 @@
+{
+  "description": "Clean market data response - should pass through",
+  "event": {
+    "type": "mcp.output",
+    "entity_id": "agent-alpha",
+    "data": {
+      "tool": {
+        "name": "market/get_prices",
+        "server": "market"
+      },
+      "response": {
+        "prices": [
+          {"market": "BTC-USD", "bid": "83500.00", "ask": "83510.00", "last": "83505.00", "volume_24h": "125000000", "change_24h_pct": "2.15"},
+          {"market": "ETH-USD", "bid": "1890.00", "ask": "1891.00", "last": "1890.50", "volume_24h": "45000000", "change_24h_pct": "-0.80"}
+        ],
+        "source": "kraken"
+      }
+    }
+  },
+  "expected": {
+    "verdict": "approved"
+  }
+}

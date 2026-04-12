@@ -1,0 +1,3268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HackathonTradingAgent - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>HackathonTradingAgent <span>#58 - Rank #28</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x822c03B5019505934D730f11e48a7f33b2f524AB</strong></div>
+        <div class="item">Operator: <strong>0x822c...24AB</strong></div>
+        <div class="item">Vault: <strong>Not claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Autonomous AI trading agent with ERC-8004 identity, Kraken CLI execution, and EIP-712 checkpoints</div>
+      </div>
+      
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">172</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$19500.57</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value negative">-$36.84</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$126.30</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value negative">-$1889.08</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value negative">-18.89%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 27</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 58 - HackathonTradingAgent
+
+1. STRATEGY
+172 total records across 7 pairs (PEPEUSD, XBTUSD, PIXBTUSD, PIETHUSD, RAVEUSD, TAOUSD, FFUSD): 134 approved, 38 rejected (22% reject rate). Primary activity Apr 10 09:18 - 18:09 UTC. PEPEUSD BUY at trade 0: $200 at market_price 0.00, qty 57,118,513 - the price feed returns zero for PEPE/RAVE/FF, allowing the sizer to book arbitrary phantom quantity (notional check evaluates qty * 0 = 0 &lt; cap). Final PEPEUSD position: &#43;3,199,003,785 tokens at avg_cost $0.0000, total_cost $11,229. PI-pairs: alternating $300-$325 BUY/SELL on PIXBTUSD and $225 on PIETHUSD, 27 closed trades all losses, realized -$36.84. RAVEUSD short opened to -2,698 units. TAOUSD long to &#43;16.6 units. Cash went negative (cash_min approximately -$9,500 at block 10631419) from levered PI positions - rank last in the 50-199 bucket on cash_min. Net PnL -$1,639.56 (-16.40%) with unrealized -$1,602.72 driven by 3.2 billion phantom PEPE tokens priced at zero. Hackathon score 30, validation 0.
+
+2. GAMING
+Zero attestations, state.validation_score=0, state.vault_claimed=false. Reputation: 8 entries from 8 unique wallets, all scoring 30/100. No judge-bot comment. Same wallet pool as agents 51, 54, 57. Shares verbatim description with 7 &#34;HackathonTradingAgent&#34; siblings (5, 8, 11, 41, 53, 54, 64, 66). 38 rejected orders split: 33 &#34;Invalid nonce&#34; (EIP-712 nonce counter bug), 5 policy rejects.
+
+3. NOTES
+The 33 &#34;Invalid nonce&#34; rejects show the EIP-712 signing layer was broken for half the submission lifetime - the agent was sending repeat nonces for PI-pair trades, effectively fighting its own signing code rather than the market. The zero-price exploit on PEPE/RAVE/FF is a side-effect of using the same notional cap path that correctly handles BTC; it is not deliberate - the developer never checked what the sizer does when market_price returns 0.
+
+Verdict: Test/Placeholder. Broken nonce counter, zero-price ticker exploit, and -16% net PnL mark this as a half-finished prototype that never reached testable trading logic.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>FFUSD</td>
+            <td>5</td>
+            <td>$0.00</td>
+            <td>$900.00</td>
+            <td class="">$0.00</td>
+            <td>-6152.221797</td>
+            <td class="positive">$305.45</td>
+          </tr>
+          
+          <tr>
+            <td>PEPEUSD</td>
+            <td>24</td>
+            <td>$11200.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>3199003785.725425</td>
+            <td class="positive">$8.98</td>
+          </tr>
+          
+          <tr>
+            <td>PIETHUSD</td>
+            <td>29</td>
+            <td>$1500.00</td>
+            <td>$4275.00</td>
+            <td class="negative">-$7.80</td>
+            <td>-1.238673</td>
+            <td class="negative">-$15.33</td>
+          </tr>
+          
+          <tr>
+            <td>PIXBTUSD</td>
+            <td>65</td>
+            <td>$6150.00</td>
+            <td>$7150.00</td>
+            <td class="negative">-$29.04</td>
+            <td>-0.013651</td>
+            <td class="positive">$1.09</td>
+          </tr>
+          
+          <tr>
+            <td>RAVEUSD</td>
+            <td>24</td>
+            <td>$0.00</td>
+            <td>$7200.00</td>
+            <td class="">$0.00</td>
+            <td>-4753.969108</td>
+            <td class="negative">-$2018.27</td>
+          </tr>
+          
+          <tr>
+            <td>TAOUSD</td>
+            <td>18</td>
+            <td>$7200.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>26.795623</td>
+            <td class="negative">-$169.62</td>
+          </tr>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>7</td>
+            <td>$3000.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.041787</td>
+            <td class="positive">$35.46</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 10 09:18</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$200.00</td>
+            <td>$0.00</td>
+            <td>57118513.712109</td>
+            <td class="muted">$0.52</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 57118513.712109</td>
+            <td>$9799.48</td>
+            <td class="positive">$9999.48</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 10 09:31</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142721927.796915</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>57118513.712109 &rarr; 199840441.509024</td>
+            <td>$9298.18</td>
+            <td class="positive">$9998.28</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 10 09:32</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71798.15</td>
+            <td>0.006964</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.006964</td>
+            <td>$8796.88</td>
+            <td class="positive">$9995.83</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 10 09:32</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142958510.991774</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>199840441.509024 &rarr; 342798952.500798</td>
+            <td>$8295.58</td>
+            <td class="positive">$9994.53</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 10 09:34</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142651961.853273</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>342798952.500798 &rarr; 485450914.354071</td>
+            <td>$7794.28</td>
+            <td class="positive">$9995.93</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 10 09:35</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71824.04</td>
+            <td>0.006961</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.006964 &rarr; 0.013925</td>
+            <td>$7292.98</td>
+            <td class="positive">$9992.82</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 10 09:35</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142807934.580512</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>485450914.354071 &rarr; 628258848.934583</td>
+            <td>$6791.68</td>
+            <td class="positive">$9991.52</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 10 09:36</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142870199.282979</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>628258848.934583 &rarr; 771129048.217562</td>
+            <td>$6290.38</td>
+            <td class="positive">$9988.96</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 10 09:36</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71802.43</td>
+            <td>0.006964</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.013925 &rarr; 0.020889</td>
+            <td>$5789.08</td>
+            <td class="positive">$9987.66</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 10 09:36</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142870199.282979</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>771129048.217562 &rarr; 913999247.500541</td>
+            <td>$5287.78</td>
+            <td class="positive">$9986.36</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 10 09:40</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142830431.207764</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>913999247.500541 &rarr; 1056829678.708305</td>
+            <td>$4786.48</td>
+            <td class="positive">$9986.82</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 10 09:42</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142857142.857143</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1056829678.708305 &rarr; 1199686821.565448</td>
+            <td>$4285.18</td>
+            <td class="positive">$9984.23</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 10 09:43</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142782189.852437</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1199686821.565448 &rarr; 1342469011.417885</td>
+            <td>$3783.88</td>
+            <td class="positive">$9985.01</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 10 09:45</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142757621.367777</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1342469011.417885 &rarr; 1485226632.785661</td>
+            <td>$3282.58</td>
+            <td class="positive">$9984.67</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 10 09:46</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142749552.458277</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1485226632.785661 &rarr; 1627976185.243938</td>
+            <td>$2781.28</td>
+            <td class="positive">$9983.33</td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 10 09:47</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142810700.490919</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1627976185.243938 &rarr; 1770786885.734857</td>
+            <td>$2279.98</td>
+            <td class="positive">$9978.78</td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 10 09:47</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71761.58</td>
+            <td>0.006968</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.020889 &rarr; 0.027856</td>
+            <td>$1778.68</td>
+            <td class="positive">$9977.48</td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 10 09:48</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142799950.938232</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1770786885.734857 &rarr; 1913586836.673089</td>
+            <td>$1277.38</td>
+            <td class="positive">$9976.64</td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 10 09:49</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142832946.972250</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1913586836.673089 &rarr; 2056419783.645339</td>
+            <td>$776.08</td>
+            <td class="positive">$9973.80</td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 10 09:49</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>2056419783.645339 &rarr; 2056419783.645339</td>
+            <td>$776.08</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 10 09:50</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142914443.129135</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2056419783.645339 &rarr; 2199334226.774474</td>
+            <td>$274.78</td>
+            <td class="positive">$9968.41</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 10 09:52</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142806217.482679</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2199334226.774474 &rarr; 2342140444.257153</td>
+            <td>-$226.52</td>
+            <td class="positive">$9973.72</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 10 09:53</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142741171.576956</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2342140444.257153 &rarr; 2484881615.834109</td>
+            <td>-$727.82</td>
+            <td class="positive">$9975.91</td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 10 09:55</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142821728.850628</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2484881615.834109 &rarr; 2627703344.684737</td>
+            <td>-$1229.12</td>
+            <td class="positive">$9970.26</td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 10 09:55</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142821728.850628</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2627703344.684737 &rarr; 2770525073.535364</td>
+            <td>-$1730.42</td>
+            <td class="positive">$9968.96</td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 10 09:55</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71801.37</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.027856 &rarr; 0.027856</td>
+            <td>-$1730.42</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 10 09:58</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142817390.513800</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2770525073.535364 &rarr; 2913342464.049164</td>
+            <td>-$2231.72</td>
+            <td class="positive">$9967.91</td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>Apr 10 10:01</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142857142.857143</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>2913342464.049164 &rarr; 3056199606.906307</td>
+            <td>-$2733.02</td>
+            <td class="positive">$9963.45</td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>Apr 10 10:02</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71781.48</td>
+            <td>0.006966</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.027856 &rarr; 0.034822</td>
+            <td>-$3234.32</td>
+            <td class="positive">$9968.07</td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>Apr 10 10:03</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$71785.01</td>
+            <td>0.006965</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.034822 &rarr; 0.041787</td>
+            <td>-$3735.62</td>
+            <td class="positive">$9972.84</td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>Apr 10 10:18</td>
+            <td>PEPEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$500.00</td>
+            <td>$0.00</td>
+            <td>142804178.819118</td>
+            <td class="muted">$1.30</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>3056199606.906307 &rarr; 3199003785.725425</td>
+            <td>-$4236.92</td>
+            <td class="positive">$9964.97</td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>Apr 10 16:58</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.003423</td>
+            <td>-$4487.57</td>
+            <td class="positive">$10339.53</td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>Apr 10 16:58</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>-$4487.57</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>Apr 10 16:58</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.003423 &rarr; 0.006846</td>
+            <td>-$4738.22</td>
+            <td class="positive">$10338.88</td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>Apr 10 16:58</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.006846 &rarr; 0.006846</td>
+            <td>-$4738.22</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>Apr 10 16:58</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.006846 &rarr; 0.010269</td>
+            <td>-$4988.87</td>
+            <td class="positive">$10338.23</td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.010269 &rarr; 0.013692</td>
+            <td>-$5239.52</td>
+            <td class="positive">$10335.75</td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.013692 &rarr; 0.017115</td>
+            <td>-$5490.17</td>
+            <td class="positive">$10335.10</td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.017115 &rarr; 0.017115</td>
+            <td>-$5490.17</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0.111592</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.111592</td>
+            <td>-$5740.82</td>
+            <td class="positive">$10334.45</td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.111592 &rarr; 0.111592</td>
+            <td>-$5740.82</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.017115 &rarr; 0.017115</td>
+            <td>-$5740.82</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.017115 &rarr; 0.017115</td>
+            <td>-$5740.82</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.017115 &rarr; 0.020538</td>
+            <td>-$5991.47</td>
+            <td class="positive">$10333.80</td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>Apr 10 16:59</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.020538 &rarr; 0.020538</td>
+            <td>-$5991.47</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0.111592</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.111592 &rarr; 0.223184</td>
+            <td>-$6242.12</td>
+            <td class="positive">$10333.74</td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.020538 &rarr; 0.020538</td>
+            <td>-$6242.12</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.020538 &rarr; 0.020538</td>
+            <td>-$6242.12</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.020538 &rarr; 0.023961</td>
+            <td>-$6492.77</td>
+            <td class="positive">$10333.09</td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0.111592</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.223184 &rarr; 0.334777</td>
+            <td>-$6743.42</td>
+            <td class="positive">$10332.44</td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.023961 &rarr; 0.027384</td>
+            <td>-$6994.07</td>
+            <td class="positive">$10331.79</td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>Apr 10 17:00</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.027384 &rarr; 0.030807</td>
+            <td>-$7244.72</td>
+            <td class="positive">$10331.14</td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>Apr 10 17:01</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0.111592</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.334777 &rarr; 0.446369</td>
+            <td>-$7495.37</td>
+            <td class="positive">$10313.53</td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>Apr 10 17:01</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.030807 &rarr; 0.030807</td>
+            <td>-$7495.37</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>Apr 10 17:01</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.030807 &rarr; 0.034229</td>
+            <td>-$7746.02</td>
+            <td class="positive">$10312.88</td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>Apr 10 17:01</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.034229 &rarr; 0.037652</td>
+            <td>-$7996.67</td>
+            <td class="positive">$10312.23</td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>Apr 10 17:01</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.037652 &rarr; 0.041075</td>
+            <td>-$8247.32</td>
+            <td class="positive">$10311.58</td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>Apr 10 17:02</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0.111592</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.446369 &rarr; 0.557961</td>
+            <td>-$8497.97</td>
+            <td class="positive">$10301.22</td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>Apr 10 17:02</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.041075 &rarr; 0.044498</td>
+            <td>-$8748.62</td>
+            <td class="positive">$10300.57</td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>Apr 10 17:02</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.044498 &rarr; 0.047921</td>
+            <td>-$8999.27</td>
+            <td class="positive">$10299.92</td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>Apr 10 17:02</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$2240.30</td>
+            <td>0.111592</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.557961 &rarr; 0.669553</td>
+            <td>-$9249.92</td>
+            <td class="positive">$10299.27</td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>Apr 10 17:02</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.047921 &rarr; 0.047921</td>
+            <td>-$9249.92</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>Apr 10 17:02</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$250.00</td>
+            <td>$73036.50</td>
+            <td>0.003423</td>
+            <td class="muted">$0.65</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.047921 &rarr; 0.051344</td>
+            <td>-$9500.57</td>
+            <td class="positive">$10298.62</td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>Apr 10 17:03</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.17</span></td>
+            <td>0.669553 &rarr; 0.569120</td>
+            <td>-$9276.16</td>
+            <td class="positive">$10299.61</td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>Apr 10 17:03</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.051344 &rarr; 0.051344</td>
+            <td>-$9276.16</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>Apr 10 17:03</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.051344 &rarr; 0.046894</td>
+            <td>-$8952.00</td>
+            <td class="positive">$10298.77</td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>Apr 10 17:03</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.17</span></td>
+            <td>0.569120 &rarr; 0.468687</td>
+            <td>-$8727.59</td>
+            <td class="positive">$10298.18</td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>Apr 10 17:03</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.046894 &rarr; 0.046894</td>
+            <td>-$8727.59</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>Apr 10 17:04</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.046894 &rarr; 0.042445</td>
+            <td>-$8403.43</td>
+            <td class="positive">$10288.74</td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>Apr 10 17:04</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.17</span></td>
+            <td>0.468687 &rarr; 0.368254</td>
+            <td>-$8179.02</td>
+            <td class="positive">$10288.15</td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>Apr 10 17:04</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.042445 &rarr; 0.042445</td>
+            <td>-$8179.02</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>Apr 10 17:04</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.042445 &rarr; 0.037995</td>
+            <td>-$7854.86</td>
+            <td class="positive">$10287.31</td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>Apr 10 17:04</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.17</span></td>
+            <td>0.368254 &rarr; 0.267821</td>
+            <td>-$7630.45</td>
+            <td class="positive">$10286.72</td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>Apr 10 17:04</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.037995 &rarr; 0.033545</td>
+            <td>-$7306.29</td>
+            <td class="positive">$10285.88</td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>Apr 10 17:05</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.033545 &rarr; 0.029095</td>
+            <td>-$6982.14</td>
+            <td class="positive">$10270.45</td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>Apr 10 17:05</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.17</span></td>
+            <td>0.267821 &rarr; 0.167388</td>
+            <td>-$6757.72</td>
+            <td class="positive">$10269.87</td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>Apr 10 17:05</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.029095 &rarr; 0.029095</td>
+            <td>-$6757.72</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>77</td>
+            <td>Apr 10 17:05</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.029095 &rarr; 0.024645</td>
+            <td>-$6433.57</td>
+            <td class="positive">$10269.02</td>
+          </tr>
+          
+          <tr>
+            <td>78</td>
+            <td>Apr 10 17:05</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.17</span></td>
+            <td>0.167388 &rarr; 0.066955</td>
+            <td>-$6209.15</td>
+            <td class="positive">$10268.44</td>
+          </tr>
+          
+          <tr>
+            <td>79</td>
+            <td>Apr 10 17:05</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.024645 &rarr; 0.024645</td>
+            <td>-$6209.15</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>80</td>
+            <td>Apr 10 17:06</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.024645 &rarr; 0.020195</td>
+            <td>-$5885.00</td>
+            <td class="positive">$10263.10</td>
+          </tr>
+          
+          <tr>
+            <td>81</td>
+            <td>Apr 10 17:06</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$0.78</span></td>
+            <td>0.066955 &rarr; -0.033478</td>
+            <td>-$5660.58</td>
+            <td class="positive">$10262.51</td>
+          </tr>
+          
+          <tr>
+            <td>82</td>
+            <td>Apr 10 17:06</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.020195 &rarr; 0.015746</td>
+            <td>-$5336.43</td>
+            <td class="positive">$10261.67</td>
+          </tr>
+          
+          <tr>
+            <td>83</td>
+            <td>Apr 10 17:06</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.015746 &rarr; 0.011296</td>
+            <td>-$5012.27</td>
+            <td class="positive">$10260.82</td>
+          </tr>
+          
+          <tr>
+            <td>84</td>
+            <td>Apr 10 17:06</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.033478 &rarr; -0.133911</td>
+            <td>-$4787.86</td>
+            <td class="positive">$10260.24</td>
+          </tr>
+          
+          <tr>
+            <td>85</td>
+            <td>Apr 10 17:07</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0.011296 &rarr; 0.011296</td>
+            <td>-$4787.86</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>86</td>
+            <td>Apr 10 17:07</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.133911 &rarr; -0.234344</td>
+            <td>-$4563.44</td>
+            <td class="positive">$10260.01</td>
+          </tr>
+          
+          <tr>
+            <td>87</td>
+            <td>Apr 10 17:07</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.011296 &rarr; 0.006846</td>
+            <td>-$4239.29</td>
+            <td class="positive">$10259.17</td>
+          </tr>
+          
+          <tr>
+            <td>88</td>
+            <td>Apr 10 17:07</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.69</span></td>
+            <td>0.006846 &rarr; 0.002396</td>
+            <td>-$3915.13</td>
+            <td class="positive">$10258.32</td>
+          </tr>
+          
+          <tr>
+            <td>89</td>
+            <td>Apr 10 17:07</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.234344 &rarr; -0.334777</td>
+            <td>-$3690.72</td>
+            <td class="positive">$10257.74</td>
+          </tr>
+          
+          <tr>
+            <td>90</td>
+            <td>Apr 10 17:08</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$0.91</span></td>
+            <td>0.002396 &rarr; -0.002054</td>
+            <td>-$3366.56</td>
+            <td class="positive">$10273.66</td>
+          </tr>
+          
+          <tr>
+            <td>91</td>
+            <td>Apr 10 17:08</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.002054 &rarr; -0.006504</td>
+            <td>-$3042.40</td>
+            <td class="positive">$10272.81</td>
+          </tr>
+          
+          <tr>
+            <td>92</td>
+            <td>Apr 10 17:08</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.006504 &rarr; -0.006504</td>
+            <td>-$3042.40</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>93</td>
+            <td>Apr 10 17:08</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.334777 &rarr; -0.435210</td>
+            <td>-$2817.99</td>
+            <td class="positive">$10272.23</td>
+          </tr>
+          
+          <tr>
+            <td>94</td>
+            <td>Apr 10 17:08</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.435210 &rarr; -0.435210</td>
+            <td>-$2817.99</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>95</td>
+            <td>Apr 10 17:09</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.006504 &rarr; -0.010953</td>
+            <td>-$2493.83</td>
+            <td class="positive">$10266.90</td>
+          </tr>
+          
+          <tr>
+            <td>96</td>
+            <td>Apr 10 17:09</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.010953 &rarr; -0.015403</td>
+            <td>-$2169.68</td>
+            <td class="positive">$10266.06</td>
+          </tr>
+          
+          <tr>
+            <td>97</td>
+            <td>Apr 10 17:10</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.015403 &rarr; -0.019853</td>
+            <td>-$1845.52</td>
+            <td class="positive">$10265.58</td>
+          </tr>
+          
+          <tr>
+            <td>98</td>
+            <td>Apr 10 17:10</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.435210 &rarr; -0.535643</td>
+            <td>-$1621.11</td>
+            <td class="positive">$10264.99</td>
+          </tr>
+          
+          <tr>
+            <td>99</td>
+            <td>Apr 10 17:10</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.019853 &rarr; -0.024303</td>
+            <td>-$1296.95</td>
+            <td class="positive">$10264.15</td>
+          </tr>
+          
+          <tr>
+            <td>100</td>
+            <td>Apr 10 17:11</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.024303 &rarr; -0.028753</td>
+            <td>-$972.80</td>
+            <td class="positive">$10248.05</td>
+          </tr>
+          
+          <tr>
+            <td>101</td>
+            <td>Apr 10 17:11</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.028753 &rarr; -0.028753</td>
+            <td>-$972.80</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>102</td>
+            <td>Apr 10 17:11</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.535643 &rarr; -0.636076</td>
+            <td>-$748.38</td>
+            <td class="positive">$10247.47</td>
+          </tr>
+          
+          <tr>
+            <td>103</td>
+            <td>Apr 10 17:11</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.028753 &rarr; -0.033203</td>
+            <td>-$424.23</td>
+            <td class="positive">$10246.62</td>
+          </tr>
+          
+          <tr>
+            <td>104</td>
+            <td>Apr 10 17:11</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.636076 &rarr; -0.736509</td>
+            <td>-$199.81</td>
+            <td class="positive">$10246.04</td>
+          </tr>
+          
+          <tr>
+            <td>105</td>
+            <td>Apr 10 17:11</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.736509 &rarr; -0.736509</td>
+            <td>-$199.81</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>106</td>
+            <td>Apr 10 17:12</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.033203 &rarr; -0.037652</td>
+            <td>$124.34</td>
+            <td class="positive">$10257.11</td>
+          </tr>
+          
+          <tr>
+            <td>107</td>
+            <td>Apr 10 17:12</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.736509 &rarr; -0.836941</td>
+            <td>$348.76</td>
+            <td class="positive">$10256.52</td>
+          </tr>
+          
+          <tr>
+            <td>108</td>
+            <td>Apr 10 17:12</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.037652 &rarr; -0.042102</td>
+            <td>$672.91</td>
+            <td class="positive">$10255.68</td>
+          </tr>
+          
+          <tr>
+            <td>109</td>
+            <td>Apr 10 17:13</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0.004450</td>
+            <td class="muted">$0.85</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.042102 &rarr; -0.046552</td>
+            <td>$997.07</td>
+            <td class="positive">$10245.15</td>
+          </tr>
+          
+          <tr>
+            <td>110</td>
+            <td>Apr 10 17:13</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.836941 &rarr; -0.937374</td>
+            <td>$1221.48</td>
+            <td class="positive">$10244.57</td>
+          </tr>
+          
+          <tr>
+            <td>111</td>
+            <td>Apr 10 17:13</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$325.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.046552 &rarr; -0.046552</td>
+            <td>$1221.48</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>112</td>
+            <td>Apr 10 17:13</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0.004108</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.56</span></td>
+            <td>-0.046552 &rarr; -0.042445</td>
+            <td>$920.70</td>
+            <td class="positive">$10243.79</td>
+          </tr>
+          
+          <tr>
+            <td>113</td>
+            <td>Apr 10 17:13</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.042445 &rarr; -0.042445</td>
+            <td>$920.70</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>114</td>
+            <td>Apr 10 17:14</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0.004108</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.56</span></td>
+            <td>-0.042445 &rarr; -0.038337</td>
+            <td>$619.92</td>
+            <td class="positive">$10239.90</td>
+          </tr>
+          
+          <tr>
+            <td>115</td>
+            <td>Apr 10 17:14</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-0.038337 &rarr; -0.038337</td>
+            <td>$619.92</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>116</td>
+            <td>Apr 10 17:14</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.937374 &rarr; -1.037807</td>
+            <td>$844.34</td>
+            <td class="positive">$10239.31</td>
+          </tr>
+          
+          <tr>
+            <td>117</td>
+            <td>Apr 10 17:14</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0.004108</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.56</span></td>
+            <td>-0.038337 &rarr; -0.034229</td>
+            <td>$543.56</td>
+            <td class="positive">$10238.53</td>
+          </tr>
+          
+          <tr>
+            <td>118</td>
+            <td>Apr 10 17:15</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-1.037807 &rarr; -1.138240</td>
+            <td>$767.97</td>
+            <td class="positive">$10226.59</td>
+          </tr>
+          
+          <tr>
+            <td>119</td>
+            <td>Apr 10 17:15</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0.004108</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.56</span></td>
+            <td>-0.034229 &rarr; -0.030122</td>
+            <td>$467.19</td>
+            <td class="positive">$10225.81</td>
+          </tr>
+          
+          <tr>
+            <td>120</td>
+            <td>Apr 10 17:15</td>
+            <td>PI_ETHUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$225.00</td>
+            <td>$2240.30</td>
+            <td>0.100433</td>
+            <td class="muted">$0.59</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-1.138240 &rarr; -1.238673</td>
+            <td>$691.61</td>
+            <td class="positive">$10225.23</td>
+          </tr>
+          
+          <tr>
+            <td>121</td>
+            <td>Apr 10 17:15</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$73036.50</td>
+            <td>0.004108</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$1.56</span></td>
+            <td>-0.030122 &rarr; -0.026014</td>
+            <td>$390.83</td>
+            <td class="positive">$10224.45</td>
+          </tr>
+          
+          <tr>
+            <td>122</td>
+            <td>Apr 10 17:16</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$72798.00</td>
+            <td>0.004121</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$0.58</span></td>
+            <td>-0.026014 &rarr; -0.021893</td>
+            <td>$90.05</td>
+            <td class="positive">$10232.93</td>
+          </tr>
+          
+          <tr>
+            <td>123</td>
+            <td>Apr 10 17:16</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$72798.00</td>
+            <td>0.004121</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$0.58</span></td>
+            <td>-0.021893 &rarr; -0.017772</td>
+            <td>-$210.73</td>
+            <td class="positive">$10232.15</td>
+          </tr>
+          
+          <tr>
+            <td>124</td>
+            <td>Apr 10 17:16</td>
+            <td>PI_XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$300.00</td>
+            <td>$72798.00</td>
+            <td>0.004121</td>
+            <td class="muted">$0.78</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="negative">-$0.58</span></td>
+            <td>-0.017772 &rarr; -0.013651</td>
+            <td>-$511.51</td>
+            <td class="positive">$10231.37</td>
+          </tr>
+          
+          <tr>
+            <td>125</td>
+            <td>Apr 10 17:34</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.61</td>
+            <td>1.662884</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 1.662884</td>
+            <td>-$962.68</td>
+            <td class="positive">$10237.31</td>
+          </tr>
+          
+          <tr>
+            <td>126</td>
+            <td>Apr 10 17:35</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.51</td>
+            <td>298.129664</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>0.000000 &rarr; -298.129664</td>
+            <td>-$513.85</td>
+            <td class="positive">$10210.50</td>
+          </tr>
+          
+          <tr>
+            <td>127</td>
+            <td>Apr 10 17:58</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.51</td>
+            <td>298.309195</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-298.129664 &rarr; -596.438859</td>
+            <td>-$65.02</td>
+            <td class="positive">$10269.18</td>
+          </tr>
+          
+          <tr>
+            <td>128</td>
+            <td>Apr 10 18:04</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.49</td>
+            <td>301.709049</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-596.438859 &rarr; -898.147908</td>
+            <td>$383.81</td>
+            <td class="positive">$10279.27</td>
+          </tr>
+          
+          <tr>
+            <td>129</td>
+            <td>Apr 10 18:04</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.68</td>
+            <td>1.662458</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>1.662884 &rarr; 3.325342</td>
+            <td>-$67.36</td>
+            <td class="positive">$10278.10</td>
+          </tr>
+          
+          <tr>
+            <td>130</td>
+            <td>Apr 10 18:04</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.49</td>
+            <td>301.709049</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-898.147908 &rarr; -1199.856957</td>
+            <td>$381.47</td>
+            <td class="positive">$10276.93</td>
+          </tr>
+          
+          <tr>
+            <td>131</td>
+            <td>Apr 10 18:05</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.25</td>
+            <td>1.665121</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>3.325342 &rarr; 4.990463</td>
+            <td>-$69.70</td>
+            <td class="positive">$10255.47</td>
+          </tr>
+          
+          <tr>
+            <td>132</td>
+            <td>Apr 10 18:05</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>300.671119</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-1199.856957 &rarr; -1500.528076</td>
+            <td>$379.13</td>
+            <td class="positive">$10254.30</td>
+          </tr>
+          
+          <tr>
+            <td>133</td>
+            <td>Apr 10 18:06</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.31</td>
+            <td>1.664782</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>4.990463 &rarr; 6.655245</td>
+            <td>-$72.04</td>
+            <td class="positive">$10253.46</td>
+          </tr>
+          
+          <tr>
+            <td>134</td>
+            <td>Apr 10 18:06</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>300.120206</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-1500.528076 &rarr; -1800.648282</td>
+            <td>$376.79</td>
+            <td class="positive">$10252.29</td>
+          </tr>
+          
+          <tr>
+            <td>135</td>
+            <td>Apr 10 18:06</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-1800.648282 &rarr; -1800.648282</td>
+            <td>$376.79</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>136</td>
+            <td>Apr 10 18:06</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.31</td>
+            <td>1.664782</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>6.655245 &rarr; 8.320027</td>
+            <td>-$74.38</td>
+            <td class="positive">$10251.12</td>
+          </tr>
+          
+          <tr>
+            <td>137</td>
+            <td>Apr 10 18:06</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-1800.648282 &rarr; -1800.648282</td>
+            <td>-$74.38</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>138</td>
+            <td>Apr 10 18:06</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.31</td>
+            <td>1.664782</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>8.320027 &rarr; 9.984810</td>
+            <td>-$525.55</td>
+            <td class="positive">$10249.95</td>
+          </tr>
+          
+          <tr>
+            <td>139</td>
+            <td>Apr 10 18:06</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>300.120206</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-1800.648282 &rarr; -2100.768488</td>
+            <td>-$76.72</td>
+            <td class="positive">$10248.78</td>
+          </tr>
+          
+          <tr>
+            <td>140</td>
+            <td>Apr 10 18:07</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.28</td>
+            <td>1.664957</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>9.984810 &rarr; 11.649767</td>
+            <td>-$527.89</td>
+            <td class="positive">$10245.80</td>
+          </tr>
+          
+          <tr>
+            <td>141</td>
+            <td>Apr 10 18:07</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>299.070242</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-2100.768488 &rarr; -2399.838729</td>
+            <td>-$79.06</td>
+            <td class="positive">$10244.63</td>
+          </tr>
+          
+          <tr>
+            <td>142</td>
+            <td>Apr 10 18:07</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-2399.838729 &rarr; -2399.838729</td>
+            <td>-$79.06</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>143</td>
+            <td>Apr 10 18:07</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.28</td>
+            <td>1.664957</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>11.649767 &rarr; 13.314723</td>
+            <td>-$530.23</td>
+            <td class="positive">$10243.46</td>
+          </tr>
+          
+          <tr>
+            <td>144</td>
+            <td>Apr 10 18:07</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>299.070242</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-2399.838729 &rarr; -2698.908971</td>
+            <td>-$81.40</td>
+            <td class="positive">$10242.29</td>
+          </tr>
+          
+          <tr>
+            <td>145</td>
+            <td>Apr 10 18:07</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-2698.908971 &rarr; -2698.908971</td>
+            <td>-$81.40</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>146</td>
+            <td>Apr 10 18:08</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.58</td>
+            <td>1.663100</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>13.314723 &rarr; 14.977823</td>
+            <td>-$532.57</td>
+            <td class="positive">$10209.45</td>
+          </tr>
+          
+          <tr>
+            <td>147</td>
+            <td>Apr 10 18:08</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.51</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-2698.908971 &rarr; -2698.908971</td>
+            <td>-$532.57</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>148</td>
+            <td>Apr 10 18:08</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.58</td>
+            <td>1.663100</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>14.977823 &rarr; 16.640923</td>
+            <td>-$983.74</td>
+            <td class="positive">$10208.28</td>
+          </tr>
+          
+          <tr>
+            <td>149</td>
+            <td>Apr 10 18:08</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.51</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-2698.908971 &rarr; -2698.908971</td>
+            <td>-$983.74</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>150</td>
+            <td>Apr 10 18:08</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.58</td>
+            <td>1.663100</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>16.640923 &rarr; 18.304023</td>
+            <td>-$1434.91</td>
+            <td class="positive">$10207.11</td>
+          </tr>
+          
+          <tr>
+            <td>151</td>
+            <td>Apr 10 18:08</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$270.58</td>
+            <td>1.663100</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>18.304023 &rarr; 19.967123</td>
+            <td>-$1886.08</td>
+            <td class="positive">$10205.94</td>
+          </tr>
+          
+          <tr>
+            <td>152</td>
+            <td>Apr 10 18:08</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.51</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>-2698.908971 &rarr; -2698.908971</td>
+            <td>-$1886.08</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>153</td>
+            <td>Apr 10 18:09</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$271.24</td>
+            <td>1.659076</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>19.967123 &rarr; 21.626198</td>
+            <td>-$2337.25</td>
+            <td class="positive">$10260.91</td>
+          </tr>
+          
+          <tr>
+            <td>154</td>
+            <td>Apr 10 18:09</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>300.146095</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-2698.908971 &rarr; -2999.055066</td>
+            <td>-$1888.42</td>
+            <td class="positive">$10259.74</td>
+          </tr>
+          
+          <tr>
+            <td>155</td>
+            <td>Apr 10 18:09</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>300.146095</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-2999.055066 &rarr; -3299.201161</td>
+            <td>-$1439.59</td>
+            <td class="positive">$10258.57</td>
+          </tr>
+          
+          <tr>
+            <td>156</td>
+            <td>Apr 10 18:11</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.50</td>
+            <td>300.411735</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-3299.201161 &rarr; -3599.612896</td>
+            <td>-$990.76</td>
+            <td class="positive">$10282.09</td>
+          </tr>
+          
+          <tr>
+            <td>157</td>
+            <td>Apr 10 18:23</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.52</td>
+            <td>295.214910</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-3599.612896 &rarr; -3894.827806</td>
+            <td>-$541.93</td>
+            <td class="positive">$10220.79</td>
+          </tr>
+          
+          <tr>
+            <td>158</td>
+            <td>Apr 10 19:06</td>
+            <td>FFUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45454.04</td>
+            <td>$0.16</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>-$541.93</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>159</td>
+            <td>Apr 10 19:07</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$45456.63</td>
+            <td>$267.56</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>21.626198 &rarr; 21.626198</td>
+            <td>-$541.93</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>160</td>
+            <td>Apr 10 19:10</td>
+            <td>FFUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45451.36</td>
+            <td>$0.15</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>-$541.93</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>161</td>
+            <td>Apr 10 19:10</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$45451.68</td>
+            <td>$266.43</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>21.626198 &rarr; 21.626198</td>
+            <td>-$541.93</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>162</td>
+            <td>Apr 10 19:13</td>
+            <td>FFUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45458.21</td>
+            <td>$0.15</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>-$541.93</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>163</td>
+            <td>Apr 10 19:17</td>
+            <td>FFUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$0.15</td>
+            <td>3064.142721</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>0.000000 &rarr; -3064.142721</td>
+            <td>-$93.10</td>
+            <td class="positive">$10230.34</td>
+          </tr>
+          
+          <tr>
+            <td>164</td>
+            <td>Apr 10 19:17</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$265.53</td>
+            <td>1.694751</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>21.626198 &rarr; 23.320950</td>
+            <td>-$544.27</td>
+            <td class="positive">$10229.17</td>
+          </tr>
+          
+          <tr>
+            <td>165</td>
+            <td>Apr 10 19:20</td>
+            <td>FFUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$0.15</td>
+            <td>3088.079076</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-3064.142721 &rarr; -6152.221797</td>
+            <td>-$95.44</td>
+            <td class="positive">$10120.13</td>
+          </tr>
+          
+          <tr>
+            <td>166</td>
+            <td>Apr 10 23:23</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.57</td>
+            <td>287.236433</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-3894.827806 &rarr; -4182.064239</td>
+            <td>$353.39</td>
+            <td class="positive">$10071.63</td>
+          </tr>
+          
+          <tr>
+            <td>167</td>
+            <td>Apr 10 23:24</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$259.50</td>
+            <td>1.734072</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>23.320950 &rarr; 25.055021</td>
+            <td>-$97.78</td>
+            <td class="positive">$10060.70</td>
+          </tr>
+          
+          <tr>
+            <td>168</td>
+            <td>Apr 10 23:25</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.58</td>
+            <td>285.689209</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-4182.064239 &rarr; -4467.753448</td>
+            <td>$351.05</td>
+            <td class="positive">$10009.77</td>
+          </tr>
+          
+          <tr>
+            <td>169</td>
+            <td>Apr 10 23:26</td>
+            <td>TAOUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$450.00</td>
+            <td>$258.53</td>
+            <td>1.740602</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>25.055021 &rarr; 26.795623</td>
+            <td>-$100.12</td>
+            <td class="positive">$9999.01</td>
+          </tr>
+          
+          <tr>
+            <td>170</td>
+            <td>Apr 10 23:27</td>
+            <td>RAVEUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$450.00</td>
+            <td>$1.57</td>
+            <td>286.215660</td>
+            <td class="muted">$1.17</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-4467.753448 &rarr; -4753.969108</td>
+            <td>$348.71</td>
+            <td class="positive">$10006.00</td>
+          </tr>
+          
+          <tr>
+            <td>171</td>
+            <td>Apr 11 17:27</td>
+            <td>RAVEUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$600.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-4753.969108 &rarr; -4753.969108</td>
+            <td>$348.71</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+    <div class="section">
+      <h2>Validation Attestations (24)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Time</th><th>Score</th><th>Validator</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 11 16:40</td>
+            <td>20</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 11 16:40</td>
+            <td>55</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 11 17:27</td>
+            <td>85</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 12 01:31</td>
+            <td>20</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 12 01:31</td>
+            <td>20</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 12 01:39</td>
+            <td>20</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 12 02:07</td>
+            <td>20</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 12 02:28</td>
+            <td>20</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 12 02:39</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 12 02:49</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 12 02:49</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 12 02:52</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 12 02:52</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 12 02:57</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 12 02:58</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 12 02:59</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 12 03:02</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 12 03:05</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 12 03:07</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 12 03:08</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 12 03:11</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 12 03:12</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 12 03:15</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 12 03:16</td>
+            <td>30</td>
+            <td title="0x822c03B5019505934D730f11e48a7f33b2f524AB">0x822c...24AB</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (8 from 8 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10632912</td>
+            <td>30</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10634080</td>
+            <td>30</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 133. Vault claimed: false. Computed score: 30/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 133. Vault claimed: false. Computed score: 30/100.</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10635240</td>
+            <td>30</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 133. Vault claimed: false. Computed score: 30/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 133. Vault claimed: false. Computed score: 30/100.</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10636403</td>
+            <td>30</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 133. Vault claimed: false. Computed score: 30/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 133. Vault claimed: false. Computed score: 30/100.</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10637562</td>
+            <td>30</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10638723</td>
+            <td>76</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 53/100. Trades submitted: 134. Vault claimed: true. Computed score: 76/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 53/100. Trades submitted: 134. Vault claimed: true. Computed score: 76/100.</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10639879</td>
+            <td>76</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10641046</td>
+            <td>67</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

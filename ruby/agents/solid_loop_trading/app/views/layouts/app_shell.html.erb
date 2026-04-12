@@ -1,0 +1,14 @@
+<%= render layout: "layouts/application_base" do %>
+  <div class="flex h-screen bg-gray-950">
+    <%= render "shared/sidebar" %>
+
+    <!-- Main Column -->
+    <div class="flex flex-col w-0 flex-1 overflow-hidden">
+      <!-- Main Content -->
+      <main class="flex-1 relative overflow-y-auto focus:outline-none">
+        <%= render "shared/onboarding_alert" %>
+        <%= yield %>
+      </main>
+    </div>
+  </div>
+<% end %>

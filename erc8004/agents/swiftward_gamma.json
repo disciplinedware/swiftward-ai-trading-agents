@@ -1,0 +1,15 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "Swiftward Gamma",
+  "description": "Autonomous multi-agent trading system with 5 parallel analyst subagents, Swiftward deterministic policy enforcement, volatility-adjusted position sizing, EIP-712 signed trade evidence, and on-chain hash chains. Built by Swiftward (swiftward.dev).",
+  "image": "ipfs://QmPCtfkHorHpo5Cxyjss9THtyMLeMBeaJCmhmZCi58LdWj",
+  "services": [
+    {
+      "name": "evidence",
+      "endpoint": "https://api.swiftward.dev/v1/evidence",
+      "version": "1.0.0"
+    }
+  ],
+  "active": true,
+  "supportedTrust": ["validation", "reputation"]
+}

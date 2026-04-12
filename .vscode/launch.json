@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "LLM Agent (once)",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/golang/cmd/server",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "TRADING__ROLE": "llm_agent",
+                "TRADING__LLM_AGENT__MODE": "once",
+                "TRADING__LLM_AGENT__TRADING_MCP_URL": "http://localhost:8095/mcp/trading",
+                "TRADING__LLM_AGENT__FILES_MCP_URL": "http://localhost:8091/mcp/files",
+                "TRADING__LLM_AGENT__PROMPT_FILE": "${workspaceFolder}/prompts/simple-llm/prompt.md",
+                "TRADING__HTTP__PORT": "9091"
+            },
+            "cwd": "${workspaceFolder}/golang"
+        }
+    ]
+}

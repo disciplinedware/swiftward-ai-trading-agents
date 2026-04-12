@@ -1,0 +1,12 @@
+#!/bin/bash -e
+
+# Ensure storage directories are writable by the rails user
+mkdir -p /rails/storage/external/data
+chown -R rails:rails /rails/storage 2>/dev/null || true
+
+# If running the rails server then create or migrate existing database
+if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
+  ./bin/rails db:prepare
+fi
+
+exec "${@}"

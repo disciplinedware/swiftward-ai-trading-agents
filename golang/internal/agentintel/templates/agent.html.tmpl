@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Agent.Agent.Name}} - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated {{.GeneratedAt}}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>{{.Agent.Agent.Name}} <span>#{{.Agent.Agent.ID}} - Rank #{{.Rank}}</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>{{.Agent.Agent.AgentWallet}}</strong></div>
+        <div class="item">Operator: <strong>{{shortAddr .Agent.Agent.OperatorWallet}}</strong></div>
+        <div class="item">Vault: <strong>{{if .Agent.State.VaultClaimed}}Claimed{{else}}Not claimed{{end}}</strong></div>
+      </div>
+      {{if .Agent.Agent.Description}}
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">{{.Agent.Agent.Description}}</div>
+      </div>
+      {{end}}
+      {{if .Agent.Summary.GamingFlags}}
+      <div class="gaming-flags">
+        {{range .Agent.Summary.GamingFlags}}
+        <span class="gaming-flag">{{.}}</span>
+        {{end}}
+      </div>
+      {{end}}
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    <!-- Summary cards -->
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">{{.Agent.Summary.TotalTrades}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">{{fmtUSD .Agent.Summary.MaxExposure}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value {{pnlClass .Agent.Summary.RealizedPnL}}">{{fmtUSD .Agent.Summary.RealizedPnL}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">{{fmtUSD .Agent.Summary.TotalFees}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value {{pnlClass .Agent.Summary.NetPnL}}">{{fmtUSD .Agent.Summary.NetPnL}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value {{pnlClass .Agent.Summary.ReturnPct}}">{{.Agent.Summary.ReturnPct}}%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">{{.Agent.Summary.WinCount}} / {{.Agent.Summary.LossCount}}</div>
+      </div>
+    </div>
+
+    {{if .Analysis}}
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">{{.Analysis}}</div>
+    </div>
+    {{end}}
+
+    <!-- Per-pair breakdown -->
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range $pair, $pnl := .Agent.Summary.PnLByPair}}
+          <tr>
+            <td>{{$pair}}</td>
+            <td>{{$pnl.Trades}}</td>
+            <td>{{fmtUSD $pnl.BuyVolume}}</td>
+            <td>{{fmtUSD $pnl.SellVolume}}</td>
+            <td class="{{pnlClass $pnl.RealizedPnL}}">{{fmtUSD $pnl.RealizedPnL}}</td>
+            <td>{{$pnl.OpenQty}}</td>
+            <td class="{{pnlClass $pnl.Unrealized}}">{{fmtUSD $pnl.Unrealized}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- All trades -->
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range .Agent.Trades}}
+          <tr>
+            <td>{{.Index}}</td>
+            <td>{{fmtTime .Timestamp}}</td>
+            <td>{{.Pair}}</td>
+            <td class="{{actionClass .Action}}">{{.Action}}</td>
+            <td>${{.AmountUSD}}</td>
+            <td>${{.MarketPrice}}</td>
+            <td>{{.Qty}}</td>
+            <td class="muted">${{.FeeUSD}}</td>
+            <td>{{if eq .Outcome "APPROVED"}}<span class="badge badge-approved">OK</span>{{else if eq .Outcome "REJECTED"}}<span class="badge badge-rejected">REJ</span>{{else}}<span class="muted">?</span>{{end}}</td>
+            <td>{{if .RealizedPnL}}{{if eq (deref .RealizedPnL) "SHORT_OPEN"}}<span class="badge badge-short">SHORT</span>{{else if isPnLNegative .RealizedPnL}}<span class="negative">{{fmtUSD (deref .RealizedPnL)}}</span>{{else}}<span class="positive">{{fmtUSD (deref .RealizedPnL)}}</span>{{end}}{{end}}</td>
+            <td>{{.PositionBefore}} &rarr; {{.PositionAfter}}</td>
+            <td>{{fmtUSD .CashAfter}}</td>
+            <td class="{{pnlClass .EquityAfter}}">{{fmtUSD .EquityAfter}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Attestations -->
+    {{if .Agent.Attestations}}
+    <div class="section">
+      <h2>Validation Attestations ({{len .Agent.Attestations}})</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Time</th><th>Score</th><th>Validator</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          {{range $i, $a := .Agent.Attestations}}
+          <tr>
+            <td>{{$i}}</td>
+            <td>{{fmtUnix $a.Timestamp}}</td>
+            <td>{{$a.Score}}</td>
+            <td title="{{$a.Validator}}">{{shortAddr $a.Validator}}</td>
+            <td class="text" title="{{$a.Notes}}" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">{{$a.Notes}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+    {{end}}
+
+    <!-- Reputation -->
+    {{if .Agent.Reputation}}
+    <div class="section">
+      <h2>Reputation Feedback ({{len .Agent.Reputation}} from {{.Agent.Summary.RepUniqueValidators}} unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          {{range $i, $r := .Agent.Reputation}}
+          <tr>
+            <td>{{$i}}</td>
+            <td>{{$r.Block}}</td>
+            <td>{{$r.Score}}</td>
+            <td>{{feedbackTypeName $r.FeedbackType}}</td>
+            <td title="{{$r.Validator}}">{{shortAddr $r.Validator}}</td>
+            <td class="text" title="{{$r.Comment}}" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">{{$r.Comment}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+    {{end}}
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

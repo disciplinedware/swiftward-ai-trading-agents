@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Batch #<%= @agent_batch.id %> - <%= @agent_batch.agent_model&.name %></title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; color: #333; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 5px; }
+    .subtitle { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+    .stat-card { background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .stat-card.featured { border-left: 4px solid #4f46e5; }
+    .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #6b7280; letter-spacing: 0.05em; margin-bottom: 5px; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #111827; }
+
+    .summary-section { margin-bottom: 40px; }
+    .summary-section h2 { font-size: 18px; margin-bottom: 15px; color: #111827; border-left: 4px solid #4f46e5; padding-left: 10px; }
+
+    table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 13px; }
+    th { text-align: left; background: #f9fafb; padding: 12px 15px; border-bottom: 2px solid #e5e7eb; color: #4b5563; font-weight: 600; }
+    td { padding: 12px 15px; border-bottom: 1px solid #f3f4f6; }
+    tr:hover { background: #f9fafb; }
+
+    .status-badge { padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 500; }
+    .status-success { background: #def7ec; color: #03543f; }
+    .status-error { background: #fde8e8; color: #9b1c1c; }
+    .status-other { background: #edf2f7; color: #2d3748; }
+
+    .score-high { color: #057a55; font-weight: 700; }
+    .score-med { color: #92400e; font-weight: 700; }
+    .score-low { color: #c81e1e; font-weight: 700; }
+
+    .conclusion-box { background: #f5f3ff; border: 1px solid #ddd6fe; padding: 20px; border-radius: 8px; color: #4338ca; font-size: 14px; white-space: pre-wrap; margin-bottom: 30px; }
+
+    .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; color: #9ca3af; font-size: 11px; }
+
+    @media print {
+      body { margin: 20px; }
+      .stat-card { border: 1px solid #ccc; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Batch Report: <%= @agent_batch.prefix %></h1>
+  <div class="subtitle">
+    ID: <%= @agent_batch.id %> |
+    Model: <%= @agent_batch.agent_model&.name %> |
+    Generated: <%= Time.current.strftime("%Y-%m-%d %H:%M:%S") %>
+  </div>
+
+  <% stats = @agent_batch.aggregate_stats %>
+  <div class="stats-grid">
+    <div class="stat-card featured">
+      <div class="stat-label">Success Rate</div>
+      <div class="stat-value"><%= stats[:success_rate] %>%</div>
+    </div>
+    <div class="stat-card featured">
+      <div class="stat-label">Avg TPS</div>
+      <div class="stat-value"><%= stats[:avg_tps] %></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Runs</div>
+      <div class="stat-value"><%= @agent_runs.count %></div>
+    </div>
+  </div>
+
+  <% if @agent_batch.warm_up_response.present? %>
+    <div class="summary-section">
+      <h2>Model Warm-up & Reasoning</h2>
+      <div class="conclusion-box" style="background: #fdf2f8; border-color: #fce7f3; color: #9d174d;">
+        <%= @agent_batch.warm_up_response %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="summary-section">
+    <h2>Performance Details</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Duration (Model)</div>
+        <div class="stat-value" style="font-size: 18px;"><%= number_to_human(stats[:total_duration_model]) %>s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Duration (Tools)</div>
+        <div class="stat-value" style="font-size: 18px;"><%= number_to_human(stats[:total_duration_tools]) %>s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Tokens</div>
+        <div class="stat-value" style="font-size: 18px;"><%= number_with_delimiter(stats[:total_tokens]) %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tool Reliance</div>
+        <div class="stat-value" style="font-size: 18px;"><%= stats[:tool_reliance] %> <span style="font-size: 10px; font-weight: normal;">calls/turn</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h2>Runs List</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title / File</th>
+          <th>Status</th>
+          <th>TPS</th>
+          <th>Duration</th>
+          <th>Tokens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @agent_runs.each do |conv| %>
+          <% lp = conv.loop %>
+          <tr>
+            <td>#<%= conv.id %></td>
+            <td>
+              <div style="font-weight: 600;"><%= conv.title %></div>
+              <div style="font-size: 10px; color: #6b7280;"><%= conv.filename %></div>
+            </td>
+            <td>
+              <span class="status-badge <%= lp&.status == 'completed' ? 'status-success' : (lp&.status == 'failed' ? 'status-error' : 'status-other') %>">
+                <%= lp&.status&.humanize || conv.status %>
+              </span>
+            </td>
+            <td><%= number_with_precision(lp&.duration_generation.to_f > 0 ? lp.tokens_total.to_f / lp.duration_generation : 0, precision: 2) %></td>
+            <td><%= number_with_precision(lp&.duration_total, precision: 1) %>s</td>
+            <td><%= number_with_delimiter(lp&.tokens_total || 0) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    Batch Report &bull; Generated by Antigravity Agent &bull; <%= Time.current.year %>
+  </div>
+</body>
+</html>

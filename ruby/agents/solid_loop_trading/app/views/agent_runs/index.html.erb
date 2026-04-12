@@ -1,0 +1,40 @@
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-100">Runs</h1>
+        <p class="mt-2 text-sm text-gray-400">A list of all your AI agent runs.</p>
+      </div>
+      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex gap-3">
+        <%= button_to "Recalc All Stats", recalculate_all_agent_runs_path, method: :post, class: "block rounded-md bg-gray-800 px-3 py-2 text-center text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-700" %>
+        <%= link_to "New Run", new_agent_run_path, class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      </div>
+    </div>
+
+    <div class="mt-8 bg-gray-900 p-6 rounded-lg shadow-sm ring-1 ring-gray-700">
+      <%= form_with url: agent_runs_path, method: :get, class: "flex flex-wrap items-end gap-4" do |f| %>
+        <div class="min-w-[200px]">
+          <%= f.label :agent_model_id, "Model", class: "block text-sm font-medium text-gray-300 mb-1" %>
+          <%= f.collection_select :agent_model_id, AgentModel.all.order(name: :asc), :id, :name, { include_blank: "All Models", selected: params[:agent_model_id] }, class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+
+        <div class="flex-grow min-w-[300px]">
+          <%= f.label :query, "Search Title", class: "block text-sm font-medium text-gray-300 mb-1" %>
+          <%= f.text_field :query, value: params[:query], placeholder: "Search title...", class: "block w-full rounded-md border-0 py-1.5 text-gray-100 bg-gray-800 shadow-sm ring-1 ring-inset ring-gray-600 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" %>
+        </div>
+
+        <div class="flex gap-2">
+          <%= f.submit "Filter", name: nil, class: "rounded-md bg-indigo-600 px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+          <%= link_to "Clear", agent_runs_path, class: "rounded-md bg-gray-800 px-3.5 py-2 text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-600 hover:bg-gray-700" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-4">
+      <%= paginate @agent_runs %>
+    </div>
+
+    <%= render "agent_runs/table", executions: @agent_runs %>
+    <div class="mt-4">
+      <%= paginate @agent_runs %>
+    </div>
+  </div>

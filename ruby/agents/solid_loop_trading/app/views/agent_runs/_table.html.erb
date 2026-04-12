@@ -1,0 +1,193 @@
+<div class="mt-8 flow-root">
+  <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+      <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+        <table class="min-w-full divide-y divide-gray-700">
+          <thead class="bg-gray-800/50">
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-300 sm:pl-6">ID</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Title</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Model</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Scenario / Batch</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">P&L</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Dates / Live Status</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Status</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Cost</th>
+              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-300">Messages</th>
+              <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6 text-right">
+                <span class="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700 bg-gray-900">
+            <% executions.each do |execution| %>
+              <tr id="<%= dom_id(execution) %>">
+                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-100 sm:pl-6">
+                   <%= execution.id %>
+                 </td>
+                 <td class="px-3 py-4 text-sm font-medium text-gray-100 flex items-center max-w-[200px] whitespace-normal break-words">
+                   <%= link_to execution.title.presence || execution.loop&.title.presence || "Untitled", execution, class: "text-indigo-400 hover:text-indigo-300", data: { turbo: false } %>
+                 </td>
+                <td class="px-3 py-4 text-sm text-gray-400 max-w-[150px] whitespace-normal break-words"><%= execution.agent_model&.name %></td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                    <% if execution.trading_scenario %>
+                      <div class="mb-1">
+                        <%= link_to execution.trading_scenario.name, execution.trading_scenario, class: "inline-flex items-center rounded-md bg-purple-900/40 px-2 py-1 text-xs font-medium text-purple-300 ring-1 ring-inset ring-purple-700/50 hover:bg-purple-900/60" %>
+                      </div>
+                    <% end %>
+                    <% if execution.agent_batch %>
+                      <div>
+                         <%= link_to "Bench ##{execution.agent_batch.id}", execution.agent_batch, class: "inline-flex items-center rounded-md bg-orange-900/40 px-2 py-1 text-xs font-medium text-orange-300 ring-1 ring-inset ring-orange-700/50 hover:bg-orange-900/60" %>
+                      </div>
+                    <% end %>
+                   <% if !execution.trading_scenario && !execution.agent_batch %>
+                     <span class="text-gray-600">-</span>
+                   <% end %>
+                </td>
+                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                    <% mcp_session = execution.loop&.mcp_sessions&.find_by(mcp_name: "trading") %>
+                    <% ts = TradingSession.find_by(uuid: mcp_session.session_id) if mcp_session %>
+                    <% if ts %>
+                      <%
+                        total_equity = ts.total_equity_usdt
+                        initial = execution.trading_scenario&.initial_balance.to_f
+                        diff = total_equity - initial
+                      %>
+                      <div class="flex flex-col">
+                        <span class="font-bold <%= diff >= 0 ? 'text-green-400' : 'text-red-400' %>">
+                          <%= diff >= 0 ? '+' : '' %><%= number_to_currency(diff, unit: "$") %>
+                        </span>
+                        <span class="text-[10px] text-gray-500" title="Available + Reserved + Other Assets at current price">Equity: <%= number_to_currency(total_equity, unit: "$") %></span>
+                      </div>
+                    <% elsif mcp_session && execution.live? %>
+                      <% begin
+                           presenter = RemoteTradingSessionPresenter.new(execution.loop.id)
+                           total_equity = presenter.total_equity_usdt
+                           diff = total_equity - presenter.initial_balance
+                      %>
+                        <div class="flex flex-col">
+                          <span class="font-bold <%= diff >= 0 ? 'text-green-400' : 'text-red-400' %>">
+                            <%= diff >= 0 ? '+' : '' %><%= number_to_currency(diff, unit: "$") %>
+                          </span>
+                          <span class="text-[10px] text-gray-500">Equity: <%= number_to_currency(total_equity, unit: "$") %></span>
+                        </div>
+                      <% rescue SolidLoop::McpError => e %>
+                        <span class="text-[10px] text-red-400" title="<%= e.message %>">MCP error</span>
+                      <% end %>
+                    <% else %>
+                      <span class="text-gray-600">-</span>
+                    <% end %>
+                 </td>
+                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400 font-mono text-[10px]">
+<% if execution.live? %>
+                      <%
+                        orch_css, orch_title = case execution.orchestrator_status
+                          when "initial" then [ "bg-gray-800 text-gray-400 ring-gray-600/50",          "Agent created but not yet started. No trades will happen until the batch is started." ]
+                          when "running" then [ "bg-yellow-900/50 text-yellow-300 ring-yellow-700/50", "LLM session is active right now. Agent is analyzing the market and may submit orders." ]
+                          when "waiting" then [ "bg-blue-900/50 text-blue-300 ring-blue-700/50",       "Session finished. Orchestrator will wake the agent on an alert or heartbeat timer. No orders until next wakeup." ]
+                          when "stopped" then [ "bg-red-900/50 text-red-300 ring-red-700/50",          "Orchestrator is stopped. Agent will NOT be woken up. No trades will happen until you Start it manually." ]
+                          else                [ "bg-gray-800 text-gray-400 ring-gray-600/50",          execution.orchestrator_status ]
+                          end
+                      %>
+                      <div class="flex flex-col gap-1">
+                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset <%= orch_css %>" title="<%= orch_title %>">
+                          <%= execution.orchestrator_status.humanize %>
+                        </span>
+                        <% if execution.last_active_at %>
+                          <span class="text-gray-500 text-[10px]">
+                            Last: <%= time_ago_in_words(execution.last_active_at) %> ago
+                          </span>
+                          <% unless execution.orchestrator_stopped? || execution.orchestrator_running? %>
+                            <% wakeup_at = execution.last_active_at + execution.wakeup_interval_minutes.minutes %>
+                            <% if wakeup_at > Time.current %>
+                              <span class="text-blue-400 text-[10px]">
+                                Wake in <%= distance_of_time_in_words(Time.current, wakeup_at) %>
+                              </span>
+                            <% else %>
+                              <span class="text-yellow-400 text-[10px]">Wake imminent</span>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                      </div>
+                    <% elsif execution.trading_scenario&.start_at.present? %>
+                      <div class="flex flex-col gap-1">
+                        <%
+                          orch_css, orch_title = case execution.orchestrator_status
+                            when "running" then [ "bg-yellow-900/50 text-yellow-300 ring-yellow-700/50", "Backtest in progress — processing current turn." ]
+                            when "stopped" then [ "bg-red-900/50 text-red-300 ring-red-700/50",          "Backtest finished." ]
+                            when "waiting" then [ "bg-blue-900/50 text-blue-300 ring-blue-700/50",       "Backtest paused — waiting for next turn." ]
+                            else                [ "bg-gray-800 text-gray-400 ring-gray-600/50",          "Not started yet." ]
+                            end
+                        %>
+                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset <%= orch_css %>" title="<%= orch_title %>">
+                          <%= execution.orchestrator_status.humanize %>
+                        </span>
+                        <div class="flex justify-between gap-2 text-gray-500">
+                          <span><%= execution.trading_scenario.start_at.strftime("%y-%m-%d %H:%M") %></span>
+                          <span><%= execution.trading_scenario.end_at.strftime("%y-%m-%d %H:%M") %></span>
+                        </div>
+
+                        <% if (cur = execution.current_virtual_time) %>
+                          <div class="bg-indigo-950/50 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-800 font-bold text-center">
+                            Now: <%= cur.strftime("%y-%m-%d %H:%M") %>
+                          </div>
+
+                          <%
+                            total = execution.trading_scenario.end_at.to_i - execution.trading_scenario.start_at.to_i
+                            elapsed = cur.to_i - execution.trading_scenario.start_at.to_i
+                            progress = total > 0 ? (elapsed.to_f / total * 100).clamp(0, 100).round : 0
+                          %>
+                          <div class="w-full bg-gray-800 rounded-full h-1 mt-1 overflow-hidden">
+                            <div class="bg-indigo-500 h-full transition-all duration-500" style="width: <%= progress %>%"></div>
+                          </div>
+                        <% end %>
+                      </div>
+                   <% elsif execution.filename.present? %>
+                     <%= execution.filename %>
+                   <% else %>
+                     <span class="text-gray-600">-</span>
+                   <% end %>
+                 </td>
+                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                  <%= render "agent_runs/status_badge", conversation: execution %>
+                </td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm font-mono text-green-400">$<%= number_with_precision(execution.loop&.cost || 0, precision: 4) %></td>
+                <td class="px-3 py-4 text-xs text-gray-400 max-w-[250px]">
+                  <div class="flex flex-col gap-1">
+                    <span class="font-bold text-gray-300">Σ <%= execution.messages_count %></span>
+                    <%
+                      last_assistant_msg = execution.loop&.messages&.where(role: :assistant)&.order(:id)&.last
+                      if last_assistant_msg
+                        format_snippet = ->(text) do
+                          clean = text.to_s.gsub(/\s+/, " ").strip
+                          return "" if clean.blank?
+                          clean.length > 60 ? "#{clean[0..30]}...#{clean[-25..-1]}" : clean
+                        end
+
+                        thought_snippet = format_snippet.call(last_assistant_msg.reasoning_content)
+                        content_snippet = format_snippet.call(last_assistant_msg.content)
+                    %>
+                      <% if thought_snippet.present? %>
+                        <span class="text-[9px] italic text-orange-400 block leading-tight truncate" title="<%= last_assistant_msg.reasoning_content %>">
+                          * <%= thought_snippet %>
+                        </span>
+                      <% end %>
+                      <% if content_snippet.present? %>
+                        <span class="italic text-gray-500 leading-tight block truncate" title="<%= last_assistant_msg.content %>">
+                          "<%= content_snippet %>"
+                        </span>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </td>
+                <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <%= button_to "Delete", execution, method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-400 hover:text-red-300 bg-transparent border-0 cursor-pointer" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

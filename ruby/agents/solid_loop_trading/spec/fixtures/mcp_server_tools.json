@@ -1,0 +1,222 @@
+{
+  "id": 2,
+  "result": {
+    "tools": [
+      {
+        "name": "edit_file",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Advanced: Edits a file. Preferred mode: 'block' (search for search_block and replace with replace_block). Also supports 'line' (replace line number), 'string' (literal replacement), and 'regex' (regex replacement). Requires unique search_block for 'block' mode. Syntax validation is performed for .py, .go, .rb.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "path",
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "description": "Edit mode: 'block', 'line', 'string', or 'regex'"
+            },
+            "path": {
+              "type": "string",
+              "description": "File path"
+            },
+            "target": {
+              "type": "string",
+              "description": "For 'line' (number), 'string' (literal), 'regex' (pattern)"
+            },
+            "content": {
+              "type": "string",
+              "description": "New content for old modes"
+            },
+            "search_block": {
+              "type": "string",
+              "description": "Exact block to find (for 'block' mode)"
+            },
+            "replace_block": {
+              "type": "string",
+              "description": "New block to insert (for 'block' mode)"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_file_info",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Returns comprehensive metadata about a file including size, MIME type, and previews (Head/Tail/Random). Use this first to understand the structure of market data files.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "path"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "File path"
+            }
+          }
+        }
+      },
+      {
+        "name": "grep_file",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Searches for a regex pattern in a file and returns matches with surrounding context lines. Results include line numbers.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "path",
+            "pattern"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "File path"
+            },
+            "pattern": {
+              "type": "string",
+              "description": "Regex pattern to search for"
+            },
+            "max_matches": {
+              "type": "number",
+              "description": "Max matches to return"
+            },
+            "width_limit": {
+              "type": "number",
+              "description": "Max characters per line"
+            },
+            "context_lines": {
+              "type": "number",
+              "description": "Number of lines of context"
+            },
+            "case_sensitive": {
+              "type": "boolean",
+              "description": "Whether search is case sensitive"
+            }
+          }
+        }
+      },
+      {
+        "name": "list_files",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Lists all files and directories in the current workspace or a specific subdirectory. Defaults to current directory if path is omitted. Use this to see what files exist.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Directory path (optional, defaults to root)"
+            }
+          }
+        }
+      },
+      {
+        "name": "read_file",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Reads specific lines from a file (text mode) or bytes (hexdump mode). Use the exact filename found via list_files. Results include line numbers.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "path"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "File path"
+            },
+            "count": {
+              "type": "number",
+              "description": "Number of lines (text) or bytes (hexdump) to read"
+            },
+            "offset": {
+              "type": "number",
+              "description": "Start line (text) or start byte (hexdump)"
+            },
+            "hexdump": {
+              "type": "boolean",
+              "description": "If true, read in binary hexdump format"
+            },
+            "width_limit": {
+              "type": "number",
+              "description": "Max characters per line (text only)"
+            }
+          }
+        }
+      },
+      {
+        "name": "shell",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Executes a shell command. WORKSPACE is at /workspace. ISOLATION: 4 CPUs, 500MB/s Write, Disk limit = 10GB. AVAILABLE TOOLS:\n- PARALLEL: 'parallel --pipe --block 10M ./strategy' - process large candle datasets using all CPU cores.\n- DUCKDB: 'duckdb -c \"SELECT * FROM candles.parquet WHERE symbol=\\'BTCUSDT\\'\"' - fastest SQL for OHLCV/Parquet/JSON.\n- POLARS/PANDAS: 'python3 -c \"import polars as pl; df = pl.read_parquet(\\'candles.parquet\\'); print(df.describe())\"' - high-performance market data analysis.\n- DATAMASH: 'datamash mean 5 < ohlcv.txt' - fast column statistics (e.g. average close price).\n- PV: 'cat candles.parquet | pv | ...' - monitor progress of long pipes.\n- RIPGREP (rg): 'rg BTCUSDT candles.json' - fastest text search across tick data.\n- ZSTD: 'zstd -d candles.zst' - fast decompression of market data archives.\n- JQ: 'jq \\'.[] | select(.symbol == \"BTCUSDT\")\\' trades.json' - filter and transform JSON market data.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "command"
+          ],
+          "properties": {
+            "command": {
+              "type": "string",
+              "description": "Shell command to execute"
+            }
+          }
+        }
+      },
+      {
+        "name": "write_file",
+        "annotations": {
+          "readOnlyHint": false,
+          "openWorldHint": true,
+          "idempotentHint": false,
+          "destructiveHint": true
+        },
+        "description": "Creates or overwrites a file in the workspace. Useful for creating scripts, configuration files, or data files.",
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "path",
+            "content"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Filename (e.g. 'script.py', 'config.json')"
+            },
+            "content": {
+              "type": "string",
+              "description": "File content"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "jsonrpc": "2.0"
+}

@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "fear_greed_mcp",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/fear_greed_mcp/server.py",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "AGENT_CONFIG_PATH": "${workspaceFolder}/config/config.yaml"
+      }
+    },
+    {
+      "name": "price_feed_mcp",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/src/price_feed_mcp/server.py",
+      "python": "${workspaceFolder}/.venv/bin/python",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/src",
+        "AGENT_CONFIG_PATH": "${workspaceFolder}/config/config.yaml"
+      }
+    }
+  ]
+}

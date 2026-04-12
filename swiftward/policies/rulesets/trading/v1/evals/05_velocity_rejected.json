@@ -1,0 +1,68 @@
+{
+  "id": "velocity-rejected",
+  "comment": "Agent already submitted 50 orders in 10min window - order rate limit hit",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "ingested_at": "2026-04-02T14:37:00Z",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 1000,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "Quick scalp trade",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "initial_state": {
+    "agent": {
+      "buckets": {
+        "orders_10m": 50
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    },
+    "trading/compute_window_end": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 80,
+      "response": {
+        "reason": "Order rate exceeded 50 orders/10min",
+        "tag": "velocity",
+        "retry_after": "2026-04-02T14:40:00Z"
+      },
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": []
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "order_rate_limit"
+      ]
+    }
+  }
+}

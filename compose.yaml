@@ -1,0 +1,1085 @@
+name: swiftward-ai-trading-agents
+
+# Hackathon demo stack - complete self-contained deployment
+#
+# Run:
+#   make up       # start (GHCR swiftward image)
+#   make local-up # build from source + start
+#   make down     # stop (includes profiled services)
+#
+# URLs:
+#   Dashboard         http://localhost:8091
+#   Swiftward Control http://localhost:5174
+#   SigNoz            http://localhost:3301
+#
+# Agents:
+#   agent-random          - deterministic random trader (profile: random)
+#   agent-alpha-claude    - Claude Code autonomous trader (profile: alpha)
+
+x-python-base: &python-base
+  build:
+    context: ./python
+    dockerfile: Dockerfile
+  volumes:
+    - ./python/config:/app/config:ro
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  restart: unless-stopped
+
+x-python-mcp-healthcheck: &python-mcp-healthcheck
+  interval: 10s
+  timeout: 5s
+  retries: 5
+  start_period: 1m
+
+services:
+  # ============================================================
+  # Observability - SigNoz (ClickHouse)
+  # ============================================================
+
+  signoz-zookeeper:
+    image: signoz/zookeeper:3.7.1
+    user: root
+    environment:
+      ZOO_SERVER_ID: "1"
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+      ZOO_AUTOPURGE_INTERVAL: "1"
+    volumes:
+      - signoz_zookeeper_data:/bitnami/zookeeper
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s -m 2 http://localhost:8080/commands/ruok | grep error | grep null" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+  signoz-clickhouse:
+    image: clickhouse/clickhouse-server:25.5.6-alpine
+    tty: true
+    volumes:
+      - signoz_clickhouse_data:/var/lib/clickhouse
+      - ./signoz/clickhouse-config.xml:/etc/clickhouse-server/config.d/signoz.xml:ro
+      - ./signoz/clickhouse-users.xml:/etc/clickhouse-server/users.d/signoz.xml:ro
+      - ./signoz/clickhouse-cluster.xml:/etc/clickhouse-server/config.d/cluster.xml:ro
+    depends_on:
+      signoz-zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "0.0.0.0:8123/ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  signoz-telemetrystore-migrator:
+    image: signoz/signoz-otel-collector:v0.144.2
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        /signoz-otel-collector migrate bootstrap &&
+        /signoz-otel-collector migrate sync up &&
+        /signoz-otel-collector migrate async up
+    environment:
+      SIGNOZ_OTEL_COLLECTOR_CLICKHOUSE_DSN: "tcp://signoz-clickhouse:9000"
+      SIGNOZ_OTEL_COLLECTOR_CLICKHOUSE_CLUSTER: "cluster"
+      SIGNOZ_OTEL_COLLECTOR_CLICKHOUSE_REPLICATION: "true"
+      SIGNOZ_OTEL_COLLECTOR_TIMEOUT: "10m"
+    depends_on:
+      signoz-clickhouse:
+        condition: service_healthy
+    restart: on-failure
+
+  signoz-otel-collector:
+    image: signoz/signoz-otel-collector:v0.144.2
+    entrypoint: [ /bin/sh ]
+    command:
+      - -c
+      - |
+        /signoz-otel-collector migrate sync check &&
+        /signoz-otel-collector --config=/etc/otel-collector-config.yaml
+    environment:
+      LOW_CARDINAL_EXCEPTION_GROUPING: "false"
+      SIGNOZ_OTEL_COLLECTOR_CLICKHOUSE_DSN: "tcp://signoz-clickhouse:9000"
+      SIGNOZ_OTEL_COLLECTOR_CLICKHOUSE_CLUSTER: "cluster"
+      SIGNOZ_OTEL_COLLECTOR_CLICKHOUSE_REPLICATION: "true"
+      SIGNOZ_OTEL_COLLECTOR_TIMEOUT: "10m"
+      OTEL_RESOURCE_ATTRIBUTES: host.name=signoz-otel-collector,os.type=linux
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    networks:
+      default: {}
+      agent-isolated: {}
+    depends_on:
+      signoz-clickhouse:
+        condition: service_healthy
+      signoz-telemetrystore-migrator:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  signoz:
+    image: signoz/signoz:v0.117.1
+    environment:
+      SIGNOZ_ALERTMANAGER_PROVIDER: "signoz"
+      SIGNOZ_TELEMETRYSTORE_CLICKHOUSE_DSN: "tcp://signoz-clickhouse:9000"
+      SIGNOZ_SQLSTORE_SQLITE_PATH: /var/lib/signoz/signoz.db
+      SIGNOZ_TOKENIZER_JWT_SECRET: "demo-secret"
+    ports:
+      - "3301:8080"
+    volumes:
+      - signoz_data:/var/lib/signoz
+    depends_on:
+      signoz-clickhouse:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "localhost:8080/api/v1/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # ============================================================
+  # Infrastructure
+  # ============================================================
+
+  redis:
+    image: redis:8-alpine
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres
+    volumes:
+      - ./data/postgres:/var/lib/postgresql
+      - ./postgres/init-databases.sh:/docker-entrypoint-initdb.d/10-init-databases.sh:ro
+    ports:
+      - "127.0.0.1:5435:5432"
+    networks:
+      default: {}
+      agent-isolated: {}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  swiftward-pg-migrations:
+    image: ${SWIFTWARD_SERVER_IMAGE:-ghcr.io/disciplinedware/ai-trading-agents/swiftward-server:latest}
+    command: [ "./server", "migrate" ]
+    environment:
+      SWIFTWARD__POSTGRES__HOST: postgres
+      SWIFTWARD__POSTGRES__PORT: 5432
+      SWIFTWARD__POSTGRES__USER: swiftward
+      SWIFTWARD__POSTGRES__PASSWORD: swiftward
+      SWIFTWARD__POSTGRES__NAME: swiftward
+      SWIFTWARD__POSTGRES__SSL_MODE: disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  trading-pg-migrations:
+    image: migrate/migrate
+    command: [ "-path=/migrations", "-database", "postgres://trading:trading@postgres:5432/trading?sslmode=disable", "up" ]
+    volumes:
+      - ./postgres/migrations:/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  swiftward-load-policies:
+    image: ${SWIFTWARD_SERVER_IMAGE:-ghcr.io/disciplinedware/ai-trading-agents/swiftward-server:latest}
+    command: [ "./server", "load-policies", "-deployments", "/app/policies/streams", "-rulesets", "/app/policies/rulesets", "-clear" ]
+    environment:
+      SWIFTWARD__POSTGRES__HOST: postgres
+      SWIFTWARD__POSTGRES__PORT: 5432
+      SWIFTWARD__POSTGRES__USER: swiftward
+      SWIFTWARD__POSTGRES__PASSWORD: swiftward
+      SWIFTWARD__POSTGRES__NAME: swiftward
+      SWIFTWARD__POSTGRES__SSL_MODE: disable
+    volumes:
+      - ./swiftward/policies:/app/policies:ro
+    depends_on:
+      swiftward-pg-migrations:
+        condition: service_completed_successfully
+    restart: "no"
+
+  swiftward-seed:
+    image: postgres:18-alpine
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        psql -h postgres -U swiftward -d swiftward -f /seed/seed.sql && \
+        psql -h postgres -U swiftward -d swiftward -c \
+          "UPDATE ai_provider_keys SET encrypted_key = '$$OPENAI_API_KEY' WHERE encrypted_key = 'PLACEHOLDER' AND provider_id IN (SELECT id FROM ai_providers WHERE provider_type = 'openai')"
+    environment:
+      PGPASSWORD: swiftward
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+    volumes:
+      - ./swiftward/seed.sql:/seed/seed.sql:ro
+    depends_on:
+      swiftward-pg-migrations:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  # ============================================================
+  # Classifiers - prompt injection detection (Llama PG2 + BERT)
+  # ============================================================
+  classifiers:
+    build:
+      context: ./docker/classifiers
+      dockerfile: Dockerfile
+    volumes:
+      - classifiers_cache:/root/.cache/huggingface
+    environment:
+      - PORT=3000
+      - CLASSIFIER_MODELS=meta-llama/Llama-Prompt-Guard-2-86M,devndeploy/bert-prompt-injection-detector
+      - HF_TOKEN=${CLASSIFIER_HF_TOKEN:-}
+      - BATCH_TIMEOUT_MS=5
+      - BATCH_MAX_SIZE=32
+    healthcheck:
+      test: [ "CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://localhost:3000/health').read()\"" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 600s
+    restart: unless-stopped
+
+  # ============================================================
+  # Swiftward Engine - policy evaluation + gateways
+  # ============================================================
+  swiftward-server:
+    image: ${SWIFTWARD_SERVER_IMAGE:-ghcr.io/disciplinedware/ai-trading-agents/swiftward-server:latest}
+    environment:
+      SWIFTWARD__ROLE: "ingestion,worker,control_api,control_ui,mcp_gateway,llm_gateway,inet_gateway"
+      SWIFTWARD__LOGGING__FORMAT: "console"
+
+      # --- Postgres ---
+      SWIFTWARD__POSTGRES__HOST: postgres
+      SWIFTWARD__POSTGRES__PORT: 5432
+      SWIFTWARD__POSTGRES__USER: swiftward
+      SWIFTWARD__POSTGRES__PASSWORD: swiftward
+      SWIFTWARD__POSTGRES__NAME: swiftward
+      SWIFTWARD__POSTGRES__SSL_MODE: disable
+
+      # --- Ingestion ---
+      SWIFTWARD__SERVER__HTTP__ENABLED: "true"
+      SWIFTWARD__SERVER__HTTP__ADDR: ":8080"
+      SWIFTWARD__SERVER__GRPC__ENABLED: "true"
+      SWIFTWARD__SERVER__GRPC__ADDR: ":50051"
+      SWIFTWARD__INGESTION__EXEC_PLAN_LOADER__DIRECTORY: /app/policies/streams
+      SWIFTWARD__INGESTION__QUEUE_PUBLISHER__CONNECTOR: postgres
+      SWIFTWARD__INGESTION__QUEUE_PUBLISHER__PARTITIONS: 4
+
+      # --- Worker ---
+      SWIFTWARD__WORKER__QUEUE_CONSUMER__CONNECTOR: postgres
+      SWIFTWARD__WORKER__QUEUE_CONSUMER__PARTITIONS: 4
+      SWIFTWARD__WORKER__QUEUE_CONSUMER__TOTAL_WORKERS: 1
+      SWIFTWARD__WORKER__QUEUE_CONSUMER__WORKER_INDEX: 1
+      SWIFTWARD__WORKER__RULESET_STORE__DISK_PATH: /app/policies/rulesets
+      SWIFTWARD__WORKER__STATE__CONNECTOR: postgres
+      SWIFTWARD__WORKER__ANALYTICS__CONNECTOR: postgres
+
+      # --- Control API ---
+      SWIFTWARD__CONTROL_API__RULESET_STORE__DISK_PATH: /app/policies/rulesets
+      SWIFTWARD__CONTROL_API__AUTH__BYPASS_ENABLED: "true"
+      SWIFTWARD__CONTROL_API__AUTH__JWT_SECRET: "demo-jwt-secret-change-in-production-min-32-bytes"
+
+      # --- MCP Gateway ---
+      SWIFTWARD__MCP_GATEWAY__ENABLED: "true"
+      SWIFTWARD__MCP_GATEWAY__ADDR: ":8095"
+      SWIFTWARD__MCP_GATEWAY__FAIL_MODE: "open"
+      SWIFTWARD__MCP_GATEWAY__INGESTION_GRPC_ADDR: "localhost:50051"
+      SWIFTWARD__MCP_GATEWAY__INGESTION_TIMEOUT: "5s"
+      SWIFTWARD__MCP_GATEWAY__AUTH__REQUIRE_AUTH: "false"
+
+      # MCP upstream servers
+      SWIFTWARD__MCP_GATEWAY__SERVERS__trading__URL: "http://trading-server:8091/mcp/trading"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__trading__TIMEOUT: "0s" # no gateway timeout - use caller's deadline
+      SWIFTWARD__MCP_GATEWAY__SERVERS__trading__AUTH__TYPE: "none"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__trading__GUARDRAILS__ENABLED: "true"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__trading__GUARDRAILS__STREAM: "trading"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__trading__GUARDRAILS__TOOLS_CALL__MODE: "sync"
+
+      SWIFTWARD__MCP_GATEWAY__SERVERS__market__URL: "http://trading-server:8091/mcp/market"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__market__TIMEOUT: "20s"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__market__AUTH__TYPE: "none"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__market__GUARDRAILS__ENABLED: "true"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__market__GUARDRAILS__STREAM: "mcp"
+
+      SWIFTWARD__MCP_GATEWAY__SERVERS__news__URL: "http://trading-server:8091/mcp/news"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__news__TIMEOUT: "15s"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__news__AUTH__TYPE: "none"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__news__GUARDRAILS__ENABLED: "true"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__news__GUARDRAILS__STREAM: "mcp"
+
+      SWIFTWARD__MCP_GATEWAY__SERVERS__polymarket__URL: "http://trading-server:8091/mcp/polymarket"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__polymarket__TIMEOUT: "10s"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__polymarket__AUTH__TYPE: "none"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__polymarket__GUARDRAILS__ENABLED: "false"
+
+      SWIFTWARD__MCP_GATEWAY__SERVERS__files__URL: "http://trading-server:8091/mcp/files"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__files__TIMEOUT: "10s"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__files__AUTH__TYPE: "none"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__files__GUARDRAILS__ENABLED: "false"
+
+      SWIFTWARD__MCP_GATEWAY__SERVERS__code__URL: "http://trading-server:8091/mcp/code"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__code__TIMEOUT: "0s"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__code__AUTH__TYPE: "none"
+      SWIFTWARD__MCP_GATEWAY__SERVERS__code__GUARDRAILS__ENABLED: "false"
+
+      # --- LLM Gateway ---
+      SWIFTWARD__LLM_GATEWAY__ENABLED: "true"
+      SWIFTWARD__LLM_GATEWAY__ADDR: ":8093"
+      SWIFTWARD__LLM_GATEWAY__REQUEST_TIMEOUT: "5m"
+      SWIFTWARD__LLM_GATEWAY__STREAM_TIMEOUT: "10m"
+      SWIFTWARD__LLM_GATEWAY__KEY_SOURCE: "client"
+      SWIFTWARD__LLM_GATEWAY__OPENAI_UPSTREAM_URL: "${OPENAI_BASE_URL:-https://api.openai.com/v1}"
+      SWIFTWARD__LLM_GATEWAY__ANTHROPIC_UPSTREAM_URL: "${ANTHROPIC_BASE_URL:-https://api.anthropic.com/v1}"
+      SWIFTWARD__LLM_GATEWAY__ENTITY_ID_IN_PATH: "true"
+      SWIFTWARD__LLM_GATEWAY__STREAM: "llm"
+
+      # --- Internet Gateway ---
+      SWIFTWARD__INET_GATEWAY__ENABLED: "true"
+      SWIFTWARD__INET_GATEWAY__ADDR: ":8097"
+      SWIFTWARD__INET_GATEWAY__FAIL_MODE: "open"
+      SWIFTWARD__INET_GATEWAY__STREAM: "inet"
+      SWIFTWARD__INET_GATEWAY__INGESTION_TIMEOUT: "5s"
+
+      # --- Classifiers ---
+      CLASSIFIERS_ENDPOINT: "http://classifiers:3000"
+
+      # --- LLM Moderation ---
+      LLM_MODERATION_ENDPOINT: "${LLM_MODERATION_ENDPOINT:-https://api.openai.com/v1/chat/completions}"
+      LLM_MODERATION_MODEL: "${LLM_MODERATION_MODEL:-gpt-5-mini}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+
+      # --- Telegram ---
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN:-}"
+      TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID:-}"
+      TELEGRAM_SWIFTWARD_TOPIC_ID: "${TELEGRAM_SWIFTWARD_TOPIC_ID:-}"
+
+      # --- Observability ---
+      OTEL_METRICS_EXPORTER: none
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: swiftward-server
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_METRIC_EXPORT_INTERVAL: "30000"
+      SWIFTWARD__METRICS__PROMETHEUS_ENABLED: "false"
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+
+    ports:
+      - "5174:8080" # Swiftward Control UI
+      - "8093:8093" # LLM Gateway
+      - "8095:8095" # MCP Gateway
+      - "8097:8097" # Internet Gateway
+    networks:
+      default:
+        aliases:
+          - control-api
+      agent-isolated: {}
+    volumes:
+      - ./swiftward/policies:/app/policies:ro
+    depends_on:
+      swiftward-pg-migrations:
+        condition: service_completed_successfully
+      swiftward-load-policies:
+        condition: service_completed_successfully
+      swiftward-seed:
+        condition: service_completed_successfully
+      classifiers:
+        condition: service_started
+      postgres:
+        condition: service_healthy
+      signoz-otel-collector:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8080/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+
+  # ============================================================
+  # Trading Server - MCP tools + exchange simulation
+  # ============================================================
+  trading-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.trading-server
+    environment:
+      TRADING__ROLE: "trading_mcp,risk_mcp,market_data_mcp,files_mcp,code_mcp,news_mcp,polymarket_mcp,dashboard"
+      TRADING__SERVER__ADDR: ":8091"
+      TRADING__LOGGING__FORMAT: "console"
+      TRADING__DB__URL: "postgres://trading:trading@postgres:5432/trading?sslmode=disable"
+      TRADING__DEFAULT_INITIAL_BALANCE: "${DEFAULT_INITIAL_BALANCE:-10000}"
+
+      # --- Agent registry (only agents that need blockchain keys) ---
+      TRADING__AGENTS__0__ID: "${AGENT_RANDOM_ID:-agent-random}"
+      TRADING__AGENTS__0__NAME: "Random Trader"
+      TRADING__AGENTS__0__API_KEY: "${AGENT_RANDOM_API_KEY:-sw_live_random}"
+      TRADING__AGENTS__0__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__0__PRIVATE_KEY: "${AGENT_RANDOM_PRIVATE_KEY:-}"
+      TRADING__AGENTS__0__ERC8004_AGENT_ID: "${AGENT_RANDOM_HACKATHON_AGENT_ID:-}"
+
+      TRADING__AGENTS__1__ID: "${AGENT_ALPHA_CLAUDE_ID:-agent-alpha-claude}"
+      TRADING__AGENTS__1__NAME: "Swiftward Alpha"
+      TRADING__AGENTS__1__API_KEY: "${AGENT_ALPHA_CLAUDE_API_KEY:-sw_live_swiftward_alpha}"
+      TRADING__AGENTS__1__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__1__PRIVATE_KEY: "${AGENT_ALPHA_CLAUDE_PRIVATE_KEY:-}"
+      TRADING__AGENTS__1__ERC8004_AGENT_ID: "${AGENT_ALPHA_CLAUDE_HACKATHON_AGENT_ID:-}"
+
+      TRADING__AGENTS__2__ID: "${AGENT_GAMMA_CLAUDE_ID:-agent-gamma-claude}"
+      TRADING__AGENTS__2__NAME: "Swiftward Gamma"
+      TRADING__AGENTS__2__API_KEY: "${AGENT_GAMMA_CLAUDE_API_KEY:-sw_live_swiftward_gamma}"
+      TRADING__AGENTS__2__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__2__PRIVATE_KEY: "${AGENT_GAMMA_CLAUDE_PRIVATE_KEY:-}"
+      TRADING__AGENTS__2__ERC8004_AGENT_ID: "${AGENT_GAMMA_CLAUDE_HACKATHON_AGENT_ID:-}"
+
+      TRADING__AGENTS__3__ID: "${AGENT_GAMMA_JAVA_ID:-agent-gamma-java}"
+      TRADING__AGENTS__3__NAME: "Gamma Java"
+      TRADING__AGENTS__3__API_KEY: "${AGENT_GAMMA_JAVA_API_KEY:-sw_live_gamma_java}"
+      TRADING__AGENTS__3__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__3__PRIVATE_KEY: "${AGENT_GAMMA_JAVA_PRIVATE_KEY:-}"
+      TRADING__AGENTS__3__ERC8004_AGENT_ID: "${AGENT_GAMMA_JAVA_HACKATHON_AGENT_ID:-}"
+
+      TRADING__AGENTS__4__ID: "${RAILS_SWIFTWARD_AGENT_ID:-agent-ruby-solid}"
+      TRADING__AGENTS__4__NAME: "Agents Arena"
+      TRADING__AGENTS__4__API_KEY: "${RAILS_SWIFTWARD_API_KEY:-sw_live_ruby_agent}"
+      TRADING__AGENTS__4__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__4__PRIVATE_KEY: "${AGENT_RUBY_SOLID_PRIVATE_KEY:-}"
+      TRADING__AGENTS__4__ERC8004_AGENT_ID: "${AGENT_RUBY_SOLID_HACKATHON_AGENT_ID:-}"
+
+      TRADING__AGENTS__5__ID: "${AGENT_PYTHON_DETERMINISTIC_LLM_ID:-agent-python-deterministic-llm}"
+      TRADING__AGENTS__5__NAME: "Python Deterministic LLM"
+      TRADING__AGENTS__5__API_KEY: "${AGENT_PYTHON_DETERMINISTIC_LLM_API_KEY:-sw_live_python_deterministic_llm}"
+      TRADING__AGENTS__5__INITIAL_BALANCE: "${AGENT_PYTHON_DETERMINISTIC_LLM_INITIAL_BALANCE:-10000}"
+      TRADING__AGENTS__5__PRIVATE_KEY: "${AGENT_PYTHON_DETERMINISTIC_LLM_PRIVATE_KEY:-}"
+      TRADING__AGENTS__5__ERC8004_AGENT_ID: "${AGENT_PYTHON_DETERMINISTIC_LLM_ERC8004_AGENT_ID:-}"
+
+      # Delta and Epsilon are NOT on the hackathon AgentRegistry — no ERC8004_AGENT_ID.
+      # Delta has a standard-registry agentId (1612) but the trading server only looks
+      # up against the hackathon registry, so leaving it unset avoids a failing ownerOf.
+      TRADING__AGENTS__6__ID: "${AGENT_DELTA_GO_ID:-agent-delta-go}"
+      TRADING__AGENTS__6__NAME: "Swiftward Delta"
+      TRADING__AGENTS__6__API_KEY: "${AGENT_DELTA_GO_API_KEY:-sw_live_simple_llm_golang}"
+      TRADING__AGENTS__6__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__6__PRIVATE_KEY: "${AGENT_DELTA_GO_PRIVATE_KEY:-}"
+
+      TRADING__AGENTS__7__ID: "${AGENT_EPSILON_RUST_ID:-agent-epsilon-rust}"
+      TRADING__AGENTS__7__NAME: "Swiftward Epsilon"
+      TRADING__AGENTS__7__API_KEY: "${AGENT_EPSILON_RUST_API_KEY:-sw_live_simple_llm_rust}"
+      TRADING__AGENTS__7__INITIAL_BALANCE: "10000"
+      TRADING__AGENTS__7__PRIVATE_KEY: "${AGENT_EPSILON_RUST_PRIVATE_KEY:-}"
+
+      TRADING__AGENTS__8__ID: "${AGENT_MIDAS_CLAUDE_ID:-agent-midas-claude}"
+      TRADING__AGENTS__8__NAME: "Swiftward Midas"
+      TRADING__AGENTS__8__API_KEY: "${AGENT_MIDAS_CLAUDE_API_KEY:-sw_live_swiftward_midas}"
+      TRADING__AGENTS__8__INITIAL_BALANCE: "100"
+      TRADING__AGENTS__8__PRIVATE_KEY: "${AGENT_MIDAS_CLAUDE_PRIVATE_KEY:-}"
+      TRADING__AGENTS__8__ERC8004_AGENT_ID: "${AGENT_MIDAS_CLAUDE_HACKATHON_AGENT_ID:-}"
+
+      # --- Exchange ---
+      TRADING__EXCHANGE__MODE: "${TRADING__EXCHANGE__MODE:-kraken_paper}"
+      KRAKEN_API_KEY: "${KRAKEN_API_KEY:-}"
+      KRAKEN_API_SECRET: "${KRAKEN_API_SECRET:-}"
+      TRADING__EXCHANGE__URL: "http://localhost:9999"
+      TRADING__EXCHANGE__KRAKEN_STATE_DIR: "/data/kraken"
+
+      # --- Files MCP ---
+      TRADING__FILES_MCP__ROOT_DIR: "/data/workspace"
+
+      # --- Code MCP ---
+      TRADING__CODE_MCP__WORKSPACE_DIR: "/data/workspace"
+      TRADING__CODE_MCP__SANDBOX_IMAGE: "${SANDBOX_PYTHON_IMAGE:-ghcr.io/disciplinedware/ai-trading-agents/sandbox-python:latest}"
+      TRADING__CODE_MCP__HOST_WORKSPACE_PATH: "${HOST_WORKSPACE_PATH:-}"
+      TRADING__CODE_MCP__IDLE_TIMEOUT: "30m"
+      TRADING__CODE_MCP__DOCKER_NETWORK: "swiftward-ai-trading-agents_default"
+
+      # --- Market Data MCP ---
+      TRADING__MARKET_DATA__SOURCES: "${TRADING__MARKET_DATA__SOURCES:-kraken,bybit}"
+      TRADING__MARKET_DATA__MARKETS: "ETH-USD,BTC-USD,SOL-USD"
+      TRADING__MARKET_DATA__VOLATILITY: "80"
+      TRADING__MARKET_DATA__CANDLE_HISTORY: "500"
+      TRADING__MARKET_DATA__ALERT_POLL_INTERVAL: "10s"
+      TRADING__MARKET_DATA__PRISM__ENABLED: "${PRISM_API_KEY:+true}"
+      TRADING__MARKET_DATA__PRISM__API_KEY: "${PRISM_API_KEY:-}"
+      TRADING__MARKET_DATA__PRISM__TIMEOUT: "15s"
+
+      # --- News MCP ---
+      TRADING__NEWS__SOURCES: "cryptocompare"
+
+      # --- Swiftward policy evaluation ---
+      TRADING__SWIFTWARD__ENABLED: "${SWIFTWARD_ENABLED:-true}"
+      TRADING__SWIFTWARD__INGEST_ADDR: "swiftward-server:50051"
+      TRADING__SWIFTWARD__STREAM: "trading"
+      TRADING__SWIFTWARD__TIMEOUT: "5s"
+
+      # --- Blockchain (EIP-712 + ERC-8004) ---
+      TRADING__CHAIN__RPC_URL: "${CHAIN_RPC_URL:-}"
+      TRADING__CHAIN__CHAIN_ID: "${CHAIN_ID:-11155111}"
+      # TRADING__CHAIN__VALIDATOR_PRIVATE_KEY: "${CHAIN_VALIDATOR_PRIVATE_KEY:-}"  # unused in hackathon - see booster command instead
+      TRADING__CHAIN__IDENTITY_REGISTRY_ADDR: "${HACKATHON_IDENTITY_ADDR:-}"
+      TRADING__CHAIN__VALIDATION_REGISTRY_ADDR: "${HACKATHON_VALIDATION_ADDR:-}"
+      TRADING__CHAIN__RISK_ROUTER_ADDR: "${HACKATHON_RISK_ROUTER_ADDR:-}"
+      TRADING__CHAIN__HARDCODED_CONFIDENCE: "${HARDCODED_CONFIDENCE:-0}"
+
+      # --- Evidence API ---
+      TRADING__EVIDENCE_PORT: ":8092"
+
+      # --- Observability ---
+      OTEL_METRICS_EXPORTER: otlp
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      OTEL_SERVICE_NAME: trading-server
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_METRIC_EXPORT_INTERVAL: "30000"
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+      OTEL_EXPORTER_OTLP_METRICS_ENDPOINT: http://signoz-otel-collector:4318/v1/metrics
+    ports:
+      - "8091:8091" # Dashboard UI + MCP endpoints
+      - "8092:8092" # Evidence API
+    networks:
+      default: {}
+      agent-isolated: {}
+    volumes:
+      - ./data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      trading-pg-migrations:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      swiftward-server:
+        condition: service_healthy
+      signoz-otel-collector:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:8091/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+
+  # ============================================================
+  # Random Agent - deterministic random trader
+  # ============================================================
+  agent-random:
+    build:
+      context: ./golang
+      dockerfile: Dockerfile
+    profiles:
+      - random
+    environment:
+      TRADING__ROLE: "random_agent"
+      TRADING__LOGGING__FORMAT: "console"
+      TRADING__RANDOM_AGENT__MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      TRADING__RANDOM_AGENT__AGENT_ID: "${AGENT_RANDOM_ID:-agent-random}"
+      TRADING__RANDOM_AGENT__API_KEY: "${AGENT_RANDOM_API_KEY:-sw_live_random}"
+      TRADING__RANDOM_AGENT__INTERVAL: "60s"
+      TRADING__RANDOM_AGENT__MARKETS: "ETH-USD,BTC-USD,SOL-USD,LINK-USD,SUI-USD"
+      TRADING__RANDOM_AGENT__MAX_SIZE: "3000"
+      OTEL_SERVICE_NAME: agent-random
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    depends_on:
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Swiftward Delta — Go LLM agent, autonomous AI trading via OpenAI
+  # Start with: make up PROFILES=delta
+  # Runs in server mode (periodic loop every INTERVAL).
+  # ============================================================
+  agent-delta-go:
+    build:
+      context: ./golang
+      dockerfile: Dockerfile
+    profiles:
+      - delta
+    environment:
+      TRADING__ROLE: "llm_agent"
+      TRADING__LOGGING__FORMAT: "console"
+      TRADING__LLM_AGENT__AGENT_ID: "${AGENT_DELTA_GO_ID:-agent-delta-go}"
+      TRADING__LLM_AGENT__API_KEY: "${AGENT_DELTA_GO_API_KEY:-sw_live_simple_llm_golang}"
+      TRADING__LLM_AGENT__TRADING_MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      TRADING__LLM_AGENT__FILES_MCP_URL: "http://swiftward-server:8095/mcp/files"
+      TRADING__LLM_AGENT__MARKET_DATA_MCP_URL: "http://swiftward-server:8095/mcp/market"
+      TRADING__LLM_AGENT__NEWS_MCP_URL: "http://swiftward-server:8095/mcp/news"
+      TRADING__LLM_AGENT__CODE_MCP_URL: "http://trading-server:8091/mcp/code"
+      TRADING__LLM_AGENT__POLYMARKET_MCP_URL: "http://trading-server:8091/mcp/polymarket"
+      TRADING__LLM_AGENT__OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      TRADING__LLM_AGENT__LLM_URL: "http://swiftward-server:8093/v1"
+      TRADING__LLM_AGENT__MODEL: "${AGENT_DELTA_GO_MODEL:-gpt-5.4-mini}"
+      TRADING__LLM_AGENT__LLM_TIMEOUT: "5m"
+      TRADING__LLM_AGENT__MAX_ITERATIONS: "10"
+      TRADING__LLM_AGENT__PROMPT_FILE: "/prompts/agent-delta-go/prompt.md"
+      TRADING__LLM_AGENT__MODE: "server"
+      TRADING__LLM_AGENT__INTERVAL: "5m"
+      OTEL_SERVICE_NAME: agent-delta-go
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents,service.role=llm_agent
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    volumes:
+      - ./prompts:/prompts:ro
+    depends_on:
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Swiftward Epsilon — Rust LLM agent, autonomous AI trading via OpenAI
+  # Start with: make up PROFILES=epsilon
+  # Runs in server mode (periodic loop every INTERVAL).
+  # ============================================================
+  agent-epsilon-rust:
+    image: ghcr.io/disciplinedware/ai-trading-agents/agent-epsilon-rust:latest
+    build:
+      context: ./rust
+      dockerfile: Dockerfile
+    profiles:
+      - epsilon
+    environment:
+      TRADING__ROLE: "llm_agent"
+      TRADING__LOGGING__FORMAT: "console"
+      TRADING__LLM_AGENT__AGENT_ID: "${AGENT_EPSILON_RUST_ID:-agent-epsilon-rust}"
+      TRADING__LLM_AGENT__API_KEY: "${AGENT_EPSILON_RUST_API_KEY:-sw_live_simple_llm_rust}"
+      TRADING__LLM_AGENT__TRADING_MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      TRADING__LLM_AGENT__FILES_MCP_URL: "http://swiftward-server:8095/mcp/files"
+      TRADING__LLM_AGENT__OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      TRADING__LLM_AGENT__MODEL: "${AGENT_EPSILON_RUST_MODEL:-gpt-5.4-mini}"
+      TRADING__LLM_AGENT__MAX_ITERATIONS: "50"
+      TRADING__LLM_AGENT__PROMPT_FILE: "/prompts/agent-epsilon-rust/prompt.md"
+      TRADING__LLM_AGENT__MODE: "server"
+      TRADING__LLM_AGENT__INTERVAL: "5m"
+      OTEL_SERVICE_NAME: agent-epsilon-rust
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents,service.role=llm_agent
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    volumes:
+      - ./prompts:/prompts:ro
+    depends_on:
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Swiftward Alpha - Claude Code autonomous trader
+  # On-chain identity: agentId=32 "Swiftward Alpha"
+  # Start with: make up PROFILES=alpha
+  # ============================================================
+  agent-alpha-claude:
+    build:
+      context: .
+      dockerfile: docker/claude-agent/Dockerfile
+    profiles:
+      - alpha
+    networks:
+      - agent-isolated
+    environment:
+      CLAUDE_AGENT__AGENT_ID: "agent-alpha-claude"
+      CLAUDE_AGENT__LOG_FORMAT: "console"
+      CLAUDE_AGENT__INTERVAL: "15m"
+      CLAUDE_AGENT__SESSION_TIMEOUT: "0"
+      CLAUDE_AGENT__IDLE_TIMEOUT: "10m"
+      CLAUDE_AGENT__MAX_SESSIONS_PER_DAY: "96"
+      CLAUDE_AGENT__MAX_CONSECUTIVE_ERRORS: "3"
+      CLAUDE_AGENT__MODEL: "claude-sonnet-4-6"
+      CLAUDE_AGENT__SWIFTWARD_URL: "http://swiftward-server:8080"
+      CLAUDE_AGENT__LIFECYCLE_STREAM: "lifecycle"
+      CLAUDE_AGENT__TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN:-}"
+      CLAUDE_AGENT__TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID:-0}"
+      CLAUDE_AGENT__TELEGRAM_TOPIC_ID: "${TELEGRAM_ALPHA_CLAUDE_TOPIC_ID:-0}"
+      CLAUDE_AGENT__CLAUDE_HOME: /home/app/.claude
+      CLAUDE_AGENT__ANTHROPIC_BASE_URL: "http://swiftward-server:8093/agent-alpha-claude"
+      HTTP_PROXY: "http://swiftward-server:8097"
+      HTTPS_PROXY: "http://swiftward-server:8097"
+      NO_PROXY: "swiftward-server,trading-server,postgres,redis,signoz-otel-collector,localhost,127.0.0.1"
+      CLAUDE_AGENT__TRADING_MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      CLAUDE_AGENT__MARKET_MCP_URL: "http://swiftward-server:8095/mcp/market"
+      CLAUDE_AGENT__NEWS_MCP_URL: "http://swiftward-server:8095/mcp/news"
+      CLAUDE_AGENT__POLYMARKET_MCP_URL: "http://swiftward-server:8095/mcp/polymarket"
+      CLAUDE_AGENT__ALERT_POLL_INTERVAL: "30s"
+      OTEL_SERVICE_NAME: agent-alpha-claude
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    volumes:
+      - ${HOME}/.claude:/mnt/claude:ro
+      - ${CLAUDE_CREDS_FILE:-/dev/null}:/mnt/claude-credentials.json:ro
+      - ./data/claude-home/agent-alpha-claude:/home/app/.claude
+      - ./data/workspace/agent-alpha-claude:/workspace
+      - ./prompts/agent-alpha-claude:/workspace/.claude:ro
+    depends_on:
+      swiftward-server:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Swiftward Midas - Live Kraken trader (REAL MONEY)
+  # Start with: make live-up
+  # ============================================================
+  agent-midas-claude:
+    build:
+      context: .
+      dockerfile: docker/claude-agent/Dockerfile
+    profiles:
+      - midas
+    networks:
+      - agent-isolated
+    environment:
+      CLAUDE_AGENT__AGENT_ID: "agent-midas-claude"
+      CLAUDE_AGENT__LOG_FORMAT: "console"
+      CLAUDE_AGENT__INTERVAL: "15m"
+      CLAUDE_AGENT__SESSION_TIMEOUT: "0"
+      CLAUDE_AGENT__IDLE_TIMEOUT: "10m"
+      CLAUDE_AGENT__MAX_SESSIONS_PER_DAY: "96"
+      CLAUDE_AGENT__MAX_CONSECUTIVE_ERRORS: "3"
+      CLAUDE_AGENT__MODEL: "claude-sonnet-4-6"
+      CLAUDE_AGENT__SWIFTWARD_URL: "http://swiftward-server:8080"
+      CLAUDE_AGENT__LIFECYCLE_STREAM: "lifecycle"
+      CLAUDE_AGENT__TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN:-}"
+      CLAUDE_AGENT__TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID:-0}"
+      CLAUDE_AGENT__TELEGRAM_TOPIC_ID: "${TELEGRAM_MIDAS_CLAUDE_TOPIC_ID:-0}"
+      CLAUDE_AGENT__CLAUDE_HOME: /home/app/.claude
+      CLAUDE_AGENT__ANTHROPIC_BASE_URL: "http://swiftward-server:8093/agent-midas-claude"
+      HTTP_PROXY: "http://swiftward-server:8097"
+      HTTPS_PROXY: "http://swiftward-server:8097"
+      NO_PROXY: "swiftward-server,trading-server,postgres,redis,signoz-otel-collector,localhost,127.0.0.1"
+      CLAUDE_AGENT__TRADING_MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      CLAUDE_AGENT__MARKET_MCP_URL: "http://swiftward-server:8095/mcp/market"
+      CLAUDE_AGENT__NEWS_MCP_URL: "http://swiftward-server:8095/mcp/news"
+      CLAUDE_AGENT__POLYMARKET_MCP_URL: "http://swiftward-server:8095/mcp/polymarket"
+      CLAUDE_AGENT__ALERT_POLL_INTERVAL: "30s"
+      OTEL_SERVICE_NAME: agent-midas-claude
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    volumes:
+      - ${HOME}/.claude:/mnt/claude:ro
+      - ${CLAUDE_CREDS_FILE:-/dev/null}:/mnt/claude-credentials.json:ro
+      - ./data/claude-home/agent-midas-claude:/home/app/.claude
+      - ./data/workspace/agent-midas-claude:/workspace
+      - ./prompts/agent-midas-claude:/workspace/.claude:ro
+    depends_on:
+      swiftward-server:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Swiftward Gamma - Claude Code multi-subagent trader
+  # Start with: make up PROFILES=gamma
+  # ============================================================
+  agent-gamma-claude:
+    build:
+      context: .
+      dockerfile: docker/claude-agent/Dockerfile
+    profiles:
+      - gamma
+    networks:
+      - agent-isolated
+    environment:
+      CLAUDE_AGENT__AGENT_ID: "agent-gamma-claude"
+      CLAUDE_AGENT__LOG_FORMAT: "console"
+      CLAUDE_AGENT__INTERVAL: "30m"
+      CLAUDE_AGENT__SESSION_TIMEOUT: "0"
+      CLAUDE_AGENT__IDLE_TIMEOUT: "10m"
+      CLAUDE_AGENT__MAX_SESSIONS_PER_DAY: "60"
+      CLAUDE_AGENT__MAX_CONSECUTIVE_ERRORS: "3"
+      CLAUDE_AGENT__SWIFTWARD_URL: "http://swiftward-server:8080"
+      CLAUDE_AGENT__LIFECYCLE_STREAM: "lifecycle"
+      CLAUDE_AGENT__TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN:-}"
+      CLAUDE_AGENT__TELEGRAM_CHAT_ID: "${TELEGRAM_CHAT_ID:-0}"
+      CLAUDE_AGENT__TELEGRAM_TOPIC_ID: "${TELEGRAM_GAMMA_CLAUDE_TOPIC_ID:-0}"
+      CLAUDE_AGENT__CLAUDE_HOME: /home/app/.claude
+      CLAUDE_AGENT__ANTHROPIC_BASE_URL: "http://swiftward-server:8093/agent-gamma-claude"
+      HTTP_PROXY: "http://swiftward-server:8097"
+      HTTPS_PROXY: "http://swiftward-server:8097"
+      NO_PROXY: "swiftward-server,trading-server,postgres,redis,signoz-otel-collector,localhost,127.0.0.1"
+      CLAUDE_AGENT__TRADING_MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      CLAUDE_AGENT__MARKET_MCP_URL: "http://swiftward-server:8095/mcp/market"
+      CLAUDE_AGENT__NEWS_MCP_URL: "http://swiftward-server:8095/mcp/news"
+      CLAUDE_AGENT__POLYMARKET_MCP_URL: "http://swiftward-server:8095/mcp/polymarket"
+      CLAUDE_AGENT__ALERT_POLL_INTERVAL: "30s"
+      OTEL_SERVICE_NAME: agent-gamma-claude
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    volumes:
+      - ${HOME}/.claude:/mnt/claude:ro
+      - ${CLAUDE_CREDS_FILE:-/dev/null}:/mnt/claude-credentials.json:ro
+      - ./data/claude-home/agent-gamma-claude:/home/app/.claude
+      - ./data/workspace/agent-gamma-claude:/workspace
+      - ./prompts/agent-gamma-claude:/workspace/.claude:ro
+    depends_on:
+      swiftward-server:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Gamma Java - Fear & Greed Contrarian agent (Java/Spring Boot)
+  # Start with: make up PROFILES=java
+  # ============================================================
+  agent-gamma-java:
+    build:
+      context: ./java
+      dockerfile: Dockerfile
+    profiles:
+      - java
+    environment:
+      AGENT_ID: "${AGENT_GAMMA_JAVA_ID:-agent-gamma-java}"
+      API_KEY: "${AGENT_GAMMA_JAVA_API_KEY:-sw_live_gamma_java}"
+      TRADING_MCP_URL: "http://swiftward-server:8095/mcp/trading"
+      MARKET_MCP_URL: "http://swiftward-server:8095/mcp/market"
+      NEWS_MCP_URL: "http://swiftward-server:8095/mcp/news"
+      TICK_INTERVAL_MS: "${AGENT_GAMMA_JAVA_TICK_INTERVAL_MS:-900000}"
+      OTEL_SERVICE_NAME: agent-gamma-java
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+    depends_on:
+      swiftward-server:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Agents Arena - Ruby agent (Ruslan)
+  # Start with: make up PROFILES=ruby
+  # Dashboard: http://localhost:7175
+  # ============================================================
+  agent-ruby-solid:
+    build:
+      context: ./ruby/agents/solid_loop_trading
+      dockerfile: Dockerfile
+    profiles:
+      - ruby
+    ports:
+      - "7175:80"
+    networks:
+      default: {}
+      agent-isolated: {}
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: "postgres://solid_loop_trading:solid_loop_trading@postgres:5432/solid_loop_trading_production"
+      CACHE_DATABASE_URL: "postgres://solid_loop_trading:solid_loop_trading@postgres:5432/solid_loop_trading_production_cache"
+      CABLE_DATABASE_URL: "postgres://solid_loop_trading:solid_loop_trading@postgres:5432/solid_loop_trading_production_cable"
+      RAILS_MASTER_KEY: "${RAILS_MASTER_KEY:-}"
+      SECRET_KEY_BASE: "${RAILS_SECRET_KEY_BASE:-}"
+      SOLID_LOOP_TRADING_DB_PASSWORD: solid_loop_trading
+      TRADING_MCP_URL: "http://agent-ruby-solid:80/mcp"
+      TRADING_SERVER_URL: "http://swiftward-server:8095"
+      SWIFTWARD_MCP_URL: "http://swiftward-server:8095"
+      SWIFTWARD_API_KEY: "${RAILS_SWIFTWARD_API_KEY:-sw_live_ruby_agent}"
+      SWIFTWARD_AGENT_ID: "${RAILS_SWIFTWARD_AGENT_ID:-agent-ruby-solid}"
+      OTEL_SERVICE_NAME: agent-ruby-solid
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      MCP_SERVER: "http://analytic-sandbox-ruby:9091"
+      MCP_API_TOKEN: "${RUBY_SANDBOX_TOKEN:-}"
+    volumes:
+      - ruby_solid_storage:/rails/storage
+      - ${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}/containers:/rails/storage/external/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      swiftward-server:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+      analytic-sandbox-ruby:
+        condition: service_started
+    restart: unless-stopped
+
+  agent-ruby-solid-worker:
+    build:
+      context: ./ruby/agents/solid_loop_trading
+      dockerfile: Dockerfile
+    command: [ "bundle", "exec", "good_job", "--max-threads", "20" ]
+    profiles:
+      - ruby
+    networks:
+      - agent-isolated
+    env_file:
+      - .env
+    environment:
+      RAILS_ENV: production
+      DATABASE_URL: "postgres://solid_loop_trading:solid_loop_trading@postgres:5432/solid_loop_trading_production"
+      CACHE_DATABASE_URL: "postgres://solid_loop_trading:solid_loop_trading@postgres:5432/solid_loop_trading_production_cache"
+      CABLE_DATABASE_URL: "postgres://solid_loop_trading:solid_loop_trading@postgres:5432/solid_loop_trading_production_cable"
+      RAILS_MASTER_KEY: "${RAILS_MASTER_KEY:-}"
+      SECRET_KEY_BASE: "${RAILS_SECRET_KEY_BASE:-}"
+      SOLID_LOOP_TRADING_DB_PASSWORD: solid_loop_trading
+      TRADING_MCP_URL: "http://agent-ruby-solid:80/mcp"
+      TRADING_SERVER_URL: "http://swiftward-server:8095"
+      SWIFTWARD_MCP_URL: "http://swiftward-server:8095"
+      SWIFTWARD_API_KEY: "${RAILS_SWIFTWARD_API_KEY:-sw_live_ruby_agent}"
+      SWIFTWARD_AGENT_ID: "${RAILS_SWIFTWARD_AGENT_ID:-agent-ruby-solid}"
+      OTEL_SERVICE_NAME: agent-ruby-solid-worker
+      OTEL_RESOURCE_ATTRIBUTES: service.namespace=ai-trading-agents
+      OTEL_LOGS_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://signoz-otel-collector:4318/v1/logs
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://signoz-otel-collector:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      MCP_SERVER: "http://analytic-sandbox-ruby:9091"
+      MCP_API_TOKEN: "${RUBY_SANDBOX_TOKEN:-}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      swiftward-server:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+    volumes:
+      - ruby_solid_storage:/rails/storage
+      - ${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}/containers:/rails/storage/external/data
+    restart: unless-stopped
+
+  analytic-sandbox-ruby:
+    build:
+      context: ./ruby/agents/analytic-sandbox
+      dockerfile: Dockerfile
+    profiles:
+      - ruby
+    networks:
+      - agent-isolated
+    environment:
+      MCP_SANDBOX_IMAGE: "${SANDBOX_PYTHON_IMAGE:-sandbox-python:local}"
+      MCP_AUTH_TOKEN: "${RUBY_SANDBOX_TOKEN:-}"
+      HOST_DATA_DIR: "${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${SANDBOX_DATA_PATH:-${PWD}/data/ruby-sandbox-data}:/app/data
+    restart: unless-stopped
+
+  # ============================================================
+  # Python MCP Services + Agent (Tikhon)
+  # Start with: make up PROFILES=python
+  # ============================================================
+
+  py-price-feed-mcp:
+    <<: *python-base
+    profiles:
+      - python
+    command: [ "uv", "run", "--no-dev", "python", "-m", "price_feed_mcp.server" ]
+    environment:
+      OTEL_SERVICE_NAME: py-price-feed-mcp
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')" ]
+      <<: *python-mcp-healthcheck
+
+  py-news-mcp:
+    <<: *python-base
+    profiles:
+      - python
+    command: [ "uv", "run", "--no-dev", "python", "-m", "news_mcp.server" ]
+    environment:
+      OTEL_SERVICE_NAME: py-news-mcp
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8002/health')" ]
+      <<: *python-mcp-healthcheck
+
+  py-onchain-data-mcp:
+    <<: *python-base
+    profiles:
+      - python
+    command: [ "uv", "run", "--no-dev", "python", "-m", "onchain_data_mcp.server" ]
+    environment:
+      OTEL_SERVICE_NAME: py-onchain-data-mcp
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8003/health')" ]
+      <<: *python-mcp-healthcheck
+
+  py-fear-greed-mcp:
+    <<: *python-base
+    profiles:
+      - python
+    command: [ "uv", "run", "--no-dev", "python", "-m", "fear_greed_mcp.server" ]
+    environment:
+      OTEL_SERVICE_NAME: py-fear-greed-mcp
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8004/health')" ]
+      <<: *python-mcp-healthcheck
+
+  py-agent:
+    <<: *python-base
+    profiles:
+      - python
+    command: [ "uv", "run", "--no-dev", "python", "-m", "agent.main" ]
+    environment:
+      OTEL_SERVICE_NAME: py-agent
+    volumes:
+      - ./python/config:/app/config:ro
+      - ./python/logs:/app/logs
+    depends_on:
+      py-price-feed-mcp:
+        condition: service_healthy
+      py-news-mcp:
+        condition: service_healthy
+      py-onchain-data-mcp:
+        condition: service_healthy
+      py-fear-greed-mcp:
+        condition: service_healthy
+      trading-server:
+        condition: service_healthy
+
+networks:
+  agent-isolated:
+    internal: true
+
+volumes:
+  signoz_clickhouse_data:
+  signoz_zookeeper_data:
+  signoz_data:
+  redis_data:
+  classifiers_cache:
+  ruby_solid_storage:

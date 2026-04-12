@@ -1,0 +1,7 @@
+code: llm
+description: "LLM Gateway - safety guardrails for trading agent reasoning"
+deployment:
+  active:
+    - arm: "A"
+      path: "../rulesets/llm/v1"
+      traffic_percent: 100

@@ -1,0 +1,10 @@
+<%= turbo_stream.replace "message_form" do %>
+  <%= render "agent_runs/footer", agent_run: @agent_run %>
+<% end %>
+
+<%= turbo_stream.append "messages" do %>
+  <script>
+    var container = document.getElementById('messages-container');
+    if (container) { container.scrollTop = container.scrollHeight; }
+  </script>
+<% end %>

@@ -1,0 +1,58 @@
+{
+  "id": "successful-trade-result",
+  "comment": "Post-trade: successful ETH-USD buy fill, updates portfolio state and logs validation request",
+  "mode": "async",
+  "event": {
+    "type": "execution_report",
+    "entity_id": "agent-42",
+    "data": {
+      "status": "fill",
+      "decision_hash": "dec_abc123",
+      "fill": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "qty": 1,
+        "price": 3000,
+        "value": 3000,
+        "leverage": 1,
+        "tx_hash": "0xabc123def456"
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "approved",
+      "priority": 0,
+      "response": {},
+      "state_changes": {
+        "agent": {
+          "change_counters": {
+            "fill_count": 1
+          }
+        }
+      },
+      "actions": [
+        {
+          "action": "log_action",
+          "params": {
+            "message": "Trade filled for agent-42, decision_hash=dec_abc123",
+            "level": "info"
+          }
+        }
+      ]
+    },
+    "decisions": {
+      "matched_rules": ["track_fill"]
+    }
+  }
+}

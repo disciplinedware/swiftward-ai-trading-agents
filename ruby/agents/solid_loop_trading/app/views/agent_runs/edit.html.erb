@@ -1,0 +1,12 @@
+<div class="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="space-y-10 divide-y divide-gray-700">
+    <div class="grid grid-cols-1 gap-x-8 gap-y-8 pt-10 md:grid-cols-3">
+      <div class="px-4 sm:px-0">
+        <h2 class="text-base font-semibold leading-7 text-gray-100">Run Settings</h2>
+        <p class="mt-1 text-sm leading-6 text-gray-400">Update the configuration for this run.</p>
+      </div>
+
+      <%= render "form", conversation: @agent_run %>
+    </div>
+  </div>
+</div>

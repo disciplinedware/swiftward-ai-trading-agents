@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Trading Agents Harness by Swiftward</title>
+  <meta name="description" content="A harness for autonomous AI trading agents: multi-agent analysis, MCP trading platform, and declarative risk engine with on-chain evidence via ERC-8004." />
+
+  <!-- Open Graph / Facebook / LinkedIn / Telegram -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ai-trading.swiftward.dev/" />
+  <meta property="og:title" content="AI Trading Agents Harness by Swiftward" />
+  <meta property="og:description" content="A harness for autonomous AI trading agents: multi-agent analysis, MCP trading platform, and declarative risk engine with on-chain evidence via ERC-8004." />
+  <meta property="og:image" content="https://ai-trading.swiftward.dev/presentations/cover-lablab.png" />
+  <meta property="og:image:alt" content="AI Trading Agents Harness by Swiftward - cover" />
+  <meta property="og:site_name" content="AI Trading Agents Harness" />
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://ai-trading.swiftward.dev/" />
+  <meta name="twitter:title" content="AI Trading Agents Harness by Swiftward" />
+  <meta name="twitter:description" content="Multi-agent analysis, MCP trading platform, and declarative risk engine with on-chain evidence via ERC-8004." />
+  <meta name="twitter:image" content="https://ai-trading.swiftward.dev/presentations/cover-lablab.png" />
+  <meta name="twitter:image:alt" content="AI Trading Agents Harness by Swiftward - cover" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #00ff88;
+      --green-dim: #00cc6a;
+      --green-glow: rgba(0, 255, 136, 0.18);
+      --blue: #0ea5e9;
+      --purple: #7c3aed;
+      --bg: #050b12;
+      --bg2: #070e18;
+      --card: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #64748b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS ── */
+    #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      padding: 18px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(5,11,18,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px;
+      color: #fff;
+    }
+    .logo span { color: var(--green); }
+    .nav-links { display: flex; gap: 36px; }
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: #fff;
+      width: 40px; height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      padding: 0;
+    }
+    .nav-links a {
+      color: var(--muted); font-size: .9rem; font-weight: 500;
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta {
+      background: var(--green); color: #030a07;
+      padding: 10px 22px; border-radius: 8px;
+      font-weight: 700; font-size: .875rem;
+      text-decoration: none; transition: all .2s;
+      box-shadow: 0 0 20px var(--green-glow);
+    }
+    .nav-cta:hover { background: #00e07a; transform: translateY(-1px); box-shadow: 0 0 35px rgba(0,255,136,.35); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,255,136,.08); border: 1px solid rgba(0,255,136,.25);
+      color: var(--green); padding: 7px 18px; border-radius: 100px;
+      font-size: .8rem; font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
+      margin-bottom: 32px;
+      animation: fadeUp .8s ease both;
+    }
+    .hero-badge .dot {
+      width: 7px; height: 7px; background: var(--green); border-radius: 50%;
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(.7); }
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5.2rem);
+      font-weight: 800; line-height: 1.08;
+      letter-spacing: -2px; color: #fff;
+      animation: fadeUp .9s .1s ease both;
+    }
+    h1 .accent {
+      background: linear-gradient(135deg, var(--green) 0%, var(--blue) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      max-width: 640px;
+      font-size: 1.15rem; color: var(--muted); line-height: 1.7;
+      margin: 24px auto 0;
+      animation: fadeUp 1s .2s ease both;
+    }
+    .hero-buttons {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+      margin-top: 44px;
+      animation: fadeUp 1s .35s ease both;
+    }
+    .btn-primary {
+      background: var(--green); color: #030a07;
+      padding: 16px 38px; border-radius: 10px;
+      font-weight: 800; font-size: 1rem; text-decoration: none;
+      box-shadow: 0 0 40px rgba(0,255,136,.3);
+      transition: all .25s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(0,255,136,.45); }
+    .btn-ghost {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 16px 38px; border-radius: 10px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      transition: all .25s; backdrop-filter: blur(8px);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.05); }
+
+    /* stats row */
+    .hero-stats {
+      display: flex; gap: 64px; justify-content: center; flex-wrap: wrap;
+      margin-top: 80px;
+      animation: fadeUp 1s .5s ease both;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.4rem; font-weight: 800; color: #fff;
+    }
+    .stat-num span { color: var(--green); }
+    .stat-label { font-size: .8rem; color: var(--muted); margin-top: 4px; letter-spacing: .5px; text-transform: uppercase; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+    }
+
+    /* ── SECTION ── */
+    section { position: relative; z-index: 1; padding: 120px 24px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block;
+      color: var(--green); font-size: .78rem; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.9rem, 3.5vw, 3rem);
+      font-weight: 800; letter-spacing: -1px; color: #fff; line-height: 1.15;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--muted); margin-top: 16px; max-width: 560px; line-height: 1.7;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px; margin-top: 64px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px 32px;
+      transition: all .3s;
+      position: relative; overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at top left, var(--green-glow), transparent 60%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(0,255,136,.2); }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 24px;
+    }
+    .fi-green { background: rgba(0,255,136,.12); border: 1px solid rgba(0,255,136,.2); }
+    .fi-blue  { background: rgba(14,165,233,.12); border: 1px solid rgba(14,165,233,.2); }
+    .fi-purple{ background: rgba(124,58,237,.12); border: 1px solid rgba(124,58,237,.2); }
+    .feature-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 12px;
+    }
+    .feature-card p { font-size: .92rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── SCREENSHOTS ── */
+    #screenshots { background: var(--bg2); }
+    .screenshots-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .screens-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 64px;
+    }
+    .screen-item {
+      border-radius: 16px; overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all .3s;
+      cursor: pointer;
+      position: relative;
+    }
+    .screen-item:hover { transform: scale(1.02); border-color: rgba(0,255,136,.3); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .screen-item img { width: 100%; display: block; }
+    .screen-item .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.8) 0%, transparent 60%);
+      opacity: 0; transition: opacity .3s;
+      display: flex; align-items: flex-end; padding: 16px;
+      pointer-events: none;
+    }
+    .screen-item:hover .overlay { opacity: 1; }
+    @media (hover: none) { .screen-item .overlay { opacity: 1; } }
+    .overlay-text { font-size: .8rem; color: var(--green); font-weight: 600; }
+    .screen-item.wide { grid-column: span 2; }
+
+    /* ── ON-CHAIN AGENTS TABLE ── */
+    .onchain-agents {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 48px;
+    }
+    .onchain-agents h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem; font-weight: 700; color: #fff;
+      padding: 28px 32px 20px;
+      margin: 0;
+    }
+    .onchain-agents table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .92rem;
+    }
+    .onchain-agents thead tr { background: rgba(255,255,255,0.02); }
+    .onchain-agents th {
+      text-align: left;
+      padding: 14px 32px;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .onchain-agents td {
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      color: #fff;
+      vertical-align: middle;
+    }
+    .onchain-agents tbody tr.agent-row { cursor: pointer; transition: background .2s; }
+    .onchain-agents tbody tr.agent-row:hover { background: rgba(0,255,136,.06); }
+    .onchain-agents tbody tr.agent-row td:first-child::before { content: '▸ '; color: var(--muted); font-size: .75rem; }
+    .onchain-agents tbody tr.agent-row.open td:first-child::before { content: '▾ '; }
+    .onchain-agents tbody tr.agent-detail { display: none; }
+    .onchain-agents tbody tr.agent-detail.open { display: table-row; }
+    .agent-detail-content { padding: 12px 0; color: var(--muted); font-size: .88rem; line-height: 1.5; }
+    .onchain-agents .agent-id {
+      color: var(--green);
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .95rem;
+    }
+    .onchain-agents .wallet {
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .82rem;
+      text-decoration: none;
+      transition: color .2s;
+      word-break: break-all;
+    }
+    .onchain-agents .wallet:hover { color: var(--green); }
+    @media (max-width: 720px) {
+      .onchain-agents th, .onchain-agents td { padding-left: 18px; padding-right: 18px; }
+      .onchain-agents .wallet { font-size: .72rem; }
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 0; margin-top: 64px; position: relative; }
+    .steps::before {
+      content: '';
+      position: absolute; top: 36px; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--green) 30%, var(--green) 70%, transparent);
+      opacity: .3;
+    }
+    .step { text-align: center; padding: 0 24px; position: relative; }
+    .step-num {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: rgba(0,255,136,.08); border: 1px solid rgba(0,255,136,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem; font-weight: 800; color: var(--green);
+      margin: 0 auto 24px;
+      position: relative; z-index: 1;
+    }
+    .step h3 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .step p { font-size: .87rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── TELEGRAM ── */
+    #telegram { background: var(--bg2); }
+    .tg-demo {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; margin-top: 64px;
+    }
+    .tg-phone {
+      background: #1a1d27; border-radius: 32px; padding: 24px 20px;
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 40px 100px rgba(0,0,0,.6);
+      max-width: 360px; margin: 0 auto;
+    }
+    .tg-header {
+      display: flex; align-items: center; gap: 12px;
+      padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,.07); margin-bottom: 16px;
+    }
+    .tg-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #000; font-weight: 700;
+    }
+    .tg-name { font-size: .9rem; font-weight: 700; color: #fff; }
+    .tg-status { font-size: .72rem; color: var(--green); }
+    .tg-msg {
+      background: #2a2d3a; border-radius: 14px 14px 14px 4px;
+      padding: 12px 14px; margin-bottom: 10px; font-size: .82rem; line-height: 1.55;
+    }
+    .tg-msg.alert { background: rgba(0,255,136,.08); border-left: 3px solid var(--green); }
+    .tg-msg.warn  { background: rgba(239,68,68,.08); border-left: 3px solid #ef4444; }
+    .tg-msg b { color: var(--green); }
+    .tg-msg .time { color: #555; font-size: .7rem; display: block; text-align: right; margin-top: 4px; }
+    .tg-desc h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.8rem; font-weight: 800; color: #fff; margin-bottom: 16px; line-height: 1.2; }
+    .tg-desc p { color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+    .tg-features { list-style: none; }
+    .tg-features li {
+      display: flex; align-items: flex-start; gap: 12px;
+      color: var(--muted); font-size: .9rem; margin-bottom: 12px;
+    }
+    .tg-features li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+    /* ── SECURITY ── */
+    .security-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 64px; }
+    .sec-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px;
+      text-align: center; transition: all .3s;
+    }
+    .sec-card:hover { border-color: rgba(14,165,233,.3); transform: translateY(-4px); }
+    .sec-icon { font-size: 2.5rem; margin-bottom: 20px; }
+    .sec-card h3 { font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    .sec-card p { font-size: .87rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── TESTIMONIAL / TRADE LOG ── */
+    .trade-log {
+      background: #070e18; border: 1px solid var(--border); border-radius: 20px;
+      overflow: hidden; margin-top: 64px;
+    }
+    .tl-header {
+      padding: 18px 28px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+      font-size: .85rem; color: var(--muted); font-weight: 600;
+    }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .d-red { background: #ef4444; } .d-yellow { background: #f59e0b; } .d-green { background: var(--green); }
+    .tl-row {
+      display: grid; grid-template-columns: 1fr 1.2fr 1fr 1fr 1.2fr 1fr 1fr;
+      padding: 16px 28px; border-bottom: 1px solid rgba(255,255,255,.03);
+      font-size: .82rem; align-items: center;
+      transition: background .2s;
+    }
+    .tl-row:hover { background: rgba(255,255,255,.02); }
+    .tl-row.header { color: var(--muted); font-size: .75rem; letter-spacing: .5px; text-transform: uppercase; }
+    .tl-row .pair { font-weight: 700; color: #fff; }
+    .tl-row .buy { color: var(--green); font-weight: 700; }
+    .tl-row .sell { color: #ef4444; font-weight: 700; }
+    .badge {
+      display: inline-flex; padding: 3px 10px; border-radius: 6px;
+      font-size: .72rem; font-weight: 700;
+    }
+    .badge.fill { background: rgba(0,255,136,.12); color: var(--green); border: 1px solid rgba(0,255,136,.25); }
+    .badge.reject { background: rgba(239,68,68,.12); color: #ef4444; border: 1px solid rgba(239,68,68,.25); }
+    .badge.pending { background: rgba(245,158,11,.12); color: #f59e0b; border: 1px solid rgba(245,158,11,.25); }
+    .pnl-pos { color: var(--green); font-weight: 700; }
+    .pnl-neg { color: #ef4444; font-weight: 700; }
+
+    /* ── TEAM ── */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 20px; margin-top: 64px; }
+    .team-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 32px 24px; text-align: center; transition: all .3s;
+    }
+    .team-card:hover { border-color: rgba(0,255,136,.2); transform: translateY(-4px); }
+    .team-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 800; color: #000;
+      margin: 0 auto 20px;
+    }
+    .team-card h4 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .team-card .role { font-size: .8rem; color: var(--green); font-weight: 600; margin-bottom: 8px; }
+    .team-card p { font-size: .82rem; color: var(--muted); line-height: 1.55; }
+
+    /* ── CTA ── */
+    #cta {
+      text-align: center; padding: 120px 24px;
+      background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0,255,136,.07), transparent);
+    }
+    #cta h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800; color: #fff; letter-spacing: -1px; margin-bottom: 20px;
+    }
+    #cta p { color: var(--muted); font-size: 1.05rem; margin-bottom: 44px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+    }
+    footer .logo { font-size: 1.2rem; }
+    footer p { font-size: .82rem; color: var(--muted); }
+
+    /* ── GLOW ORBS ── */
+    .orb {
+      position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0;
+    }
+    .orb-green { background: rgba(0,255,136,.08); width: 600px; height: 600px; top: -200px; left: -200px; }
+    .orb-blue  { background: rgba(14,165,233,.06); width: 500px; height: 500px; bottom: -150px; right: -100px; }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      overflow: hidden; background: rgba(0,255,136,.04); border-top: 1px solid rgba(0,255,136,.1); border-bottom: 1px solid rgba(0,255,136,.1);
+      padding: 14px 0; position: relative; z-index: 1;
+    }
+    .ticker {
+      display: flex; gap: 64px; white-space: nowrap;
+      animation: ticker 30s linear infinite;
+    }
+    .ticker-item { display: flex; align-items: center; gap: 10px; font-size: .85rem; font-weight: 600; }
+    .ticker-item .sym { color: #fff; }
+    .ticker-item .price { color: var(--muted); }
+    .ticker-item .chg { color: var(--green); }
+    .ticker-item .chg.neg { color: #ef4444; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 768px) {
+      nav { padding: 14px 18px; flex-wrap: wrap; gap: 10px; }
+      .nav-toggle { display: flex !important; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 14px;
+        flex-basis: 100%;
+        order: 3;
+        padding: 14px 8px 6px;
+      }
+      nav.open .nav-links { display: flex; }
+      .nav-cta {
+        display: none;
+        order: 4;
+        flex-basis: 100%;
+        text-align: center;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+      nav.open .nav-cta { display: block; }
+      .screenshots-intro { grid-template-columns: 1fr; }
+      .screens-grid { grid-template-columns: 1fr; }
+      .screen-item.wide { grid-column: span 1; }
+      .tg-demo { grid-template-columns: 1fr; }
+      .security-grid { grid-template-columns: 1fr; }
+      .steps::before { display: none; }
+      footer { flex-direction: column; text-align: center; }
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── LIGHTBOX ── */
+    .screen-item { cursor: pointer; }
+    #lightbox { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.9); flex-direction:column; align-items:center; justify-content:center; gap:16px; cursor:pointer; }
+    #lightbox.active { display:flex; }
+    #lightbox img { max-width:92vw; max-height:85vh; border-radius:12px; }
+    #lightbox .lb-caption { color:var(--green); font-size:.9rem; font-weight:600; max-width:80vw; text-align:center; }
+  </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<!-- ── NAV ── -->
+<nav id="mainNav">
+  <div class="logo">swift<span>ward</span></div>
+  <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('mainNav').classList.toggle('open')">☰</button>
+  <div class="nav-links">
+    <a href="#hero">Home</a>
+    <a href="#video">Demo</a>
+    <a href="#pillars">Three Pillars</a>
+    <a href="#pillar1">Agents</a>
+    <a href="#pillar2">Platform</a>
+    <a href="#pillar3">Safety</a>
+    <a href="#team">Team</a>
+    <a href="#agentintel">Audit</a>
+  </div>
+  <a href="https://github.com/disciplinedware/swiftward-ai-trading-agents" class="nav-cta" target="_blank">GitHub</a>
+</nav>
+
+<!-- ── TICKER ── -->
+<div class="ticker-wrap" style="margin-top:72px;">
+  <div class="ticker" id="tickerInner"></div>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero" style="padding-top:60px;">
+  <div class="orb orb-green"></div>
+  <div class="orb orb-blue"></div>
+  <div class="hero-badge"><span class="dot"></span>AI Trading Agents Hackathon - lablab.ai</div>
+  <h1>AI Trading Agents<br/><span class="accent">Harness</span></h1>
+  <p class="hero-sub">
+    A harness for autonomous AI trading agents: multi-agent analysis, MCP trading platform, and a declarative risk engine with on-chain evidence via ERC-8004. Three pillars. Zero competitors.
+  </p>
+  <div class="hero-buttons">
+    <a href="#video" class="btn-primary">Watch Demo</a>
+    <a href="https://github.com/disciplinedware/swiftward-ai-trading-agents" class="btn-ghost" target="_blank">View on GitHub</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">3<span>x</span></div>
+      <div class="stat-label">Agent Architectures</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">45<span></span></div>
+      <div class="stat-label">MCP Tools</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">31<span></span></div>
+      <div class="stat-label">Risk Control Rules</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4,772<span></span></div>
+      <div class="stat-label">Trades Registered On-Chain</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VIDEO PREVIEW ── -->
+<div class="divider"></div>
+<section id="video" style="background:var(--bg2);padding:80px 24px;">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:40px;">
+      <span class="section-tag">Demo</span>
+      <h2 class="section-title">Watch it in action</h2>
+      <p class="section-sub" style="margin:0 auto;">See how the platform handles live market conditions - agents analyzing, trading, getting blocked, learning.</p>
+    </div>
+    <div class="reveal" style="max-width:360px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:0 40px 100px rgba(0,0,0,.7);background:#000;">
+      <video controls style="width:100%;display:block;">
+        <source src="Swiftward_ AI-Driven Automated Trading_720p_caption.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="reveal" style="max-width:960px;margin:64px auto 0;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:0 40px 100px rgba(0,0,0,.7);background:#000;">
+      <div style="position:relative;padding-top:56.25%;">
+        <iframe src="https://share.descript.com/embed/1Gp07AHr8K7"
+                style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+                frameborder="0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="reveal" style="text-align:center;margin-top:40px;">
+      <a href="presentations/hackathon-demo-full.pdf" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;">
+        <span>📄</span>
+        <span>Download Pitch Deck (PDF)</span>
+      </a>
+    </div>
+    <div class="onchain-agents reveal" style="margin-top:48px;">
+      <h3>Agents registered on-chain</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Agent ID</th>
+            <th>Name</th>
+            <th>Stack</th>
+            <th>Strategy</th>
+            <th>Operator Wallet</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="agent-row" data-agent="alpha">
+            <td class="agent-id">32</td>
+            <td>Swiftward Alpha</td>
+            <td>Go + Claude Code</td>
+            <td>Momentum trader, regime-based</td>
+            <td><a class="wallet" href="https://sepolia.etherscan.io/address/0x6Cd7DdABD496b545bAE05a04044F2828C1395d13" target="_blank" rel="noopener">0x6Cd7...d13</a></td>
+          </tr>
+          <tr class="agent-detail" id="detail-alpha"><td colspan="5"><div class="agent-detail-content">Systematic momentum with discretionary overlay. Regime-based deployment (bull/neutral/bear). Claude Sonnet 4.6, 15-min interval. Lets winners run, cuts losers fast. Telegram streaming.</div></td></tr>
+          <tr class="agent-row" data-agent="random">
+            <td class="agent-id">37</td>
+            <td>Random Trader</td>
+            <td>Go</td>
+            <td>Chaos baseline, 7 behavioral modes</td>
+            <td><a class="wallet" href="https://sepolia.etherscan.io/address/0x7a2F2E58B93Ac448fF7D0e81C2756A3EfC7a15e0" target="_blank" rel="noopener">0x7a2F...5e0</a></td>
+          </tr>
+          <tr class="agent-detail" id="detail-random"><td colspan="5"><div class="agent-detail-content">Scalp 40%, Swing 25%, FOMO 12%, Take Profit, YOLO, DCA, Panic Sell. Mood shifts every 15-25 ticks. 10-sec interval. The control group - proves the policy engine blocks bad trades.</div></td></tr>
+          <tr class="agent-row" data-agent="gamma">
+            <td class="agent-id">43</td>
+            <td>Swiftward Gamma</td>
+            <td>Go + Claude Code</td>
+            <td>Multi-agent debate, 5 subagents</td>
+            <td><a class="wallet" href="https://sepolia.etherscan.io/address/0xC5e0362badA7D1968325e134783dA2B7c48FbF62" target="_blank" rel="noopener">0xC5e0...F62</a></td>
+          </tr>
+          <tr class="agent-detail" id="detail-gamma"><td colspan="5"><div class="agent-detail-content">5 parallel analysts (technical, sentiment, market structure, bull/bear). 6 skills on demand: trading session, deep analysis, portfolio review, strategy update, morning brief, alert review. Claude Sonnet 4.6, 30-min interval. Telegram streaming.</div></td></tr>
+          <tr class="agent-row" data-agent="haia">
+            <td class="agent-id">49</td>
+            <td>Haia Trading Agent</td>
+            <td>Python asyncio</td>
+            <td>3-stage deterministic quant</td>
+            <td><a class="wallet" href="https://sepolia.etherscan.io/address/0xFa7b27f6D316CC96d93F6b126D1acd8066E340B7" target="_blank" rel="noopener">0xFa7b...0B7</a></td>
+          </tr>
+          <tr class="agent-detail" id="detail-haia"><td colspan="5"><div class="agent-detail-content">Market health filter, asset rotation selector, decision engine with ATR stops and Kelly sizing. 4 loops (clock 15m, price spike 1m, tier2 5m, exit watchdog 2m). Pure math core - no hallucination where it matters.</div></td></tr>
+          <tr class="agent-row" data-agent="midas">
+            <td class="agent-id">77</td>
+            <td>Swiftward Midas</td>
+            <td>Go + Claude Code</td>
+            <td>Live Kraken, $100 real capital</td>
+            <td><a class="wallet" href="https://sepolia.etherscan.io/address/0xD890E2f207b1Ea981670237Ca3b06bA8ca9B2b1A" target="_blank" rel="noopener">0xD890...b1A</a></td>
+          </tr>
+          <tr class="agent-detail" id="detail-midas"><td colspan="5"><div class="agent-detail-content">Pullback trend trader on real Kraken account. Buys pullbacks in confirmed uptrends, targets 2R profit. Win rate >60% focus. Hard risk limits enforced by Swiftward policy. Claude Sonnet 4.6, 15-min interval.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="reveal" style="margin-top:48px;text-align:center;">
+      <h3 style="margin-bottom:12px;">Live servers - explore right now</h3>
+      <p style="color:var(--muted);margin-bottom:24px;">Real infrastructure with historical trades and data. Random Trader active, AI agents require API keys to run.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="https://trade.ai-trading.swiftward.dev/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
+          <span>📊</span> Trading Dashboard
+        </a>
+        <a href="https://arena.ai-trading.swiftward.dev/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
+          <span>🏟️</span> Backtesting Arena
+        </a>
+        <a href="https://logs.ai-trading.swiftward.dev/" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;">
+          <span>📋</span> SigNoz Observability
+        </a>
+      </div>
+      <p style="color:var(--muted);font-size:0.85rem;margin-top:16px;">Trading Dashboard: equity curves, positions, trade history, evidence hashes, policy decisions, agent activity.<br/>Backtesting Arena: strategy runs, batch results, PnL comparison, agent selection for live trading.<br/>SigNoz: logs, traces, and metrics across all services. Login: <code style="color:var(--green);font-size:.8rem;">lablab@swiftward.dev</code> / <code style="color:var(--green);font-size:.8rem;">RfkxEvJ98w2ylpWgRw5!</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- ── THREE PILLARS ── -->
+<div class="divider"></div>
+<section id="pillars">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <span class="section-tag">Why We Win</span>
+      <h2 class="section-title">Three Pillars.<br/>Better in all three.</h2>
+      <p class="section-sub" style="margin:0 auto;">Every competitor built a trading bot. We built smarter agents, a trading platform, and a risk engine. Three pillars nobody else attempted.</p>
+    </div>
+    <div class="features-grid" style="grid-template-columns:repeat(3,1fr);margin-top:64px;">
+      <div class="feature-card reveal" style="border-color:rgba(0,255,136,.2);">
+        <div class="feature-icon fi-green">🧠</div>
+        <h3>Smarter Agents</h3>
+        <p>Multi-agent debate. Deterministic quant trader. Backtesting arena. Self-improving with memory. Harness runtime. Code sandbox.</p>
+      </div>
+      <div class="feature-card reveal" style="border-color:rgba(14,165,233,.2);">
+        <div class="feature-icon fi-blue">🔧</div>
+        <h3>Trading Platform</h3>
+        <p>6 MCP servers, 33+ tools. Multi-source market data. News, sentiment, Polymarket. Alerts and conditional orders. On-chain evidence via ERC-8004. Dashboard.</p>
+      </div>
+      <div class="feature-card reveal" style="border-color:rgba(124,58,237,.2);">
+        <div class="feature-icon fi-purple">🛡️</div>
+        <h3>Super Safe</h3>
+        <p>Declarative YAML rules. Graduated risk tiers and circuit breakers. Safe rollout with backtesting and shadow mode. 3 gateways. Observability. Audit trail.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PILLAR 1: SMARTER AGENTS ── -->
+<div class="divider"></div>
+<section id="pillar1">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Pillar 1</span>
+      <h2 class="section-title">Smarter Agents</h2>
+      <p class="section-sub">How the agents actually work under the hood - sandbox, memory, and the runtime that orchestrates it all.</p>
+    </div>
+    <div class="features-grid" style="margin-top:48px;">
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-green">🧪</div>
+        <h3>Python Code Sandbox</h3>
+        <p>Isolated Docker container per agent. Downloads market data, writes and runs custom analysis scripts. Persistent state across sessions. The agent codes its own trading tools.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-green">💡</div>
+        <h3>Self-Improving</h3>
+        <p>Persistent memory across sessions. Detailed session reports with trade reasoning. Self-reflection after losses - analyzes what went wrong, creates permanent rules. Strategy evolves from exploration to fine-tuned edge.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-green">🛠️</div>
+        <h3>Harness Runtime</h3>
+        <p>Event-driven agent harness (think OpenClaw, but for trading and 100% isolated). Orchestrates Claude Code CLI via stream-json protocol. Session lifecycle, alert injection, Telegram streaming, error recovery. Works with API keys or Claude subscription for flat-cost operation.</p>
+      </div>
+    </div>
+    <!-- Pillar 1 screenshots -->
+    <!-- 1. Hook: agent intelligence -->
+    <div class="screens-grid reveal" style="margin-top:48px;">
+      <div class="screen-item wide">
+        <img src="alert-fake-news.png" alt="News alert - false positive detection" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">News alert fires - agent checks sources, detects false positive, holds position</span></div>
+      </div>
+      <div class="screen-item">
+        <img src="telegram-3+2subagents.png" alt="5 subagents spawned in parallel" />
+        <div class="overlay"><span class="overlay-text">3 analysts spawned, then Bull + Bear researchers debate</span></div>
+      </div>
+      <div class="screen-item">
+        <img src="telegram-self-improving-learning.png" alt="Agent self-analysis" style="object-fit:cover;" />
+        <div class="overlay"><span class="overlay-text">Agent analyzes mistakes, creates permanent trading rules</span></div>
+      </div>
+    </div>
+    <!-- 2. Real money, real positions -->
+    <div class="screens-grid reveal" style="margin-top:16px;">
+      <div class="screen-item wide">
+        <img src="dashboard-agent-position.png" alt="Agent positions across 6 assets with concentration chart" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Multi-asset portfolio: 6 concurrent positions with real-time PnL and concentration tracking</span></div>
+      </div>
+    </div>
+    <!-- 3. Backtesting Arena -->
+    <div class="screens-grid reveal" style="margin-top:16px;">
+      <div class="screen-item wide">
+        <img src="agena-batch.png" alt="Arena batch results - cost, tokens, PnL stats" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Batch #10 results: 6 runs, 1.7M tokens, best/worst PnL - pick the winner for live trading</span></div>
+      </div>
+      <div class="screen-item wide">
+        <img src="arena-runs.png" alt="Arena - 6 agent strategies evaluated" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Backtesting arena: 6 strategies compete - Trend Follower, Quant Analyst, Portfolio Rebalancer, Mean Reversion, Macro, Scalper</span></div>
+      </div>
+    </div>
+    <!-- 4. Depth: learns new tools -->
+    <div class="screens-grid reveal" style="margin-top:16px;grid-template-columns:minmax(0,520px);justify-content:center;">
+      <div class="screen-item">
+        <img src="telegram-newagent-learns.png" alt="Agent learns new tools and saves learnings" />
+        <div class="overlay"><span class="overlay-text">Agent discovers new MCP tools and saves session learnings to memory</span></div>
+      </div>
+    </div>
+    <!-- 5. Technical: deterministic agent flow -->
+    <div class="screen-item reveal" style="margin-top:24px;border-radius:16px;overflow:hidden;border:1px solid var(--border);">
+      <img src="determemistic_agent_flow.svg" alt="Deterministic Python agent flow diagram" style="width:100%;display:block;padding:16px;" />
+      <div class="overlay"><span class="overlay-text">Deterministic agent: 4 triggers, cooldown gate, 3-stage brain, 5 data sources</span></div>
+    </div>
+    <!-- 6. Agent isolation: personal folders -->
+    <div class="screens-grid reveal" style="margin-top:16px;grid-template-columns:minmax(0,520px);justify-content:center;">
+      <div class="screen-item">
+        <img src="agents-are-isolaged-in-folders.png" alt="Each agent gets isolated persistent folders" />
+        <div class="overlay"><span class="overlay-text">Each agent is fully isolated: personal Kraken CLI workspace and credentials, persistent workspace, and Claude Code home directory</span></div>
+      </div>
+    </div>
+    <!-- Telegram integration -->
+    <div class="tg-demo reveal" style="margin-top:64px;gap:32px;justify-items:end;">
+      <div style="border-radius:20px;overflow:hidden;border:1px solid var(--border);max-width:320px;margin-left:auto;">
+        <img src="telegram-interact.jpg" alt="Operator interacting with agent via Telegram" style="width:100%;display:block;" />
+      </div>
+      <div class="tg-desc">
+        <span class="section-tag">Telegram Integration</span>
+        <h3>Operator in the loop.<br/>Agent in control.</h3>
+        <p>Agent streams output in real-time to Telegram. Operator can message mid-session - ask questions, request analysis, guide decisions. The agent acknowledges and incorporates.</p>
+        <ul class="tg-features">
+          <li>Live output streaming as the agent thinks and acts</li>
+          <li>Two-way communication - ask agent to check an idea or trade</li>
+          <li>Risk engine alerts: halts, circuit breakers, blocked actions</li>
+          <li>Agent alerts: price triggers, news events, session summaries</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PILLAR 2: TRADING PLATFORM ── -->
+<div class="divider"></div>
+<section id="pillar2" style="background:var(--bg2);">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Pillar 2</span>
+      <h2 class="section-title">Trading Platform</h2>
+      <p class="section-sub">Universal infrastructure. Any agent plugs in. Standardized MCP protocol.</p>
+    </div>
+    <div class="features-grid" style="margin-top:48px;">
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-blue">🔧</div>
+        <h3>6 MCP Servers, 33+ Tools</h3>
+        <p>Trading (submit, estimate, portfolio, history, limits). Market Data (prices, candles, orderbook, funding, OI, alerts). Files, Code Sandbox, News, Risk. All JSON-RPC standard.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-blue">📊</div>
+        <h3>Multi-Source Market Data</h3>
+        <p>Kraken, Binance, Bybit connectors with degradation chain. PRISM API for asset resolution and signals. 7 server-side indicators (EMA, SMA, RSI, MACD, BBands, ATR, VWAP). Fear & Greed index. Funding rates. Open interest.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-blue">📰</div>
+        <h3>News + Sentiment + Polymarket</h3>
+        <p>CryptoPanic news feed with sentiment scoring. Event classification (hack, regulation, listing, macro). Polymarket prediction data. Keyword alerts that wake agents.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-blue">🔔</div>
+        <h3>Alerts & Conditional Orders</h3>
+        <p>Price alerts (above/below/change%). News keyword alerts. Auto-executing stop-loss and take-profit (OCO-linked). Soft stops that wake the agent without auto-selling. Trailing stops.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-blue">⛓️</div>
+        <h3>On-Chain Evidence (ERC-8004)</h3>
+        <p>We maintain our own keccak256 hash chain - signing all internal decisions AND external RiskRouter verdicts. Proofs posted to ERC-8004 Validation Registry. Agent identity as NFT. 6 reputation metrics on-chain.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-blue">🖥️</div>
+        <h3>Professional Dashboard</h3>
+        <p>6 screens: Overview, Agent Detail, Market, Evidence, Policy, Claude Agent. Equity curves, positions, trade history with evidence hashes. Single binary deployment.</p>
+      </div>
+    </div>
+    <!-- Pillar 2 screenshots -->
+    <div class="screens-grid reveal" style="margin-top:48px;">
+      <div class="screen-item">
+        <img src="photo_2026-04-08_19-12-30.jpg" alt="Positions and asset concentration" />
+        <div class="overlay"><span class="overlay-text">Asset concentration with 50% policy limit</span></div>
+      </div>
+      <div class="screen-item">
+        <img src="trades-with-profit.jpg" alt="Open positions with profit" />
+        <div class="overlay"><span class="overlay-text">Open positions: FARTCOIN +15.6%, total unrealized +$271, SL/TP on all</span></div>
+      </div>
+    </div>
+    <div class="screens-grid reveal" style="margin-top:16px;">
+      <div class="screen-item">
+        <img src="telegram-alerts-existing.png" alt="Active alerts overview" />
+        <div class="overlay"><span class="overlay-text">5 active alerts - hard stops, take profits, soft stops with auto-execute</span></div>
+      </div>
+      <div class="screen-item">
+        <img src="telegram-alert-triggered.png" alt="Alert triggered - MON breakdown" />
+        <div class="overlay"><span class="overlay-text">Soft stop triggers - agent analyzes breakdown, exits in 2 tranches</span></div>
+      </div>
+      <div class="screen-item wide">
+        <img src="dashboard-agent-active-alerts.png" alt="Active alerts dashboard - trading and market alerts" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Platform alert monitor: trading alerts per order, market soft stops, and news sentiment watchers</span></div>
+      </div>
+    </div>
+    <!-- ERC-8004 evidence chain -->
+    <div class="screens-grid reveal" style="margin-top:16px;">
+      <div class="screen-item wide">
+        <img src="dashboard-trades-and-evidences.png" alt="Trades with evidence links" style="width:100%;object-fit:cover;max-height:300px;" />
+        <div class="overlay"><span class="overlay-text">127 trades - each with decision hash, evidence link, reasoning</span></div>
+      </div>
+      <div class="screen-item wide">
+        <img src="dashboard-evidence-url.png" alt="Evidence detail - full JSON proof with on-chain hash" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Every evidence published to a public URL - full proof: trade reasoning, policy approval, on-chain tx hash</span></div>
+      </div>
+      <div class="screen-item">
+        <img src="dashboard-decision-hash-chain.png" alt="Decision hash chain - 339 decisions" />
+        <div class="overlay"><span class="overlay-text">339 decisions hash-chained - fills and rejects linked</span></div>
+      </div>
+      <div class="screen-item">
+        <img src="dashboard-decision-hash-chain-item.png" alt="Decision trace detail with JSON" />
+        <div class="overlay"><span class="overlay-text">Each decision: full trace JSON with reasoning, confidence, fill data</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PILLAR 3: SUPER SAFE ── -->
+<div class="divider"></div>
+<section id="pillar3">
+  <div class="container">
+    <div class="reveal">
+      <span class="section-tag">Pillar 3</span>
+      <h2 class="section-title">Super Safe</h2>
+      <p class="section-sub">Trading risk management and AI operations controls: graduated tiers, declarative rules, three gateways, full audit.</p>
+    </div>
+
+    <div class="features-grid" style="margin-top:48px;">
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-purple">📝</div>
+        <h3>Declarative Versioned Rules</h3>
+        <p>Human-readable off-the-code policy rules. Change risk limits without redeploying. Every rule is versioned. Rulesets follow their own lifecycle: draft -> candidate -> active -> archived. Entity state per agent: counters, labels, buckets, metadata.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-purple">⚡</div>
+        <h3>Trading Risk Rules Pack</h3>
+        <p>Graduated risk tiers (limits tighten as drawdown grows). Circuit breakers (3 losses = 1h pause). Three-layer heartbeat drawdown. Stop-loss enforcement. Concentration caps. Pair whitelist. Rate limits. Operator halt/resume.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-purple">🧪</div>
+        <h3>Safe Rollout: Evals, Backtesting, Shadow, A/B</h3>
+        <p>Never deploy untested rules. Eval tests validate rules before rollout. Backtesting on historical events. Shadow mode runs next version of rules in parallel, logged not enforced. A/B testing compares policy versions on live traffic.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-purple">🔐</div>
+        <h3>3 Gateways + Injection Defense</h3>
+        <p>Agents are fully isolated - all communication goes through 3 gateways: MCP (tool calls), LLM (AI prompts), Internet (HTTP). Every request policy-evaluated. ML classifiers (PG2 + BERT) for prompt injection. LLM Gateway also enforces required behaviour - e.g. end-of-session attestation with reasoning for every agent.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-purple">📊</div>
+        <h3>Observability & Scalability</h3>
+        <p>OpenTelemetry metrics and logs (SigNoz). Kubernetes-ready. Horizontal scalability. Docker Compose for dev, multi-platform Docker images. Policy alerts via Telegram (halts, breakers, rejections).</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon fi-purple">🧾</div>
+        <h3>Audit & Evidence Hash Chain</h3>
+        <p>Every decision (approved or rejected) gets a keccak256 hash chained to the previous. Modify one record - the chain breaks. Public Evidence API. Full audit trail from genesis to latest trade.</p>
+      </div>
+    </div>
+    <!-- Pillar 3 screenshots -->
+    <div class="screens-grid reveal" style="margin-top:32px;">
+      <div class="screen-item wide">
+        <img src="dashboard-risk-policies.png" alt="Active policy rules" style="width:100%;object-fit:cover;max-height:320px;" />
+        <div class="overlay"><span class="overlay-text">Declarative YAML rules - change limits without redeploying code. 16 rules, 301 rejections.</span></div>
+      </div>
+      <div class="screen-item wide">
+        <img src="dashboard-trades-and-rejected-by-policy.png" alt="Trades list with policy rejection" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">FARTCOIN BUY rejected - 3 losses, 1h pause (exits allowed)</span></div>
+      </div>
+    </div>
+    <div class="screens-grid reveal" style="margin-top:16px;">
+      <div class="screen-item wide">
+        <img src="swiftward-analytics.png" alt="Policy analytics - 43K events, 668 violations, top rules" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Policy analytics: 43,949 events processed, 668 violations (2%), events over time, top rules fired</span></div>
+      </div>
+      <div class="screen-item wide">
+        <img src="swiftward-investigate-events-trade-order.png" alt="Event investigator - trade_order events with verdicts" style="width:100%;display:block;" />
+        <div class="overlay"><span class="overlay-text">Event investigator: browse trade_order events - approved/rejected verdicts, matching rules, top entities</span></div>
+      </div>
+    </div>
+    <!-- Telegram alerts: stack loss streak + inet (short) on left, tier block (tall) on right -->
+    <div class="reveal" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="screen-item">
+          <img src="swiftward-loss-streak.png" alt="Loss streak protection" />
+          <div class="overlay"><span class="overlay-text">3 losses - automatic 1h trading pause</span></div>
+        </div>
+        <div class="screen-item">
+          <img src="swiftward-inet-blocked.png" alt="Blocked domain alert" />
+          <div class="overlay"><span class="overlay-text">Agent tried blocked domain - REJECTED by internet policy</span></div>
+        </div>
+      </div>
+      <div class="screen-item" style="height:100%;">
+        <img src="swiftward-blocked-tier10pct.png" alt="Graduated tier block" style="height:100%;object-fit:cover;" />
+        <div class="overlay"><span class="overlay-text">Caution tier: $1K order blocked (>10%), agent reduces to $970, filled</span></div>
+      </div>
+    </div>
+    <div class="screens-grid reveal" style="margin-top:16px;">
+      <div class="screen-item wide">
+        <img src="signoz-logs.png" alt="SigNoz observability - full trade pipeline logs" style="width:100%;object-fit:cover;max-height:320px;" />
+        <div class="overlay"><span class="overlay-text">SigNoz logs - two trades approved and filled, third blocked by policy. Full pipeline visible.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TEAM ── -->
+<section id="team">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <span class="section-tag">The Team</span>
+      <h2 class="section-title">Built by <span style="color:var(--green)">Swiftward Team</span></h2>
+      <p class="section-sub" style="margin:0 auto;">Platform engineers building safe AI infrastructure for autonomous trading.</p>
+    </div>
+    <div class="team-grid reveal">
+      <a href="https://www.linkedin.com/in/ktrunin/" target="_blank" class="team-card" style="text-decoration:none;color:inherit;cursor:pointer;">
+        <img src="kostya.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 20px;display:block;" />
+        <h4>Konstantin Trunin</h4>
+        <div class="role">Founder & CTO, Swiftward</div>
+        <p>25+ years in distributed systems. Engineering leader across 15+ startups, Co-Founder & CTO of a logistics SaaS. Built the platform end-to-end.</p>
+      </a>
+      <a href="https://www.linkedin.com/in/jokly/" target="_blank" class="team-card" style="text-decoration:none;color:inherit;cursor:pointer;">
+        <div style="width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto 20px;">
+          <img src="tikhon.jpeg" style="width:100%;height:100%;object-fit:cover;object-position:center 25%;transform:scale(1.8);display:block;" />
+        </div>
+        <h4>Tikhon Slasten</h4>
+        <div class="role">Tech Lead, HAIA</div>
+        <p>6+ years in software engineering, focused on distributed systems and Web3 integrations. Builds scalable systems where AI meets on-chain finance.</p>
+      </a>
+      <a href="https://www.linkedin.com/in/ivan-puchkov/" target="_blank" class="team-card" style="text-decoration:none;color:inherit;cursor:pointer;">
+        <div style="width:72px;height:72px;border-radius:50%;overflow:hidden;margin:0 auto 20px;">
+          <img src="ivan.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center 25%;transform:scale(1.8);display:block;" />
+        </div>
+        <h4>Ivan Puchkov</h4>
+        <div class="role">Java | Kotlin Senior Backend Engineer</div>
+        <p>Senior Java/Kotlin Backend Developer with 5+ years of experience in designing and developing banking and financial systems</p>
+      </a>
+      <a href="https://www.linkedin.com/in/ruslan-mukhametov-5838bb1a2/" target="_blank" class="team-card" style="text-decoration:none;color:inherit;cursor:pointer;">
+        <img src="ruslan.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;margin:0 auto 20px;display:block;" />
+        <h4>Ruslan Mukhametov</h4>
+        <div class="role">Ruby on Rails Lead Engineer</div>
+        <p>9+ years in FinTech. Built the backtesting and prompt eval layer — powered by SolidLoop, an open-source library for observable AI agents.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── ONE MORE THING ── -->
+<div class="divider"></div>
+<section id="agentintel" style="background:var(--bg2);">
+  <div class="container">
+    <div class="reveal" style="text-align:center;">
+      <p style="color:var(--muted);font-size:1.1rem;font-style:italic;margin-bottom:24px;">Oh, and one more thing...</p>
+      <span class="section-tag">Agent Intelligence</span>
+      <h2 class="section-title">We audited <span style="color:var(--green)">every agent</span><br/>in the hackathon</h2>
+      <p class="section-sub" style="margin:16px auto 0;">84 agents. 14,287 trades. $51M volume. On-chain attestations, reputation scores, sybil detection, AI-generated verdicts. On top of everything above - we built the intelligence layer to analyze every agent in the hackathon.</p>
+    </div>
+    <a href="audit/" class="reveal" style="display:block;margin-top:48px;text-decoration:none;border-radius:16px;overflow:hidden;border:1px solid var(--border);position:relative;transition:all .3s;cursor:pointer;" onmouseover="this.style.borderColor='rgba(0,255,136,.4)';this.style.transform='scale(1.01)';this.style.boxShadow='0 20px 60px rgba(0,0,0,.5)';" onmouseout="this.style.borderColor='var(--border)';this.style.transform='scale(1)';this.style.boxShadow='none';">
+      <img src="agentintel.png" alt="Agent Intel - hackathon agent leaderboard" style="width:100%;display:block;filter:blur(3px);" />
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(7,14,24,0.3) 0%, rgba(7,14,24,0.85) 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:800;color:#fff;text-shadow:0 2px 20px rgba(0,0,0,.9);text-align:center;">84 agents. Scored, ranked, and audited.</span>
+        <span class="btn-primary" style="pointer-events:none;font-size:.95rem;">Explore Agent Intel →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section id="cta">
+  <div class="container">
+    <div class="reveal">
+      <h2>Run it <span style="color:var(--green)">yourself</span></h2>
+      <p>Open source. One command to start the full stack. Docker Compose, pre-built images, production-ready.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;">
+        <a href="https://github.com/disciplinedware/swiftward-ai-trading-agents" class="btn-primary" target="_blank">View on GitHub</a>
+        <a href="#video" class="btn-ghost">Watch Demo</a>
+      </div>
+      <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:16px 24px;display:inline-block;font-family:monospace;font-size:.9rem;color:var(--green);">
+        git clone https://github.com/disciplinedware/swiftward-ai-trading-agents.git && cd swiftward-ai-trading-agents && cp .env.example .env && make up PROFILES=random
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="logo">swift<span>ward</span></div>
+  <p>© 2026 Swiftward Team. Built for <a href="https://lablab.ai/ai-hackathons/ai-trading-agents" style="color:var(--green);text-decoration:none;" target="_blank">AI Trading Agents Hackathon</a> (lablab.ai)</p>
+  <p style="font-size:.78rem;color:#374151;"><a href="https://github.com/disciplinedware/swiftward-ai-trading-agents" style="color:#64748b;text-decoration:none;" target="_blank">GitHub</a></p>
+</footer>
+
+<script>
+// ── AGENT ROW EXPAND ──
+document.querySelectorAll('.agent-row').forEach(row => {
+  row.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    const id = 'detail-' + row.dataset.agent;
+    const detail = document.getElementById(id);
+    row.classList.toggle('open');
+    detail.classList.toggle('open');
+  });
+});
+
+// ── PARTICLES ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W, H, dots = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+window.addEventListener('resize', resize); resize();
+for (let i = 0; i < 80; i++) {
+  dots.push({ x: Math.random()*W, y: Math.random()*H, r: Math.random()*1.5+.3,
+    vx: (Math.random()-.5)*.25, vy: (Math.random()-.5)*.25, o: Math.random()*.5+.1 });
+}
+function drawParticles() {
+  ctx.clearRect(0,0,W,H);
+  dots.forEach(d => {
+    d.x += d.vx; d.y += d.vy;
+    if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+    if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+    ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(0,255,136,${d.o})`; ctx.fill();
+  });
+  // connections
+  for (let i = 0; i < dots.length; i++) for (let j = i+1; j < dots.length; j++) {
+    const dx = dots[i].x-dots[j].x, dy = dots[i].y-dots[j].y;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    if (dist < 120) {
+      ctx.beginPath(); ctx.moveTo(dots[i].x,dots[i].y); ctx.lineTo(dots[j].x,dots[j].y);
+      ctx.strokeStyle = `rgba(0,255,136,${(1-dist/120)*.08})`; ctx.lineWidth = .5; ctx.stroke();
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── TICKER ──
+const pairs = [
+  {sym:'ETH',price:'$2,124',chg:'+2.4%'},{sym:'BTC',price:'$83,200',chg:'+1.1%'},
+  {sym:'NEAR',price:'$4.87',chg:'+5.2%'},{sym:'ZEC',price:'$31.40',chg:'-0.8%',neg:true},
+  {sym:'SOL',price:'$148.20',chg:'+3.1%'},{sym:'ADA',price:'$0.44',chg:'+1.7%'},
+  {sym:'ETH',price:'$2,124',chg:'+2.4%'},{sym:'BTC',price:'$83,200',chg:'+1.1%'},
+  {sym:'NEAR',price:'$4.87',chg:'+5.2%'},{sym:'ZEC',price:'$31.40',chg:'-0.8%',neg:true},
+  {sym:'SOL',price:'$148.20',chg:'+3.1%'},{sym:'ADA',price:'$0.44',chg:'+1.7%'},
+];
+const ticker = document.getElementById('tickerInner');
+ticker.innerHTML = pairs.map(p =>
+  `<div class="ticker-item"><span class="sym">${p.sym}/USD</span><span class="price">${p.price}</span><span class="chg${p.neg?' neg':''}">${p.chg}</span></div>`
+).join('');
+
+// ── SCROLL REVEAL ──
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+revealEls.forEach(el => observer.observe(el));
+
+// ── LIGHTBOX ──
+const lb = document.createElement('div');
+lb.id = 'lightbox';
+lb.innerHTML = '<img /><div class="lb-caption"></div>';
+document.body.appendChild(lb);
+const lbImg = lb.querySelector('img');
+const lbCap = lb.querySelector('.lb-caption');
+document.querySelectorAll('.screen-item img').forEach(img => {
+  img.addEventListener('click', e => {
+    e.stopPropagation();
+    lbImg.src = img.src;
+    const overlay = img.closest('.screen-item').querySelector('.overlay-text');
+    lbCap.textContent = overlay ? overlay.textContent : '';
+    lb.classList.add('active');
+  });
+});
+lb.addEventListener('click', () => lb.classList.remove('active'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') lb.classList.remove('active'); });
+</script>
+</body>
+</html>

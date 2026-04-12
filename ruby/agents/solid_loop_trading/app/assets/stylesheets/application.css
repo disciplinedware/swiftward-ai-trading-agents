@@ -1,0 +1,62 @@
+/*
+ * Dark theme overrides for form elements and pagination.
+ */
+
+select,
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  background-color: theme("colors.gray.800");
+  color: theme("colors.gray.100");
+  border-color: theme("colors.gray.600");
+}
+
+select:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="time"]:focus {
+  border-color: theme("colors.indigo.600");
+}
+
+textarea:focus {
+  border-color: theme("colors.indigo.600");
+}
+
+body {
+  background-color: theme("colors.gray.950");
+  color: theme("colors.gray.100");
+}
+
+a {
+  color: theme("colors.indigo.400");
+}
+a:hover {
+  color: theme("colors.indigo.300");
+}
+
+.pagination span,
+.pagination a,
+.pagination em {
+  color: theme("colors.gray.300");
+  background-color: theme("colors.gray.800");
+  border-color: theme("colors.gray.600");
+}
+
+.pagination a:hover {
+  background-color: theme("colors.gray.700");
+}
+
+.pagination .current,
+.pagination em.current {
+  background-color: theme("colors.indigo.600");
+  color: theme("colors.white");
+  border-color: theme("colors.indigo.600");
+}
+
+.pagination .disabled {
+  color: theme("colors.gray.600");
+}
+
+input[type="checkbox"] {
+  accent-color: theme("colors.indigo.600");
+}

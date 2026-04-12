@@ -1,0 +1,62 @@
+{
+  "id": "concentration-rejected",
+  "comment": "Buying 6K ETH-USD exceeds absolute 1000 cap (p96) and also triggers concentration >50% (p85).",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 6000,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "Adding to ETH position",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 24000,
+        "day_start_value": 50000,
+        "positions": "{\"ETH-USD\":6.667}"
+      },
+      "prices": {
+        "ETH-USD": 3000
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 96,
+      "response": {
+        "reason": "Order exceeds 1000 quote-currency cap (on-chain RiskRouter limit is 1,000)",
+        "tag": "risk_limit",
+        "max_value": 1000,
+        "max_pct": 50
+      },
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": []
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "concentration_limit",
+        "max_order_value_absolute"
+      ]
+    }
+  }
+}

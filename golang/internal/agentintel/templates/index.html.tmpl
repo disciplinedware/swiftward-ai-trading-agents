@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agent Intel - Hackathon Trading Agents Analysis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo"><span>Agent</span>Intel</div>
+      <div class="nav">
+        <a href="index.html">Audit</a>
+        <span class="generated">Generated {{.GeneratedAt}}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="summary">
+      <div class="card">
+        <div class="label">Agents</div>
+        <div class="value">{{.TotalAgents}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">{{.TotalTrades}}</div>
+      </div>
+      <div class="card">
+        <div class="label">Cohort Peak Exposure</div>
+        <div class="value">${{.TotalExposure}}</div>
+      </div>
+    </div>
+
+    <div class="section" style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+      <h3 style="margin:0 0 8px;color:rgba(255,200,50,0.9);font-size:.9rem;">Simulated PnL - How It Works</h3>
+      <p style="margin:0;color:var(--text-muted);font-size:.82rem;line-height:1.5;">
+        On-chain trade intents carry no execution price, so PnL is <strong>reconstructed from market data</strong>.
+        For each approved trade we take the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent timestamp (execution happens after the on-chain intent) and apply a <strong>0.26% taker fee</strong> (Kraken lowest tier).
+        Positions are tracked with FIFO lot accounting.
+        This is the best approximation possible from on-chain data alone, but it is not actual exchange PnL.
+        A few things to keep in mind:
+        buy-and-hold of a single volatile asset can show large PnL from <strong>market movement, not strategy</strong>;
+        some agents short-sell assets they don't hold (tracked as synthetic short positions);
+        unrealized PnL is marked to the last available candle;
+        trades without a matching on-chain approval are excluded (shown as UNKNOWN).
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>Leaderboard <span style="color:var(--text-muted);font-weight:400;font-size:.75em;">(simulated PnL - not real returns)</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Agent</th>
+            <th>Trades</th>
+            <th title="Peak capital committed = $10K - min(cash_after). Honest measure; reflects paper-leverage blowups.">Max Exposure</th>
+            <th>Realized PnL</th>
+            <th>Fees</th>
+            <th>Net PnL</th>
+            <th>Return %</th>
+            <th>W/L</th>
+            <th>Pairs</th>
+            <th>Attestations</th>
+            <th>Val Score</th>
+            <th>Rep Score</th>
+            <th title="Organizer formula: (val/2 + min(approved,10)*3 + vault*10 + activity*10) * 0.5 + rep * 0.5">Score</th>
+            <th>AI Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{range $i, $a := .Agents}}
+          <tr>
+            <td>{{add $i 1}}</td>
+            <td>{{$a.Agent.ID}}</td>
+            <td class="text"><a href="agents/{{$a.Agent.ID}}.html">{{$a.Agent.Name}}</a></td>
+            <td>{{$a.Summary.TotalTrades}}</td>
+            <td>{{fmtUSD $a.Summary.MaxExposure}}</td>
+            <td class="{{pnlClass $a.Summary.RealizedPnL}}">{{fmtUSD $a.Summary.RealizedPnL}}</td>
+            <td class="negative">{{fmtUSD $a.Summary.TotalFees}}</td>
+            <td class="{{pnlClass $a.Summary.NetPnL}}">{{fmtUSD $a.Summary.NetPnL}}</td>
+            <td class="{{pnlClass $a.Summary.ReturnPct}}">{{$a.Summary.ReturnPct}}%</td>
+            <td>{{$a.Summary.WinCount}}W/{{$a.Summary.LossCount}}L</td>
+            <td>{{len $a.Summary.PairsTraded}}</td>
+            <td>{{$a.Summary.AttestationCount}}</td>
+            <td>{{$a.Summary.AvgValidationScore}}</td>
+            <td>{{$a.Summary.AvgReputationScore}}</td>
+            <td title="val_half={{$a.Summary.HackathonValidation}} = val/2 + activity({{$a.Summary.HackathonActivityPts}}) + vault({{$a.Summary.HackathonVaultPts}}) + checkpoint({{$a.Summary.HackathonCheckpointPts}})"><strong>{{$a.Summary.HackathonScore}}</strong></td>
+            <td>{{if eq $a.Summary.AIVerdict "Gamer"}}<span class="badge" style="background:rgba(255,68,102,0.15);color:var(--red)">Gamer</span>{{else if eq $a.Summary.AIVerdict "Real Trader"}}<span class="badge" style="background:rgba(0,255,136,0.15);color:var(--green)">Real Trader</span>{{else if eq $a.Summary.AIVerdict "Inactive"}}<span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Inactive</span>{{else if eq $a.Summary.AIVerdict "Test"}}<span class="badge" style="background:rgba(100,116,139,0.2);color:var(--text-muted)">Test</span>{{else if $a.Summary.AIVerdict}}<span class="muted">{{$a.Summary.AIVerdict}}</span>{{end}}</td>
+          </tr>
+          {{end}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

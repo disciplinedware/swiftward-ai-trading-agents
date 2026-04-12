@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: agent-gamma
+  main:
+    web-application-type: none   # headless agent — no HTTP server needed
+  threads:
+    virtual:
+      enabled: true              # Java 21 virtual threads for all blocking I/O
+
+agent:
+  id: ${AGENT_ID:agent-gamma-java}
+  api-key: ${API_KEY:sw_live_gamma_java}
+  tick-interval-ms: ${TICK_INTERVAL_MS:900000}   # 15 minutes
+
+  mcp:
+    trading-url: ${TRADING_MCP_URL:http://localhost:8095/mcp/trading}
+    market-url:  ${MARKET_MCP_URL:http://localhost:8095/mcp/market}
+    news-url:    ${NEWS_MCP_URL:http://localhost:8095/mcp/news}
+
+  strategy:
+    assets:
+      - ETH-USDC
+      - BTC-USDC
+    rsi-oversold: 35          # RSI below this → fear, buy signal
+    rsi-overbought: 65        # RSI above this → greed, sell signal
+    news-sentiment-floor: -0.3  # skip LONG if news score below this threshold
+    cooldown-minutes: 240     # minimum minutes between trades on same asset
+    trade-value-usd: 500.0    # USD size per order
+
+logging:
+  level:
+    root: INFO
+    com.trading: DEBUG

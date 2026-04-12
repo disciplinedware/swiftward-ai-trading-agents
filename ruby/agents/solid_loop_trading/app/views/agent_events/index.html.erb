@@ -1,0 +1,81 @@
+<div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100">Event Logs</h1>
+      <p class="mt-2 text-sm text-gray-300">Detailed traces of LLM completions and tool executions.</p>
+    </div>
+  </div>
+
+  <div class="mt-8 space-y-6">
+    <% @agent_events.each do |event| %>
+      <div class="bg-gray-900 shadow sm:rounded-lg overflow-hidden border border-gray-700">
+        <div class="px-4 py-5 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+               <span class="inline-flex items-center rounded-md bg-gray-800/50 px-2 py-1 text-xs font-medium text-gray-300 ring-1 ring-inset ring-gray-700/30">
+                 ID: <%= event.id %>
+               </span>
+               <span class="inline-flex items-center rounded-md bg-purple-950/50 px-2 py-1 text-xs font-medium text-purple-300 ring-1 ring-inset ring-purple-700/30">
+                 <%= event.name.humanize %>
+               </span>
+              <span class="text-sm text-gray-400"><%= event.created_at.to_fs(:db) %></span>
+              <% if event.duration %>
+                <span class="inline-flex items-center rounded-full bg-blue-950/50 px-2 py-0.5 text-xs font-medium text-blue-300 ring-1 ring-inset ring-blue-700/30">
+                  <%= event.duration.round(2) %>s
+                </span>
+              <% end %>
+            </div>
+            <div class="flex items-center space-x-3">
+              <% if event.name == "mcp_tool_call" && event.loop&.subject&.is_a?(AgentRun) %>
+                <%= link_to mcp_agent_run_path(event.loop.subject, event_id: event.id), class: "inline-flex items-center rounded-md bg-gray-800 px-2 py-1 text-xs font-semibold text-indigo-400 shadow-sm ring-1 ring-inset ring-indigo-500 hover:bg-indigo-950/50" do %>
+                  <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                  Replay
+                <% end %>
+              <% end %>
+              <%= link_to "View JSON", agent_event_path(event), class: "text-sm text-indigo-400 hover:text-indigo-300" %>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-2">
+              <h4 class="font-bold border-b border-gray-600 pb-1 text-gray-200">Request Data</h4>
+              <div class="bg-gray-800/50 p-2 rounded max-h-60 overflow-y-auto">
+                <pre class="text-xs font-mono text-gray-200 whitespace-pre-wrap break-words"><%= JSON.pretty_generate(event.request_data || {}) rescue "N/A" %></pre>
+              </div>
+            </div>
+            <div class="space-y-2">
+              <h4 class="font-bold border-b border-gray-600 pb-1 text-gray-200">Response Data</h4>
+              <div class="bg-gray-800/50 p-2 rounded max-h-60 overflow-y-auto">
+                <pre class="text-xs font-mono text-gray-200 whitespace-pre-wrap break-words"><%= JSON.pretty_generate(event.response_data || {}) rescue "N/A" %></pre>
+              </div>
+            </div>
+          </div>
+
+          <% if event.eventable %>
+            <div class="mt-4 pb-2 border-b border-gray-700">
+              <h4 class="text-xs font-bold mb-1 text-gray-300">Context (<%= event.eventable_type %> #<%= event.eventable_id %>)</h4>
+              <div class="text-xs text-gray-400 truncate bg-gray-800/50 p-1.5 rounded border border-gray-700">
+                <% if event.eventable.respond_to?(:content) %>
+                  <%= event.eventable.content.to_s.truncate(150) %>
+                <% elsif event.eventable.respond_to?(:title) %>
+                  <%= event.eventable.title.to_s.truncate(150) %>
+                <% else %>
+                  <%= event.eventable.to_global_id.to_s rescue 'N/A' %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if event.log.present? %>
+            <div class="mt-4">
+              <h4 class="text-xs font-bold border-b border-gray-600 pb-1 text-gray-200 mb-2">Internal Log</h4>
+              <div class="bg-gray-900 text-green-400 p-2 rounded text-[10px] font-mono whitespace-pre-wrap max-h-[500px] overflow-y-auto">
+                <%= event.log %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

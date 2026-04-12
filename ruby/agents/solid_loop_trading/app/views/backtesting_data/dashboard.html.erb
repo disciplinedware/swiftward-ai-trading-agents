@@ -1,0 +1,17 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-100">Backtesting Data</h1>
+      <p class="mt-2 text-sm text-gray-400">Overview of news and candles data available for backtesting.</p>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+    <%= render "news_card" %>
+    <%= render "candles_card" %>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+    <%= render "actions_card" %>
+  </div>
+</div>

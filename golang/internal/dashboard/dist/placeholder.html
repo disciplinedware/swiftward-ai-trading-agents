@@ -1,0 +1,13 @@
+<!--
+  Placeholder so //go:embed all:dist in dashboard.go always has at least one
+  file to embed, even on fresh checkouts where the TypeScript dashboard has
+  not been built yet. Required for agent-random and other roles that build
+  via golang/Dockerfile (no UI build stage).
+
+  The real dashboard assets (index.html, assets/, favicon.svg) are produced
+  by `make typescript-build` and overwrite this directory at build time;
+  `Dockerfile.trading-server` runs that step in a multi-stage build.
+
+  .gitignore has an explicit allow for this file:
+      !golang/internal/dashboard/dist/placeholder.html
+-->

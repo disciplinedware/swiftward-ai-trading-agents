@@ -1,0 +1,7 @@
+code: lifecycle
+description: "Agent Lifecycle - monitors agent health and alerts on critical conditions"
+deployment:
+  active:
+    - arm: "A"
+      path: "../rulesets/lifecycle/v1"
+      traffic_percent: 100

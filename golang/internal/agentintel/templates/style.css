@@ -1,0 +1,172 @@
+:root {
+  --green: #00ff88;
+  --green-dim: #00cc6a;
+  --red: #ff4466;
+  --red-dim: #cc3355;
+  --blue: #4488ff;
+  --yellow: #ffcc00;
+  --bg: #0a0f1a;
+  --bg2: #111827;
+  --bg3: #1f2937;
+  --border: #2d3748;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color: var(--green); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+/* Header */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+}
+header .container {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.logo {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 20px; font-weight: 700;
+}
+.logo span { color: var(--green); }
+.nav a { color: var(--text-dim); margin-left: 24px; font-size: 14px; }
+.nav a:hover { color: var(--text); }
+.generated { color: var(--text-muted); font-size: 12px; }
+
+/* Summary cards */
+.summary {
+  display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap;
+}
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 24px;
+  flex: 1; min-width: 180px;
+}
+.card .label { color: var(--text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+.card .value { font-family: 'Space Grotesk', monospace; font-size: 24px; font-weight: 600; margin-top: 4px; }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0;
+}
+th {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--text-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'Space Grotesk', monospace;
+  white-space: nowrap;
+}
+tr:hover { background: var(--bg2); }
+td.text { font-family: 'Inter', sans-serif; }
+
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+.muted { color: var(--text-muted); }
+.flag { color: var(--yellow); font-size: 11px; }
+
+/* Agent page sections */
+.section { margin: 32px 0; }
+.section h2 {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* Agent header */
+.agent-header {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.agent-header h1 {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 28px;
+}
+.agent-header h1 span { color: var(--text-muted); font-size: 16px; font-weight: 400; }
+.agent-meta { display: flex; gap: 32px; margin-top: 12px; flex-wrap: wrap; }
+.agent-meta .item { color: var(--text-dim); font-size: 13px; }
+.agent-meta .item strong { color: var(--text); }
+
+/* Gaming flags */
+.gaming-flags {
+  display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;
+}
+.gaming-flag {
+  background: rgba(255, 204, 0, 0.1);
+  border: 1px solid var(--yellow);
+  color: var(--yellow);
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: 'Space Grotesk', monospace;
+}
+
+/* LLM Analysis */
+.analysis {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  color: var(--text-dim);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container { padding: 0 12px; }
+  table { font-size: 11px; }
+  td, th { padding: 4px 6px; }
+  .summary { flex-direction: column; }
+  .agent-meta { flex-direction: column; gap: 8px; }
+}
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.badge-approved { background: rgba(0,255,136,0.15); color: var(--green); }
+.badge-rejected { background: rgba(255,68,102,0.15); color: var(--red); }
+.badge-short { background: rgba(68,136,255,0.15); color: var(--blue); }
+.action-buy { color: var(--green); font-weight: 600; }
+.action-sell { color: var(--red); font-weight: 600; }
+.action-other { color: var(--yellow); }

@@ -1,0 +1,160 @@
+# LLM Safety Guardrails for Trading Agent Reasoning
+#
+# Defense-in-depth injection scanning on tool_result content blocks.
+# Primary injection defense is at MCP Gateway (:8095) where external data
+# enters BEFORE Claude Code wraps it. This layer is a second check.
+#
+# WHY NOT scan user text blocks (type:"text" in role:"user"):
+# Claude Code injects trusted instructions into role:"user" type:"text"
+# blocks as <system-reminder> wrapped content. These contain directive
+# language ("you MUST", "OVERRIDE") that is indistinguishable from prompt
+# injection. The <system-reminder> tag is content, not structure - an
+# attacker can fake it. No LLM gateway can reliably scan user messages
+# for injection when Claude Code is the client.
+#
+# WHAT WE CAN scan: type:"tool_result" blocks in user messages. These are
+# structurally distinct from type:"text" blocks. Claude Code smooshes
+# short system-reminder text into tool_results (concatenated strings),
+# which may cause occasional FPs, but the major FP source (full CLAUDE.md
+# and skills list) lives in type:"text" blocks and is skipped.
+#
+# Signal pipeline:
+#   1. Extract tool_result text from the last user message
+#   2. Skip if empty (no classifier calls on empty text)
+#   3. Normalize (NFKC, strip invisible chars, homoglyphs)
+#   4. Three parallel detectors:
+#      a) Lexical patterns (regex, near-zero FP)
+#      b) Gate (injection vocabulary presence check)
+#      c) PG2 (Llama Prompt Guard 2, DeBERTa 86M)
+#      d) BERT (multilingual injection detector)
+#   5. Block if patterns match OR (gate + any ML model)
+
+dsl_version: 2
+
+default_effects:
+  verdict: approved
+
+state_models:
+  agent:
+    key: "{{ event.entity_id }}"
+    counters:
+      injection_detections:
+
+constants:
+  injection_threshold: 0.7
+
+signals:
+  # Extract tool_result content from the last user message.
+  # include_user:false skips type:"text" blocks (system-reminders + operator text).
+  # include_tool_results:true extracts type:"tool_result" blocks (MCP tool output).
+  injection_scan_request_surface:
+    udf: llm/messages_extract_text
+    params:
+      request: "{{ event.data.request }}"
+      include_system: false
+      include_user: false
+      include_assistant: false
+      include_tool_results: true
+      include_tool_calls: false
+      last_only: true
+      max_text_length: 10000
+    on_error:
+      text: ""
+      segments: []
+
+  # Normalize text - strip Unicode evasion, invisible chars, bidi, homoglyphs.
+  # Only runs when there is text to scan (pure function, cheap on empty input).
+  inject_normalize:
+    udf: guardrails/normalize
+    params:
+      text: "{{ signals.injection_scan_request_surface.text }}"
+    on_error:
+      text: ""
+
+  # Lexical patterns (pure, no I/O) - runs on all inputs including empty.
+  inject_patterns:
+    udf: guardrails/injection_patterns
+    params:
+      text: "{{ signals.inject_normalize.text }}"
+    on_error:
+      matched: false
+      matched_categories: []
+      matches: []
+
+  # Gate - injection vocabulary presence check (pure, no I/O).
+  inject_gate:
+    udf: guardrails/injection_gate
+    params:
+      text: "{{ signals.inject_normalize.text }}"
+    on_error:
+      matched: false
+
+  # Prompt Guard 2 - primary ML detector (DeBERTa, 86M params).
+  # Empty text returns clean immediately (no HTTP call) - handled by the UDF.
+  inject_pg2:
+    udf: classifier/text
+    params:
+      endpoint: "{{ env.CLASSIFIERS_ENDPOINT }}"
+      model: "meta-llama/Llama-Prompt-Guard-2-86M"
+      text: "{{ signals.inject_normalize.text }}"
+      suspicious_labels: ["LABEL_1"]
+      threshold: "{{ constants.injection_threshold }}"
+    on_error:
+      flagged: false
+      top_label: ""
+      top_score: 0.0
+      scores: {}
+
+  # BERT injection detector - second vote (multilingual).
+  # Empty text returns clean immediately (no HTTP call) - handled by the UDF.
+  inject_bert:
+    udf: classifier/text
+    params:
+      endpoint: "{{ env.CLASSIFIERS_ENDPOINT }}"
+      model: "devndeploy/bert-prompt-injection-detector"
+      text: "{{ signals.inject_normalize.text }}"
+      suspicious_labels: ["INJECTION"]
+      threshold: "{{ constants.injection_threshold }}"
+    on_error:
+      flagged: false
+      top_label: ""
+      top_score: 0.0
+      scores: {}
+
+rules:
+  # Block prompt injection in tool_result content.
+  # Tier 1 - strict patterns (near-zero FP): block immediately.
+  # Tier 2 - gate + any ML model: gate filters ML false positives.
+  # Guard: skip entirely when no text was extracted (no tool_results in last turn).
+  block_prompt_injection:
+    enabled: true
+    condition: >
+      event.type == "llm.input" &&
+      signals.injection_scan_request_surface.text != "" && (
+        signals.inject_patterns.matched == true ||
+        (signals.inject_gate.matched == true && (
+          signals.inject_pg2.flagged == true ||
+          signals.inject_bert.flagged == true
+        ))
+      )
+    effects:
+      verdict: rejected
+      priority: 200
+      state_changes:
+        agent:
+          change_counters:
+            injection_detections: 1
+      response:
+        reason: "Prompt injection detected in tool_result content. This may indicate manipulated data from an MCP tool. Do not retry."
+        tag: "llm_injection"
+        injection_detected: true
+        injection_score: "{{ signals.inject_pg2.top_score }}"
+      actions:
+        - action: http/request
+          params:
+            method: "POST"
+            url: "https://api.telegram.org/bot{{ env.TELEGRAM_BOT_TOKEN }}/sendMessage"
+            payload:
+              chat_id: "{{ env.TELEGRAM_CHAT_ID }}"
+              message_thread_id: "{{ env.TELEGRAM_SWIFTWARD_TOPIC_ID }}"
+              text: "[LLM INJECTION] Agent: {{ event.entity_id }}\nPG2 score: {{ signals.inject_pg2.top_score }}\nDetected in tool_result at LLM Gateway (defense-in-depth). Request blocked."

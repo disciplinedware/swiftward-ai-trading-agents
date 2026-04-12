@@ -1,0 +1,79 @@
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+    <div class="sm:flex sm:items-center">
+      <div class="sm:flex-auto">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-100">Scenarios</h1>
+        <p class="mt-2 text-sm text-gray-300">Manage trading scenarios for your agents.</p>
+      </div>
+      <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <%= link_to "New Scenario", new_trading_scenario_path, class: "block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" %>
+      </div>
+    </div>
+
+    <%= form_with url: new_agent_batch_path, method: :get, local: true do |f| %>
+      <div class="mt-4 flex justify-end">
+        <%= f.submit "Create Batch", class: "rounded-md bg-green-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" %>
+      </div>
+
+      <div class="mt-8 flow-root">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <div class="overflow-hidden shadow ring-1 ring-gray-700 sm:rounded-lg">
+              <table class="min-w-full divide-y divide-gray-700">
+                <thead class="bg-gray-800/50">
+                  <tr>
+                    <th scope="col" class="relative px-7 sm:w-12 sm:px-6">
+                      <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-600 text-indigo-600 focus:ring-indigo-600" onclick="toggleAll(this)">
+                    </th>
+                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-100 sm:pl-6">Name</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Params</th>
+                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-100">Runs</th>
+                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                      <span class="sr-only">Edit</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-700 bg-gray-900">
+                  <% @trading_scenarios.each do |task| %>
+                    <tr>
+                      <td class="relative px-7 sm:w-12 sm:px-6">
+                        <input type="checkbox" name="agent_batch[trading_scenario_ids][]" value="<%= task.id %>" class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-600 text-indigo-600 focus:ring-indigo-600 task-checkbox" checked>
+                      </td>
+                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-100 sm:pl-6">
+                        <%= link_to task.name, task, class: "text-indigo-400 hover:text-indigo-300" %>
+                      </td>
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                        <% if task.category == "trading" && task.start_at.present? %>
+                          <span class="font-medium"><%= task.start_at.strftime("%Y-%m-%d %H:%M") %></span> — 
+                          <span class="font-medium"><%= task.end_at.strftime("%Y-%m-%d %H:%M") %></span>
+                        <% elsif task.filename.present? %>
+                          <span class="text-xs text-gray-500">Filename:</span> <%= task.filename %>
+                        <% else %>
+                          <span class="text-gray-600">—</span>
+                        <% end %>
+                      </td>
+                      <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-400">
+                        <%= link_to task.conversations_count, agent_runs_path(trading_scenario_id: task.id), class: "text-indigo-400 hover:text-indigo-300" %>
+                      </td>
+                      <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                        <%= link_to "Edit", edit_trading_scenario_path(task), class: "text-indigo-400 hover:text-indigo-300" %>
+                         <%= link_to "Delete", task, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600 hover:text-red-900 ml-4" %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <script>
+    function toggleAll(source) {
+      checkboxes = document.getElementsByClassName('task-checkbox');
+      for(var i=0, n=checkboxes.length;i<n;i++) {
+        checkboxes[i].checked = source.checked;
+      }
+    }
+  </script>

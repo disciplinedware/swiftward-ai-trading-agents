@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS decision_traces;
+DROP TABLE IF EXISTS trades;
+DROP TABLE IF EXISTS agent_state;

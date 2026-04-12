@@ -1,0 +1,98 @@
+chain:
+  chain_id: 11155111
+  rpc_url: https://rpc.sepolia.org
+  risk_router_address: "0x0000000000000000000000000000000000000001"
+
+assets:
+  tracked:
+    - BTC
+    - ETH
+  stablecoin: USDC
+
+llm:
+  base_url: http://localhost:11434/v1
+  model: llama3.2
+  api_key: ollama
+  max_tokens: 1000
+  retries: 3
+
+news_llm:
+  base_url: http://localhost:11434/v1
+  model: llama3.2
+  api_key: ollama
+  max_tokens: 2000
+
+trading:
+  mode: paper
+  starting_balance_usdc: 10000
+  max_concurrent_positions: 2
+  database_url: postgresql+asyncpg://user:password@localhost:5432/trading_agent
+
+trigger:
+  cooldown_minutes: 30
+  price_spike_threshold_pct: 3.0
+  fear_greed_low: 20
+  fear_greed_high: 80
+
+brain:
+  implementation: stub
+  stage1:
+    risk_on_threshold: 0.6
+    risk_off_threshold: 0.4
+    btc_trend_clamp_pct: 7.0
+    ema_steepness: 150.0
+    funding_peak_rate: 0.0001
+    funding_extreme_rate: 0.0005
+    macro_penalty_factor: 0.85
+    weights:
+      ema: 0.30
+      fear_greed: 0.15
+      btc_trend: 0.25
+      funding: 0.20
+      volatility: 0.10
+  stage2:
+    weights:
+      momentum: 0.40
+      relative_strength: 0.35
+      volume: 0.25
+    held_asset_bonus: 0.05
+    max_selections: 2
+  stage3:
+    half_kelly_fraction: 0.09
+    min_reward_risk_ratio: 2.0
+    regime_multipliers:
+      STRONG_UPTREND: 1.0
+      BREAKOUT: 0.75
+      RANGING: 0.5
+      WEAK_MIXED: 0.25
+    regime_sl_tp:
+      STRONG_UPTREND: {sl_mult: 2.0, tp_mult: 4.0}
+      BREAKOUT:       {sl_mult: 1.5, tp_mult: 4.5}
+      RANGING:        {sl_mult: 1.5, tp_mult: 3.0}
+    WEAK_MIXED:     {sl_mult: 1.5, tp_mult: 3.0}
+
+mcp_servers:
+  price_feed_url: http://localhost:8001
+  news_url: http://localhost:8002
+  onchain_data_url: http://localhost:8003
+  fear_greed_url: http://localhost:8004
+  trading_url: http://localhost:8005
+
+erc8004:
+  identity_registry_address: "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+  validation_registry_address: "0x0000000000000000000000000000000000000002"
+  agent_wallet_private_key: "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef"
+  ipfs_provider: mock
+  ipfs_api_key: test-key
+
+external_apis:
+  binance_api_key: ""
+  coinglass_api_key: test-coinglass-key
+  cryptopanic_api_key: test-cryptopanic-key
+
+cache:
+  redis_url: redis://localhost:6379/0
+
+logging:
+  level: INFO
+  format: console

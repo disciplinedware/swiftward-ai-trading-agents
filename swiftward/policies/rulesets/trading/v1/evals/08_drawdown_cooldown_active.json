@@ -1,0 +1,89 @@
+{
+  "id": "loss-streak-pause",
+  "comment": "3 consecutive losses (state counter) - buy blocked, counter reset to 0, pause flag set for 1h with exact expiry. ingested_at=14:37 -> paused_until=15:37.",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "ingested_at": "2026-04-02T14:37:00Z",
+    "data": {
+      "order": {
+        "pair": "ETH-USD",
+        "side": "buy",
+        "value": 1000,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "Market recovering, time to buy",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "initial_state": {
+    "agent": {
+      "counters": {
+        "loss_streak": 3
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    },
+    "time/timestamp_add": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 100,
+      "response": {
+        "reason": "3 consecutive losses - new positions paused for 1h (exits still allowed)",
+        "tag": "loss_streak",
+        "consecutive_losses": 3,
+        "retry_after": "2026-04-02T15:37:00Z"
+      },
+      "state_changes": {
+        "agent": {
+          "set_counters": {
+            "loss_streak": 0,
+            "loss_streak_paused": 1
+          },
+          "set_metadata": {
+            "loss_streak_paused_until": "2026-04-02T15:37:00Z"
+          },
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": [
+        {
+          "action": "http/request",
+          "params": {
+            "method": "POST",
+            "url": "https://api.telegram.org/bot/sendMessage",
+            "payload": {
+              "chat_id": "",
+              "message_thread_id": "",
+              "text": "[LOSS STREAK] Agent: agent-42\n3 consecutive losses. New positions paused for 1h until 2026-04-02T15:37:00Z. Exits still allowed."
+            }
+          }
+        }
+      ]
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "loss_streak_pause"
+      ]
+    }
+  }
+}

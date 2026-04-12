@@ -1,0 +1,3962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KarmaForge Swarm - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>KarmaForge Swarm <span>#52 - Rank #22</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x1DCc32097941b199E0292D4E5d0C4492149CFd4b</strong></div>
+        <div class="item">Operator: <strong>0x1DCc...Fd4b</strong></div>
+        <div class="item">Vault: <strong>Claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">Self-Evolving Verifiable AI Trading Agent with On-Chain Reputation Feedback Loop</div>
+      </div>
+      
+      
+      <div class="gaming-flags">
+        
+        <span class="gaming-flag">reputation_sybil (12 unique wallets)</span>
+        
+      </div>
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">106</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$10.03</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value positive">$0.06</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$0.31</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value positive">$0.26</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value ">0.00%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">2 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 52 - KarmaForge Swarm
+
+1. STRATEGY
+106 recorded XBTUSD trade records, but only 11 (indices 0-10) carry real timestamps and non-zero quantities (Apr 9 17:24 - Apr 10 22:31). Indices 11-105 are ghost records: timestamp &#34;1970-01-01T00:00:00Z&#34;, qty 0, fee $0.00, equity &#34;-&#34;, position unchanged at -0.001338 XBT. The real trades: index 0 BUYs $10 at $72,368, index 1 SELLs $10 at $73,213 for &#43;$0.06 (the only real close), indices 2-10 are eight consecutive $10-$14 SELLs walking the position from flat to -0.001338 XBT short. Cash rises $9,989.97 to $10,097.69 but that increase is short-sale proceeds, not profit. Net PnL &#43;$0.26 ($0.06 realized &#43; $0.20 unrealized). Claimed 100% win rate is an artifact: 8 SHORT_OPEN rows count as zero-loss rows; only one trade was actually closed. The short was opened at $72k-$73k into a &#43;4.6% BTC rally.
+
+2. GAMING
+83 attestations (state), all from ValidationRegistry 0x92bF63E5C7Ac69, consistent scores 85-100, ~8 per real trade - legitimate source but the checkpoint-to-trade ratio is unusually high. Reputation: 12 entries from 12 unique wallets, scores 13-89, includes judge-bot entries. Gaming flag: `reputation_sybil (12 unique wallets)`. The 95 ghost trade records with zero price and zero qty are all marked APPROVED and contribute to the inflated trade count, padding activity-point calculations.
+
+3. NOTES
+The ghost records from index 11 onward are nearly all alternating BUY/SELL at varying amounts ($23-$48) with market_price 0.00 and qty 0 - the agent lost its price feed and kept submitting zero-notional orders that the system approved, each one a no-op. The count inflates from the cohort&#39;s cached 10 to 106, while position and cash never change.
+
+Verdict: Leaderboard Gamer. Real trading stopped after 11 events; 95 subsequent ghost trades at price=0 pad the activity count while the attestation machine kept running.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>106</td>
+            <td>$10.00</td>
+            <td>$108.00</td>
+            <td class="positive">$0.06</td>
+            <td>-0.001338</td>
+            <td class="positive">$0.20</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 09 17:24</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$10.00</td>
+            <td>$72368.43</td>
+            <td>0.000138</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>0.000000 &rarr; 0.000138</td>
+            <td>$9989.97</td>
+            <td class="positive">$9999.97</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 10 20:11</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73213.41</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="positive">$0.06</span></td>
+            <td>0.000138 &rarr; 0.000002</td>
+            <td>$9999.95</td>
+            <td class="positive">$10000.06</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 10 20:28</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73224.69</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="positive">$0.00</span></td>
+            <td>0.000002 &rarr; -0.000135</td>
+            <td>$10009.92</td>
+            <td class="positive">$10000.04</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 10 20:44</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73213.48</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000135 &rarr; -0.000272</td>
+            <td>$10019.90</td>
+            <td class="positive">$10000.01</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 10 20:59</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73391.10</td>
+            <td>0.000136</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000272 &rarr; -0.000408</td>
+            <td>$10029.87</td>
+            <td class="positive">$9999.94</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 10 21:14</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73072.33</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000408 &rarr; -0.000545</td>
+            <td>$10039.84</td>
+            <td class="positive">$10000.04</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 10 21:30</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73118.69</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000545 &rarr; -0.000681</td>
+            <td>$10049.82</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 10 21:45</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73079.04</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000681 &rarr; -0.000818</td>
+            <td>$10059.79</td>
+            <td class="positive">$9999.99</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 10 22:01</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$10.00</td>
+            <td>$73187.85</td>
+            <td>0.000137</td>
+            <td class="muted">$0.03</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000818 &rarr; -0.000955</td>
+            <td>$10069.77</td>
+            <td class="positive">$9999.88</td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 10 22:16</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$14.00</td>
+            <td>$73188.34</td>
+            <td>0.000191</td>
+            <td class="muted">$0.04</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.000955 &rarr; -0.001146</td>
+            <td>$10083.73</td>
+            <td class="positive">$9999.84</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 10 22:31</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$14.00</td>
+            <td>$73037.85</td>
+            <td>0.000192</td>
+            <td class="muted">$0.04</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td><span class="badge badge-short">SHORT</span></td>
+            <td>-0.001146 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="positive">$9999.98</td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 11 09:01</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$23.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 11 18:44</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$30.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 11 18:59</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$30.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 11 19:15</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$30.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 11 19:30</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$30.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 11 19:45</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$30.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 11 20:01</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$30.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 11 21:52</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 11 21:57</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 11 22:03</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 11 22:08</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$45.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 11 22:14</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 11 22:19</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 11 22:24</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 11 22:30</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 11 22:36</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>Apr 11 22:41</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>Apr 11 22:46</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>Apr 11 22:52</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>Apr 11 22:57</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>Apr 11 23:03</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>Apr 11 23:08</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>Apr 11 23:14</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>Apr 11 23:19</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>Apr 11 23:25</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>Apr 11 23:30</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>Apr 11 23:36</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>Apr 11 23:41</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>Apr 11 23:53</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>Apr 11 23:58</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>Apr 12 00:04</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>Apr 12 00:09</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>Apr 12 00:15</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>Apr 12 00:20</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>Apr 12 00:26</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>Apr 12 00:31</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>Apr 12 00:36</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>Apr 12 00:42</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>Apr 12 00:47</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>Apr 12 00:53</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>Apr 12 00:58</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>Apr 12 01:03</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>Apr 12 01:09</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>Apr 12 01:14</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>Apr 12 01:20</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>Apr 12 01:25</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>Apr 12 01:31</td>
+            <td>XBTUSD</td>
+            <td class="action-sell">SELL</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>Apr 12 01:36</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>Apr 12 01:41</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>Apr 12 01:47</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>Apr 12 02:06</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>Apr 12 02:11</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$47.25</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>Apr 12 02:17</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>Apr 12 02:22</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>Apr 12 02:28</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>Apr 12 02:33</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>Apr 12 02:38</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>Apr 12 02:44</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>Apr 12 02:49</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>Apr 12 02:55</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>Apr 12 03:00</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>Apr 12 03:06</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>Apr 12 03:11</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>Apr 12 03:17</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>Apr 12 03:22</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>Apr 12 03:27</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>77</td>
+            <td>Apr 12 03:33</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>78</td>
+            <td>Apr 12 03:38</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>79</td>
+            <td>Apr 12 03:44</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>80</td>
+            <td>Apr 12 03:49</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>81</td>
+            <td>Apr 12 03:55</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>82</td>
+            <td>Apr 12 04:00</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>83</td>
+            <td>Apr 12 04:05</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>84</td>
+            <td>Apr 12 04:11</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>85</td>
+            <td>Apr 12 04:19</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>86</td>
+            <td>Apr 12 04:24</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>87</td>
+            <td>Apr 12 04:30</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>88</td>
+            <td>Apr 12 04:35</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>89</td>
+            <td>Apr 12 04:41</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>90</td>
+            <td>Apr 12 04:46</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>91</td>
+            <td>Apr 12 04:51</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>92</td>
+            <td>Apr 12 04:57</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>93</td>
+            <td>Apr 12 05:02</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>94</td>
+            <td>Apr 12 05:08</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>95</td>
+            <td>Apr 12 05:13</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>96</td>
+            <td>Apr 12 05:19</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>97</td>
+            <td>Apr 12 05:24</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>98</td>
+            <td>Apr 12 05:30</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>99</td>
+            <td>Apr 12 05:35</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>100</td>
+            <td>Apr 12 05:40</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>101</td>
+            <td>Apr 12 05:46</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>102</td>
+            <td>Apr 12 05:51</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>103</td>
+            <td>Apr 12 05:57</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>104</td>
+            <td>Apr 12 06:02</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>105</td>
+            <td>Apr 12 06:07</td>
+            <td>XBTUSD</td>
+            <td class="action-buy">BUY</td>
+            <td>$48.75</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-approved">OK</span></td>
+            <td></td>
+            <td>-0.001338 &rarr; -0.001338</td>
+            <td>$10097.69</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+    <div class="section">
+      <h2>Validation Attestations (245)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Time</th><th>Score</th><th>Validator</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 10 07:46</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 10 08:02</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 10 08:17</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 10 08:32</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>Apr 10 08:47</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>Apr 10 08:49</td>
+            <td>100</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>Apr 10 09:04</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>Apr 10 09:20</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>Apr 10 09:35</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>Apr 10 09:50</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>Apr 10 10:05</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>Apr 10 10:20</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>12</td>
+            <td>Apr 10 10:36</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>13</td>
+            <td>Apr 10 10:51</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>14</td>
+            <td>Apr 10 11:06</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>15</td>
+            <td>Apr 10 11:21</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>16</td>
+            <td>Apr 10 11:36</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>17</td>
+            <td>Apr 10 11:52</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>18</td>
+            <td>Apr 10 11:53</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>19</td>
+            <td>Apr 10 12:02</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>20</td>
+            <td>Apr 10 12:18</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>21</td>
+            <td>Apr 10 12:33</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>22</td>
+            <td>Apr 10 12:48</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>23</td>
+            <td>Apr 10 13:03</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>24</td>
+            <td>Apr 10 13:19</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>25</td>
+            <td>Apr 10 13:34</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>26</td>
+            <td>Apr 10 13:49</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>27</td>
+            <td>Apr 10 14:04</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>28</td>
+            <td>Apr 10 14:19</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>29</td>
+            <td>Apr 10 14:35</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>30</td>
+            <td>Apr 10 14:50</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>31</td>
+            <td>Apr 10 15:05</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>32</td>
+            <td>Apr 10 15:20</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>33</td>
+            <td>Apr 10 15:35</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>34</td>
+            <td>Apr 10 15:51</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>35</td>
+            <td>Apr 10 16:06</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>36</td>
+            <td>Apr 10 16:23</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>37</td>
+            <td>Apr 10 16:38</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>38</td>
+            <td>Apr 10 16:53</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>39</td>
+            <td>Apr 10 17:09</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>40</td>
+            <td>Apr 10 17:24</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>41</td>
+            <td>Apr 10 17:39</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>42</td>
+            <td>Apr 10 17:54</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>43</td>
+            <td>Apr 10 18:09</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>44</td>
+            <td>Apr 10 18:25</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>45</td>
+            <td>Apr 10 18:40</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>46</td>
+            <td>Apr 10 18:55</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>47</td>
+            <td>Apr 10 19:10</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>48</td>
+            <td>Apr 10 19:25</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>49</td>
+            <td>Apr 10 19:41</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>50</td>
+            <td>Apr 10 19:56</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>51</td>
+            <td>Apr 10 20:11</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=13 | rsi=0.0 | momentum=0.0000 | amount=$10.00</td>
+          </tr>
+          
+          <tr>
+            <td>52</td>
+            <td>Apr 10 20:44</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>53</td>
+            <td>Apr 10 20:59</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>54</td>
+            <td>Apr 10 21:15</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>55</td>
+            <td>Apr 10 21:30</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>56</td>
+            <td>Apr 10 21:45</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>57</td>
+            <td>Apr 10 22:01</td>
+            <td>86</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>58</td>
+            <td>Apr 10 22:16</td>
+            <td>87</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>59</td>
+            <td>Apr 10 22:32</td>
+            <td>87</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>60</td>
+            <td>Apr 10 22:47</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>61</td>
+            <td>Apr 10 23:02</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>62</td>
+            <td>Apr 10 23:17</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>63</td>
+            <td>Apr 10 23:32</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>64</td>
+            <td>Apr 10 23:48</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>65</td>
+            <td>Apr 11 00:03</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>66</td>
+            <td>Apr 11 00:18</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>67</td>
+            <td>Apr 11 00:20</td>
+            <td>100</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="EVOLUTION: Updated strategy.rsi_oversold from 30 to 30.0 | Reason: Increase RSI oversold threshold to allow for more conservative selling decisions in an overbought market." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">EVOLUTION: Updated strategy.rsi_oversold from 30 to 30.0 | Reason: Increase RSI oversold threshold to allow for more conservative selling decisions in an overbought market.</td>
+          </tr>
+          
+          <tr>
+            <td>68</td>
+            <td>Apr 11 00:35</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>69</td>
+            <td>Apr 11 00:50</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>70</td>
+            <td>Apr 11 01:06</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>71</td>
+            <td>Apr 11 01:21</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>72</td>
+            <td>Apr 11 01:36</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>73</td>
+            <td>Apr 11 01:51</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>74</td>
+            <td>Apr 11 02:06</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=28 | rsi=0.0 | momentum=0.0000 | amount=$14.00</td>
+          </tr>
+          
+          <tr>
+            <td>75</td>
+            <td>Apr 11 02:22</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00</td>
+          </tr>
+          
+          <tr>
+            <td>76</td>
+            <td>Apr 11 02:37</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00</td>
+          </tr>
+          
+          <tr>
+            <td>77</td>
+            <td>Apr 11 02:52</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>78</td>
+            <td>Apr 11 03:07</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00</td>
+          </tr>
+          
+          <tr>
+            <td>79</td>
+            <td>Apr 11 03:22</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>80</td>
+            <td>Apr 11 03:38</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00</td>
+          </tr>
+          
+          <tr>
+            <td>81</td>
+            <td>Apr 11 03:53</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00</td>
+          </tr>
+          
+          <tr>
+            <td>82</td>
+            <td>Apr 11 04:08</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=38 | rsi=0.0 | momentum=0.0000 | amount=$19.00</td>
+          </tr>
+          
+          <tr>
+            <td>83</td>
+            <td>Apr 11 04:23</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>84</td>
+            <td>Apr 11 04:25</td>
+            <td>100</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>85</td>
+            <td>Apr 11 04:40</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>86</td>
+            <td>Apr 11 04:56</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>87</td>
+            <td>Apr 11 05:11</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>88</td>
+            <td>Apr 11 05:26</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>89</td>
+            <td>Apr 11 05:41</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>90</td>
+            <td>Apr 11 05:56</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>91</td>
+            <td>Apr 11 06:12</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>92</td>
+            <td>Apr 11 06:27</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>93</td>
+            <td>Apr 11 06:42</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>94</td>
+            <td>Apr 11 06:57</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>95</td>
+            <td>Apr 11 07:12</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>96</td>
+            <td>Apr 11 07:28</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>97</td>
+            <td>Apr 11 07:43</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>98</td>
+            <td>Apr 11 07:58</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>99</td>
+            <td>Apr 11 08:13</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>100</td>
+            <td>Apr 11 08:29</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>101</td>
+            <td>Apr 11 08:31</td>
+            <td>100</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>102</td>
+            <td>Apr 11 08:46</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>103</td>
+            <td>Apr 11 09:01</td>
+            <td>89</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>104</td>
+            <td>Apr 11 09:17</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>105</td>
+            <td>Apr 11 09:32</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>106</td>
+            <td>Apr 11 09:47</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>107</td>
+            <td>Apr 11 10:02</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>108</td>
+            <td>Apr 11 10:17</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>109</td>
+            <td>Apr 11 10:33</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>110</td>
+            <td>Apr 11 10:48</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>111</td>
+            <td>Apr 11 11:03</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>112</td>
+            <td>Apr 11 11:18</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>113</td>
+            <td>Apr 11 11:33</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>114</td>
+            <td>Apr 11 11:49</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>115</td>
+            <td>Apr 11 12:04</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=52 | rsi=0.0 | momentum=0.0000 | amount=$26.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=52 | rsi=0.0 | momentum=0.0000 | amount=$26.00</td>
+          </tr>
+          
+          <tr>
+            <td>116</td>
+            <td>Apr 11 12:19</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>117</td>
+            <td>Apr 11 12:34</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>118</td>
+            <td>Apr 11 12:51</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>119</td>
+            <td>Apr 11 13:07</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>120</td>
+            <td>Apr 11 13:22</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>121</td>
+            <td>Apr 11 13:38</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=52 | rsi=0.0 | momentum=0.0000 | amount=$26.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=52 | rsi=0.0 | momentum=0.0000 | amount=$26.00</td>
+          </tr>
+          
+          <tr>
+            <td>122</td>
+            <td>Apr 11 13:53</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>123</td>
+            <td>Apr 11 14:08</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>124</td>
+            <td>Apr 11 14:23</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00</td>
+          </tr>
+          
+          <tr>
+            <td>125</td>
+            <td>Apr 11 14:38</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>126</td>
+            <td>Apr 11 14:54</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>127</td>
+            <td>Apr 11 15:09</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00</td>
+          </tr>
+          
+          <tr>
+            <td>128</td>
+            <td>Apr 11 15:24</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00</td>
+          </tr>
+          
+          <tr>
+            <td>129</td>
+            <td>Apr 11 15:39</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00</td>
+          </tr>
+          
+          <tr>
+            <td>130</td>
+            <td>Apr 11 15:54</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>131</td>
+            <td>Apr 11 16:10</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>132</td>
+            <td>Apr 11 16:25</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>133</td>
+            <td>Apr 11 16:40</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>134</td>
+            <td>Apr 11 16:57</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>135</td>
+            <td>Apr 11 17:12</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>136</td>
+            <td>Apr 11 17:28</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=56 | rsi=0.0 | momentum=0.0000 | amount=$28.00</td>
+          </tr>
+          
+          <tr>
+            <td>137</td>
+            <td>Apr 11 17:43</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>138</td>
+            <td>Apr 11 17:58</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>139</td>
+            <td>Apr 11 18:13</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>140</td>
+            <td>Apr 11 18:29</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>141</td>
+            <td>Apr 11 18:44</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>142</td>
+            <td>Apr 11 18:59</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00</td>
+          </tr>
+          
+          <tr>
+            <td>143</td>
+            <td>Apr 11 19:15</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00</td>
+          </tr>
+          
+          <tr>
+            <td>144</td>
+            <td>Apr 11 19:30</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00</td>
+          </tr>
+          
+          <tr>
+            <td>145</td>
+            <td>Apr 11 19:46</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>146</td>
+            <td>Apr 11 20:01</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>147</td>
+            <td>Apr 11 20:16</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>148</td>
+            <td>Apr 11 20:31</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00</td>
+          </tr>
+          
+          <tr>
+            <td>149</td>
+            <td>Apr 11 20:47</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>150</td>
+            <td>Apr 11 21:04</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="HOLD XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">HOLD XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$30.00</td>
+          </tr>
+          
+          <tr>
+            <td>151</td>
+            <td>Apr 11 21:19</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>152</td>
+            <td>Apr 11 21:31</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>153</td>
+            <td>Apr 11 21:36</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>154</td>
+            <td>Apr 11 21:42</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>155</td>
+            <td>Apr 11 21:47</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>156</td>
+            <td>Apr 11 21:52</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>157</td>
+            <td>Apr 11 21:58</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$45.00" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=60 | rsi=0.0 | momentum=0.0000 | amount=$45.00</td>
+          </tr>
+          
+          <tr>
+            <td>158</td>
+            <td>Apr 11 22:03</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>159</td>
+            <td>Apr 11 22:08</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>160</td>
+            <td>Apr 11 22:14</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>161</td>
+            <td>Apr 11 22:19</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>162</td>
+            <td>Apr 11 22:25</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>163</td>
+            <td>Apr 11 22:30</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>164</td>
+            <td>Apr 11 22:36</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>165</td>
+            <td>Apr 11 22:47</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>166</td>
+            <td>Apr 11 22:52</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>167</td>
+            <td>Apr 11 22:57</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>168</td>
+            <td>Apr 11 23:03</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>169</td>
+            <td>Apr 11 23:08</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>170</td>
+            <td>Apr 11 23:14</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>171</td>
+            <td>Apr 11 23:20</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>172</td>
+            <td>Apr 11 23:25</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>173</td>
+            <td>Apr 11 23:31</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>174</td>
+            <td>Apr 11 23:36</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>175</td>
+            <td>Apr 11 23:41</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>176</td>
+            <td>Apr 11 23:53</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>177</td>
+            <td>Apr 11 23:59</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>178</td>
+            <td>Apr 12 00:04</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>179</td>
+            <td>Apr 12 00:10</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>180</td>
+            <td>Apr 12 00:15</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>181</td>
+            <td>Apr 12 00:20</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>182</td>
+            <td>Apr 12 00:26</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>183</td>
+            <td>Apr 12 00:31</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>184</td>
+            <td>Apr 12 00:37</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>185</td>
+            <td>Apr 12 00:42</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>186</td>
+            <td>Apr 12 00:47</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>187</td>
+            <td>Apr 12 00:53</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>188</td>
+            <td>Apr 12 00:58</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>189</td>
+            <td>Apr 12 01:04</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>190</td>
+            <td>Apr 12 01:09</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>191</td>
+            <td>Apr 12 01:15</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>192</td>
+            <td>Apr 12 01:20</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>193</td>
+            <td>Apr 12 01:25</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>194</td>
+            <td>Apr 12 01:31</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">SELL XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>195</td>
+            <td>Apr 12 01:36</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>196</td>
+            <td>Apr 12 01:42</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>197</td>
+            <td>Apr 12 01:47</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>198</td>
+            <td>Apr 12 01:52</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>199</td>
+            <td>Apr 12 01:57</td>
+            <td>85</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>200</td>
+            <td>Apr 12 02:06</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=63 | rsi=0.0 | momentum=0.0000 | amount=$47.25</td>
+          </tr>
+          
+          <tr>
+            <td>201</td>
+            <td>Apr 12 02:12</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>202</td>
+            <td>Apr 12 02:17</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>203</td>
+            <td>Apr 12 02:22</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>204</td>
+            <td>Apr 12 02:28</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>205</td>
+            <td>Apr 12 02:33</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>206</td>
+            <td>Apr 12 02:39</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>207</td>
+            <td>Apr 12 02:44</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>208</td>
+            <td>Apr 12 02:49</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>209</td>
+            <td>Apr 12 02:55</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>210</td>
+            <td>Apr 12 03:00</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>211</td>
+            <td>Apr 12 03:06</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>212</td>
+            <td>Apr 12 03:11</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>213</td>
+            <td>Apr 12 03:17</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>214</td>
+            <td>Apr 12 03:22</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>215</td>
+            <td>Apr 12 03:28</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>216</td>
+            <td>Apr 12 03:33</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>217</td>
+            <td>Apr 12 03:38</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>218</td>
+            <td>Apr 12 03:44</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>219</td>
+            <td>Apr 12 03:49</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>220</td>
+            <td>Apr 12 03:55</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>221</td>
+            <td>Apr 12 04:00</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>222</td>
+            <td>Apr 12 04:06</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>223</td>
+            <td>Apr 12 04:11</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>224</td>
+            <td>Apr 12 04:19</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>225</td>
+            <td>Apr 12 04:25</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>226</td>
+            <td>Apr 12 04:30</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>227</td>
+            <td>Apr 12 04:35</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>228</td>
+            <td>Apr 12 04:41</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>229</td>
+            <td>Apr 12 04:46</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>230</td>
+            <td>Apr 12 04:52</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>231</td>
+            <td>Apr 12 04:57</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>232</td>
+            <td>Apr 12 05:02</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>233</td>
+            <td>Apr 12 05:08</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>234</td>
+            <td>Apr 12 05:14</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>235</td>
+            <td>Apr 12 05:19</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>236</td>
+            <td>Apr 12 05:24</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>237</td>
+            <td>Apr 12 05:30</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>238</td>
+            <td>Apr 12 05:35</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>239</td>
+            <td>Apr 12 05:41</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>240</td>
+            <td>Apr 12 05:46</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>241</td>
+            <td>Apr 12 05:51</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">BUY XBTUSD | karma=65 | rsi=0.0 | momentum=0.0000 | amount=$48.75</td>
+          </tr>
+          
+          <tr>
+            <td>242</td>
+            <td>Apr 12 05:57</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>243</td>
+            <td>Apr 12 06:02</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>244</td>
+            <td>Apr 12 06:08</td>
+            <td>91</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (12 from 12 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10624768</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xE7E01255806aA384Cfb471D244b62be3d0CF4D58">0xE7E0...4D58</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10625930</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0x2Ea49168E31E4a78FfbD69cA031fd9Ac4eC86E48">0x2Ea4...6E48</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10627103</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0x5B3d9DC29C6FDB65E7b9bfEb2738Ab2B6E990A0B">0x5B3d...0A0B</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10628263</td>
+            <td>13</td>
+            <td>Trade</td>
+            <td title="0xfe30F12c7E8d9BB76Ce3870F2B54C2e27D528c78">0xfe30...8c78</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 0/100. Trades submitted: 1. Vault claimed: true. Computed score: 13/100.</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10632907</td>
+            <td>89</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10634075</td>
+            <td>92</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10635235</td>
+            <td>92</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 85/100. Trades submitted: 11. Vault claimed: true. Computed score: 92/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 85/100. Trades submitted: 11. Vault claimed: true. Computed score: 92/100.</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10636398</td>
+            <td>92</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 85/100. Trades submitted: 12. Vault claimed: true. Computed score: 92/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 85/100. Trades submitted: 12. Vault claimed: true. Computed score: 92/100.</td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>10637557</td>
+            <td>92</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>9</td>
+            <td>10638718</td>
+            <td>92</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 85/100. Trades submitted: 12. Vault claimed: true. Computed score: 92/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 85/100. Trades submitted: 12. Vault claimed: true. Computed score: 92/100.</td>
+          </tr>
+          
+          <tr>
+            <td>10</td>
+            <td>10639874</td>
+            <td>92</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>11</td>
+            <td>10641041</td>
+            <td>93</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<div id="<%= dom_id(benchmark, :warm_up_status) %>" class="inline-flex items-center">
+  <% case benchmark.warm_up_status %>
+  <% when 'pending' %>
+    <span class="inline-flex items-center rounded-full bg-yellow-900/50 p-1 text-lg" title="Warm-up pending...">🕒</span>
+  <% when 'executing' %>
+    <span class="inline-flex items-center rounded-full bg-yellow-900/50 p-1 text-lg animate-pulse" title="Warm-up executing...">⚡</span>
+  <% when 'warmed_up' %>
+    <span class="inline-flex items-center rounded-full bg-green-900/50 p-1 text-lg cursor-help"
+          title="<%= benchmark.warm_up_response %> (At: <%= benchmark.warm_up_at&.to_fs(:short) %>)">✅</span>
+  <% when 'not_started', nil %>
+    <span class="inline-flex items-center rounded-full bg-gray-800 p-1 text-lg cursor-help"
+          title="Warm-up not started. <%= benchmark.warm_up_response if benchmark.warm_up_response.present? %>">🥶</span>
+  <% else %>
+    <span class="inline-flex items-center rounded-full bg-red-900/50 p-1 text-lg cursor-help" title="Unknown status: <%= benchmark.warm_up_status %>">❓</span>
+  <% end %>
+</div>

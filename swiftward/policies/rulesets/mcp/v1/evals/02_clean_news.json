@@ -1,0 +1,22 @@
+{
+  "description": "Clean news response - should pass through",
+  "event": {
+    "type": "mcp.output",
+    "entity_id": "agent-alpha",
+    "data": {
+      "tool": {
+        "name": "news/get_latest",
+        "server": "news"
+      },
+      "response": {
+        "articles": [
+          {"title": "Bitcoin ETF inflows hit $500M this week", "source": "CoinDesk", "published_at": "2026-04-03T10:00:00Z"},
+          {"title": "Ethereum L2 activity surges on Base network", "source": "The Block", "published_at": "2026-04-03T09:30:00Z"}
+        ]
+      }
+    }
+  },
+  "expected": {
+    "verdict": "approved"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "heartbeat-approved",
+  "comment": "Heartbeat check: portfolio at 48000, rolling_peak_24h 50000 (-4% trailing drawdown, under -8% threshold) - approved",
+  "mode": "sync",
+  "event": {
+    "type": "heartbeat",
+    "entity_id": "agent-42",
+    "data": {
+      "prices": {"ETH-USD": 3000, "BTC-USD": 60000},
+      "check_type": "periodic",
+      "portfolio": {
+        "value": 48000,
+        "peak": 50000,
+        "cash": 0,
+        "rolling_peak_24h": 50000,
+        "day_start_value": 50000,
+        "initial_value": 50000
+      }
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "approved",
+      "response": {},
+      "state_changes": {},
+      "actions": []
+    },
+    "decisions": {
+      "matched_rules": []
+    }
+  }
+}

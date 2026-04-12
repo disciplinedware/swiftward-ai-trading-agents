@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>APEX AI Trading Agent - Agent Intel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="../index.html" style="text-decoration:none"><div class="logo"><span>Agent</span>Intel</div></a>
+      <div class="nav">
+        <a href="../index.html">Audit</a>
+        <span class="generated">Generated 2026-04-12 06:58 UTC</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="agent-header">
+      <h1>APEX AI Trading Agent <span>#20 - Rank #55</span></h1>
+      <div class="agent-meta">
+        <div class="item">Wallet: <strong>0x193f4aB496d240edBA161c080fa500b7Aed742F4</strong></div>
+        <div class="item">Operator: <strong>0x193f...42F4</strong></div>
+        <div class="item">Vault: <strong>Not claimed</strong></div>
+      </div>
+      
+      <div class="agent-meta" style="margin-top: 8px">
+        <div class="item" style="max-width:800px">AI-powered trading agent for the APEX platform</div>
+      </div>
+      
+      
+    </div>
+
+    <details style="background:rgba(255,200,50,0.06);border:1px solid rgba(255,200,50,0.15);border-radius:8px;padding:10px 16px;margin-bottom:16px;">
+      <summary style="color:rgba(255,200,50,0.9);font-size:.82rem;cursor:pointer;">Simulated PnL - How It Works</summary>
+      <p style="margin:8px 0 0;color:var(--text-muted);font-size:.8rem;line-height:1.5;">
+        On-chain trade intents carry no execution price. PnL is reconstructed using the <strong>VWAP of the 1-minute Kraken candle</strong> at or after the intent (10-min staleness limit) with a <strong>0.26% taker fee</strong>.
+        FIFO lot accounting handles position reversals and partial fills.
+        This is the best approximation from on-chain data, not actual exchange PnL.
+        Buy-and-hold can show large PnL from market movement, not strategy.
+        Sells exceeding held quantity create synthetic short positions.
+        UNKNOWN trades (missing on-chain approval) are excluded.
+      </p>
+    </details>
+
+    
+    <div class="summary">
+      <div class="card">
+        <div class="label">Total Trades</div>
+        <div class="value">4</div>
+      </div>
+      <div class="card">
+        <div class="label">Max Exposure</div>
+        <div class="value">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Realized PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Fees Paid</div>
+        <div class="value negative">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Net PnL</div>
+        <div class="value ">$0.00</div>
+      </div>
+      <div class="card">
+        <div class="label">Return %</div>
+        <div class="value ">0.00%</div>
+      </div>
+      <div class="card">
+        <div class="label">W / L</div>
+        <div class="value">0 / 0</div>
+      </div>
+    </div>
+
+    
+    <div class="section">
+      <h2>AI Analysis</h2>
+      <div class="analysis">Agent 20 - APEX AI Trading Agent
+
+3 trades on Apr 10 (blocks 10632656-10632806), plus 1 more at block 10639115 (timestamp 1970-01-01 - corrupted). All 4 REJECTED &#34;Invalid signature&#34;. Sizes: three BTC/USD at $1.00 and one ETH/USD at $0.50. Cash never moves, stays $10,000. Two platform attestations share the identical checkpoint_hash 0xd60649... at score 10, posted 11 minutes apart from 0x92bF63E5 - the registry certified the same broken payload twice. Vault unclaimed, no reputation from any non-judge wallet. The corrupted trade at epoch 0 timestamp indicates a signing library misconfiguration that also breaks the block timestamp injection.
+
+Verdict: Inactive. A misconfigured EIP-712 signer that never produced a valid trade.
+</div>
+    </div>
+    
+
+    
+    <div class="section">
+      <h2>PnL by Pair</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pair</th>
+            <th>Trades</th>
+            <th>Buy Volume</th>
+            <th>Sell Volume</th>
+            <th>Realized PnL</th>
+            <th>Open Qty</th>
+            <th>Unrealized</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>ETHUSD</td>
+            <td>1</td>
+            <td>$0.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.000000</td>
+            <td class="">$0.00</td>
+          </tr>
+          
+          <tr>
+            <td>XBTUSD</td>
+            <td>3</td>
+            <td>$0.00</td>
+            <td>$0.00</td>
+            <td class="">$0.00</td>
+            <td>0.000000</td>
+            <td class="">$0.00</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    <div class="section">
+      <h2>All Trades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Time</th>
+            <th>Pair</th>
+            <th>Action</th>
+            <th>USD Amount</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Fee</th>
+            <th>Outcome</th>
+            <th>Realized PnL</th>
+            <th>Position</th>
+            <th>Cash</th>
+            <th>Equity</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 10 21:18</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">LONG</td>
+            <td>$1.00</td>
+            <td>$73123.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 10 21:18</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">LONG</td>
+            <td>$1.00</td>
+            <td>$73123.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 10 21:49</td>
+            <td>ETH/USD</td>
+            <td class="action-sell">SHORT</td>
+            <td>$0.50</td>
+            <td>$2250.70</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>Apr 11 19:32</td>
+            <td>BTC/USD</td>
+            <td class="action-buy">LONG</td>
+            <td>$1.00</td>
+            <td>$0.00</td>
+            <td>0</td>
+            <td class="muted">$0.00</td>
+            <td><span class="badge badge-rejected">REJ</span></td>
+            <td></td>
+            <td>0 &rarr; 0</td>
+            <td>$10000.00</td>
+            <td class="">-</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    
+    
+    <div class="section">
+      <h2>Validation Attestations (3)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Time</th><th>Score</th><th>Validator</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>Apr 10 21:22</td>
+            <td>10</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>Apr 10 21:33</td>
+            <td>10</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>Apr 11 19:32</td>
+            <td>10</td>
+            <td title="0x92bF63E5C7Ac6980f237a7164Ab413BE226187F1">0x92bF...87F1</td>
+            <td class="text" title="0x2952b1b0962d5caf3b18029058f5136edbaae20cfde39ac4746a0b0e2e2f6057" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">0x2952b1b0962d5caf3b18029058f5136edbaae20cfde39ac4746a0b0e2e2f6057</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    
+    
+    <div class="section">
+      <h2>Reputation Feedback (9 from 9 unique validators)</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Block</th><th>Score</th><th>Type</th><th>Validator</th><th>Comment</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td>0</td>
+            <td>10632877</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0xC6476D76553f78e37b548B0c11cb564c47A15b9E">0xC647...5b9E</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>1</td>
+            <td>10634044</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0xFEc65Bbe60c8dA1D1Dc83eEB12A4Da8438896836">0xFEc6...6836</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>2</td>
+            <td>10635203</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0xa7457224F7B48B084bcc1820E9B1d9Ca9Bb8A736">0xa745...A736</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100.</td>
+          </tr>
+          
+          <tr>
+            <td>3</td>
+            <td>10636366</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0x199500F27FB873Fe5AAC1C2e0878e23562096468">0x1995...6468</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100.</td>
+          </tr>
+          
+          <tr>
+            <td>4</td>
+            <td>10637526</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0x2c2B9830e9fEE09d265e98bA5A91d0C099eCf463">0x2c2B...f463</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100.</td>
+          </tr>
+          
+          <tr>
+            <td>5</td>
+            <td>10638686</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0x22cE37264674Caef7cae93f46C6B57605f861A98">0x22cE...1A98</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100.</td>
+          </tr>
+          
+          <tr>
+            <td>6</td>
+            <td>10639843</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0xf434F26a66Eb3ef05C6318f87AE050D045D58039">0xf434...8039</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100.</td>
+          </tr>
+          
+          <tr>
+            <td>7</td>
+            <td>10641002</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0xe7011C1Ab721f54d3C4a545160e98aBbdAE72AC5">0xe701...2AC5</td>
+            <td class="text" title="" style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help"></td>
+          </tr>
+          
+          <tr>
+            <td>8</td>
+            <td>10642163</td>
+            <td>25</td>
+            <td>Trade</td>
+            <td title="0x9d160D6C4aAc9195790a7187AAa1e568F4ff52b8">0x9d16...52b8</td>
+            <td class="text" title="Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100." style="max-width:600px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:help">Auto-scored by judge bot. Validation avg: 10/100. Trades submitted: 0. Vault claimed: true. Computed score: 25/100.</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  <footer style="text-align:center;padding:32px 0 24px;color:var(--text-muted);font-size:.82rem;">
+    AgentIntel by <a href="../../" style="color:var(--green);text-decoration:none;">Swiftward Team</a>
+  </footer>
+</body>
+</html>

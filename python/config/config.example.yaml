@@ -1,0 +1,131 @@
+chain:
+  # TODO: confirm with hackathon
+  chain_id: 1
+  # TODO: Sepolia RPC URL (e.g. Alchemy/Infura endpoint)           
+  rpc_url: https://...
+  # TODO: Risk Router contract address (provided on hackathon Day 1)
+  risk_router_address: "0x8E575a59C6A7bA3FB714e726E4a24e4BA10B1EDa"
+
+assets:
+  tracked:
+    - BTC   # ~40% of futures volume
+    - ETH   # ~20%
+    - SOL   # high OI, active perps
+    - BNB   # native exchange token, deep book
+    - XRP   # top 5 by spot + futures volume
+    - DOGE  # high retail liquidity
+    - AVAX  # consistent top-10 perp OI
+    - LINK  # largest oracle token, liquid perps
+    - ARB   # top L2 by TVL and perp volume
+    - OP    # second L2, correlated with ARB
+  stablecoin: USDC
+
+llm:
+  base_url: http://localhost:11434/v1  # local Ollama default
+  model: llama3.2
+  api_key: ollama                      # SECRET — replace for GPT-4o / Claude
+  max_tokens: 1000
+  retries: 3
+
+news_llm:
+  base_url: http://localhost:11434/v1  # lighter/cheaper model for sentiment scoring
+  model: llama3.2                      # e.g. gpt-4o-mini for OpenAI, or small Ollama model
+  api_key: ollama                      # SECRET
+  max_tokens: 3000                     # reasoning models burn tokens on CoT before output — keep high
+
+trading:
+  mode: paper                  # paper | live
+  # TODO: set to actual sub-account balance from Capital Vault on Day 1
+  starting_balance_usdc: 1000
+  max_concurrent_positions: 2
+  database_url: postgresql+asyncpg://py_trading:py_trading@postgres:5432/py_trading
+  backend: python              # python | go (go = use Go Trading MCP for Swiftward + Kraken + Dashboard)
+  agent_id: ""                 # X-Agent-ID header for Go Trading MCP (required when backend=go)
+
+trigger:
+  cooldown_minutes: 30
+  price_spike_threshold_pct: 3.0
+  fear_greed_low: 20    # trigger brain cycle when F&G drops below this (extreme fear)
+  fear_greed_high: 80   # trigger brain cycle when F&G rises above this (extreme greed)
+
+brain:
+  implementation: stub # stub | deterministic_llm
+
+  # Stage 1 — Market Filter (deterministic health score → verdict)
+  stage1:
+    risk_on_threshold: 0.6
+    risk_off_threshold: 0.4
+    btc_trend_clamp_pct: 7.0      # tighter clamp → more responsive to 3–5% daily moves
+    ema_steepness: 150.0           # sigmoid steepness for EMA proximity (higher = sharper transition)
+    funding_peak_rate: 0.0001      # optimal funding rate (~0.01%) — peak of inverted-U
+    funding_extreme_rate: 0.0005   # danger zone funding rate (~0.05%) — overcrowded longs
+    macro_penalty_factor: 0.85     # multiplicative score penalty during FOMC/CPI/macro events
+    weights:
+      ema: 0.30
+      fear_greed: 0.15
+      btc_trend: 0.25
+      funding: 0.20
+      volatility: 0.10            # ATR-based volatility regime signal
+
+  # Stage 2 — Rotation Selector (asset ranking + LLM re-ranking)
+  stage2:
+    weights:
+      momentum: 0.40
+      relative_strength: 0.35
+      volume: 0.25
+    held_asset_bonus: 0.05
+    max_selections: 2
+
+  # Stage 3 — Decision Engine (ATR stops, Kelly sizing, intent assembly)
+  stage3:
+    half_kelly_fraction: 0.09
+    min_reward_risk_ratio: 2.0
+    regime_multipliers:
+      STRONG_UPTREND: 1.0   # full size — strong trend, high confidence
+      BREAKOUT: 0.75        # slightly reduced — breakouts can fail
+      RANGING: 0.5          # half size — mean-reversion, tighter range
+      WEAK_MIXED: 0.25      # minimal exposure — unclear direction
+    regime_sl_tp:
+      STRONG_UPTREND: {sl_mult: 2.0, tp_mult: 4.0}  # R:R = 2.0 — unchanged
+      BREAKOUT:       {sl_mult: 1.5, tp_mult: 4.5}  # R:R = 3.0 — tighter SL, wider TP
+      RANGING:        {sl_mult: 1.5, tp_mult: 3.0}  # R:R = 2.0 — both tighter
+      WEAK_MIXED:     {sl_mult: 1.5, tp_mult: 3.0}  # R:R = 2.0 — conservative
+
+mcp_servers:
+  price_feed_url: http://localhost:8001
+  news_url: http://localhost:8002
+  onchain_data_url: http://localhost:8003
+  fear_greed_url: http://localhost:8004
+  trading_url: http://localhost:8006   # SwiftWard URL — set to :8005 to bypass
+  go_trading_url: ""                   # e.g. http://trading-server:8091 (required when trading.backend=go)
+
+# https://github.com/erc-8004/erc-8004-contracts?tab=readme-ov-file#contract-addresses
+erc8004:
+  # TODO: agent registry addresses (from hackathon)
+  identity_registry_address: "0x483066372b6DBbeef80702FAf0D6b28677fBe178"   # eth sepolia
+  validation_registry_address: "0x7C9f58a1f5Ed4D654A7E63a0142Bb6912DCBb121" # eth sepolia
+  # TODO: wallet private key
+  agent_wallet_private_key: "0x"
+  ipfs_provider: pinata # pinata | mock
+  ipfs_api_key: "key"   # pinata JWT
+
+external_apis:
+  # TODO (optional): Binance API key for higher rate limits
+  binance_api_key: ""
+  # TODO (not used): CoinGlass API key (on-chain data MCP)
+  coinglass_api_key: "key"
+  # TODO: CryptoPanic API key (news MCP, free tier at cryptopanic.com)
+  cryptopanic_api_key: "key"
+  # TODO: CoinDesk API key (news MCP, free tier at developers.coindesk.com)
+  coindesk_api_key: ""
+
+cache:
+  # shared by all MCP servers that use Redis caching
+  redis_url: redis://localhost:6379/0
+
+logging:
+  level: INFO
+  format: console  # console (plain text) | json
+  file: ""         # optional: /app/logs/agent.log (Docker) or logs/agent.log (local)
+  otlp_endpoint: ""  # optional: http://signoz-otel-collector:4318/v1/logs
+                     # service name is read from OTEL_SERVICE_NAME env var (set per-container in compose)

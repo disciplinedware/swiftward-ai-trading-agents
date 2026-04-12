@@ -1,0 +1,59 @@
+{
+  "id": "multiple-rejections",
+  "comment": "pair_whitelist is disabled; size 7500 exceeds both 15% and absolute 1000 cap. Absolute cap (p96) wins.",
+  "mode": "sync",
+  "event": {
+    "type": "trade_order",
+    "entity_id": "agent-42",
+    "data": {
+      "order": {
+        "pair": "SHIB-USDC",
+        "side": "buy",
+        "value": 7500,
+        "leverage": 1,
+        "is_risk_reducing": false,
+        "reason": "SHIB breakout detected",
+        "stop_loss": 2700.0
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0,
+        "day_start_value": 50000,
+        "positions": "{}"
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "rejected",
+      "priority": 96,
+      "response": {
+        "reason": "Order exceeds 1000 quote-currency cap (on-chain RiskRouter limit is 1,000)",
+        "tag": "risk_limit",
+        "max_value": 1000,
+        "max_pct": 15
+      },
+      "state_changes": {
+        "agent": {
+          "change_buckets": {
+            "orders_10m": 1
+          }
+        }
+      },
+      "actions": []
+    },
+    "decisions": {
+      "matched_rules": [
+        "count_orders",
+        "max_order_size",
+        "max_order_value_absolute"
+      ]
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "router-rejection-alert",
+  "comment": "Post-trade: Risk Router rejected a Swiftward-approved trade - flagged with warning",
+  "mode": "async",
+  "event": {
+    "type": "execution_report",
+    "entity_id": "agent-42",
+    "data": {
+      "status": "reject",
+      "decision_hash": "dec_def456",
+      "reject": {
+        "source": "router",
+        "reason": "Insufficient margin"
+      },
+      "portfolio": {
+        "value": 50000,
+        "peak": 52000,
+        "cash": 0
+      }
+    }
+  },
+  "mock_udfs": {
+    "trading/count_recent_trades": {
+      "passthrough": true
+    }
+  },
+  "expected": {
+    "effects": {
+      "verdict": "flagged",
+      "priority": 0,
+      "response": {},
+      "state_changes": {
+        "agent": {
+          "change_counters": {
+            "reject_count": 1
+          }
+        }
+      },
+      "actions": [
+        {
+          "action": "log_action",
+          "params": {
+            "message": "Risk Router rejected a Swiftward-approved trade - tighten policies",
+            "level": "warning"
+          }
+        }
+      ]
+    },
+    "decisions": {
+      "matched_rules": ["router_rejection_alert"]
+    }
+  }
+}
